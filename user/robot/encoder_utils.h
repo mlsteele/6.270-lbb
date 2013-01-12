@@ -1,6 +1,6 @@
 uint16_t encoder_distance(uint16_t read_diff = 0) {
 	return 	(  155 // small wheel circumfrence in mm  
-			 * (3./25.) // gear ratio 
+			 * (1./25.) // gear ratio 
 			 * (read_diff or encoder_read(ENCODER_PIN)) 
 			 / 6) ;
 }

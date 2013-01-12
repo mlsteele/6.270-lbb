@@ -36,6 +36,7 @@
 
 #define GYRO_PORT       11
 #define LSB_US_PER_DEG  1400000
+#define LSB_US_PER_DEG  1386583
 
 uint8_t team_number={1,0};
 

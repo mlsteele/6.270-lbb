@@ -18,8 +18,8 @@ bool vps_daemon_has_run = false;
 struct lock vps_data_lock;
 
 void convert_vps_pos_to_mm_pos(board_coord* src, Point* target) {
-  target->x = src->x * UNITS_VPS_TO_DEG;
-  target->y = src->y * UNITS_VPS_TO_DEG;
+  target->x = src->x * UNITS_VPS_TO_MM;
+  target->y = src->y * UNITS_VPS_TO_MM;
 }
 
 void vps_download_info() {

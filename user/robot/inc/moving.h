@@ -11,8 +11,8 @@ typedef struct {
 
 left_right_float_t last_motor_pows = {0, 0};
 
-#define SPEED 150
-#define TARGET_TOLERANCE 150
+#define DEFAULT_SPEED .58
+#define TARGET_TOLERANCE 50
 
 float get_gyro_current_angle() {
 	return fmod(gyro_get_degrees(), 360);
@@ -35,8 +35,8 @@ Point unimplemented_get_current_location() {
 // }
 
 void set_velocity(float v) {
-	motor_set_vel(PIN_MOTOR_DRIVE_L, v);
-	motor_set_vel(PIN_MOTOR_DRIVE_R, v);
+	motor_set_vel(PIN_MOTOR_DRIVE_L, v * 255);
+	motor_set_vel(PIN_MOTOR_DRIVE_R, v * 255);
 }
 
 void set_wheel_pows(float l, float r) {

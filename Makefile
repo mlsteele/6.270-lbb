@@ -1,5 +1,5 @@
 # User source files
-USERSRC = user/robot/umain.c
+USERSRC = user/robot/nicole/umain.c
 
 # Serial port
 AVRDUDE_USERPORT ?= COM4

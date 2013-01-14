@@ -8,9 +8,8 @@
 #define PIN_MOTOR_DRIVE_R 1
 #define PIN_GYRO 21
 
-// #error please have the common courtesy of defining your encoder pins!
-// #define PIN_ENCODER_WHEEL_L
-// #define PIN_ENCODER_WHEEL_R
+#define PIN_ENCODER_WHEEL_L 27
+#define PIN_ENCODER_WHEEL_R 26
 
 
 // PHYSICAL

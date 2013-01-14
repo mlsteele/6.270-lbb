@@ -22,20 +22,25 @@ void convert_vps_pos_to_mm_pos(board_coord* src, Point* target) {
   target->y = src->y * UNITS_VPS_TO_DEG;
 }
 
+void vps_download_info() {
+  acquire(&vps_data_lock);
+
+  copy_objects();
+
+  convert_vps_pos_to_mm_pos(&game.coords[0], &vps_position);
+  convert_vps_pos_to_mm_pos(&game.coords[1], &vps_active_target);
+  vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;
+
+  vps_daemon_has_run = true;
+
+  release(&vps_data_lock);
+}
+
+
 int vps_data_daemon() {
   while(1) {
     pause(20); // safety interval (arbitrary time)
-    acquire(&vps_data_lock);
-
-    copy_objects();
-
-    convert_vps_pos_to_mm_pos(&game.coords[0], &vps_position);
-    convert_vps_pos_to_mm_pos(&game.coords[1], &vps_active_target);
-    vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;
-
-    vps_daemon_has_run = true;
-
-    release(&vps_data_lock);
+    vps_download_info();
   }
 
   return 0;

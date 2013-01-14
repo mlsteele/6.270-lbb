@@ -1,3 +1,5 @@
+#ifndef MOVING_H
+#define MOVING_H
 #include <math.h>
 
 struct Point current_loc;
@@ -94,3 +96,4 @@ void move_for_time(float velocity, float millis) {
 	pause(millis);
 	brake();
 }
+#ENDIF

@@ -1,9 +1,9 @@
-struct Point vps_coords() {
+struct Point vps_coords(uint8_t target) {
 	copy_objects();
-	ret = struct Point;
+	Point ret;
 	float board_to_mm = 0.5953;
-	ret.x = game.coords[0].x * board_to_mm;
-	ret.y = game.coords[0].y * board_to_mm;
+	ret.x = game.coords[target].x * board_to_mm;
+	ret.y = game.coords[target].y * board_to_mm;
 	return ret;
 }
 float vps_theta() {

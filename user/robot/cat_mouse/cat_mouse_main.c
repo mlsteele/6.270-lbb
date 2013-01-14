@@ -4,6 +4,8 @@
 #include "./move_towards_target_smooth.h"
 
 int usetup (void) {
+  extern volatile uint8_t robot_id;
+  robot_id = 8;
   return 0;
 }
 

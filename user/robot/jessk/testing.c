@@ -31,8 +31,8 @@ void move_towards_target_smooth(Point goal, Point current, float vps_theta) {
 			//set_velocity(150);
 		}else{
 			//printf("fabsf(%.3f) < %.3f\n", delta_theta, dist/10);
-			float vel_1 = 150 + fabsf(delta_theta);
-			float vel_2 = 150;
+			float vel_1 = 150/255 + fabsf(delta_theta)/255;
+			float vel_2 = 150/255;
 
 			if(delta_theta>0) {
 				printf("set_velocities(%.1f,%.1f)\n",vel_1, vel_2);

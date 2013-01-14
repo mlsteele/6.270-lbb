@@ -18,9 +18,9 @@ void move_towards_target_smooth() {
 		float dist = sqrt(pow((current.x-goal.x), 2)+pow(current.y-goal.y, 2));
 
 		if(fabsf(delta_theta) >= 90 || dist <= 200){
-			set_velocity(0);
+			set_wheel_pows(0,0);
 			rotate(delta_theta);
-			set_velocity(150);
+			set_wheel_pows(150/255);
 		}else{
 			float vel_1 = 150/255 + fabsf(delta_theta)/255;
 			float vel_2 = 150/255;

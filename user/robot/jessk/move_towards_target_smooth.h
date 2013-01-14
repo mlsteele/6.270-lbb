@@ -1,15 +1,17 @@
-#ifndef B_H
-#define B_H
+#ifndef _B_H_
+#define _B_H_
 
 #include "../moving.h"
-void B() {
-	set_velocity(0);
-	while(1){
-		Point goal = TARGET_POINT;
-		Point current = CURRENT_POINT;
 
-		float current_angle = CURRENT_ANGLE;
-		float delta_theta = atan((goal.y-current.y)/(goal.x-current.x))*180/M_PI - current_angle;
+void move_towards_target() {
+	set_velocity(0);
+	while(1) {
+		acquire(&vps_data_lock);
+		Point goal = vps_active_target;
+		Point current = vps_position;
+		release(&vps_data_lock);
+
+		float delta_theta = atan((goal.y-current.y)/(goal.x-current.x))*180/M_PI - CURRENT_ANGLE;
 
 		float dist = sqrt(pow((current.x-goal.x), 2)+pow(current.y-goal.y, 2));
 

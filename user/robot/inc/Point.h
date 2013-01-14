@@ -6,4 +6,6 @@ typedef struct {
   float y;
 } Point;
 
+int this_should_be_available = 4;
+
 #endif

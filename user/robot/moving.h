@@ -1,6 +1,12 @@
+#ifndef _MOVING_H_
+#define _MOVING_H_
 #include <math.h>
 
+<<<<<<< HEAD
 #define SPEED 150
+=======
+#define TARGET_TOLERANCE 150
+>>>>>>> 6ca2be28a88fc14df59317bf034ad78aabd4b1cd
 
 Point current_loc;
 float current_angle = 0; //probably want to set it to a different value
@@ -11,25 +17,25 @@ void set_starting_loc(void) {
 	current_loc.y = 0;
 }
 
-void update_location() {
-	//use gps
-}
+// void update_location() {
+// 	//use gps
+// }
 
 void set_velocity(float v) {
-	motor_set_vel(MOTOR_L, v);
-	motor_set_vel(MOTOR_R, v);
+	motor_set_vel(PIN_MOTOR_DRIVE_L, v);
+	motor_set_vel(PIN_MOTOR_DRIVE_R, v);
 }
 
 void set_velocities(float l, float r) {
-	motor_set_vel(MOTOR_L, l);
-	motor_set_vel(MOTOR_R, r);
+	motor_set_vel(PIN_MOTOR_DRIVE_L, l);
+	motor_set_vel(PIN_MOTOR_DRIVE_R, r);
 }
 
 void brake(void) {
-//	motor_brake(MOTOR_R);
-//	motor_brake(MOTOR_L);
-	motor_set_vel(MOTOR_R ,0);
-	motor_set_vel(MOTOR_L, 0);
+//	motor_brake(PIN_MOTOR_DRIVE_R);
+//	motor_brake(PIN_MOTOR_DRIVE_L);
+	motor_set_vel(PIN_MOTOR_DRIVE_R ,0);
+	motor_set_vel(PIN_MOTOR_DRIVE_L, 0);
 }
 
 void deccelerate(float millis) {
@@ -68,6 +74,7 @@ void rotate(float degrees) {
 	}
 }
 
+<<<<<<< HEAD
 // void move_to(Point p, float velocity) {
 // 	//moves in a straight line to the desired point at the desired velocity
 // 	current_angle = gyro_get_degrees();
@@ -75,10 +82,20 @@ void rotate(float degrees) {
 // 	float dist_y = p.y - current_loc.y;
 // 	float dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
 // 	float desired_angle = atan(dist_y/dist_x);
+=======
+void move_to(Point p, float velocity) {
+	//moves in a straight line to the desired point at the desired velocity
+	current_angle = gyro_get_degrees();
+	float dist_x = p.x - current_loc.x;
+	float dist_y = p.y - current_loc.y;
+	float dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
+	float desired_angle = atan(dist_y/dist_x);
+>>>>>>> 6ca2be28a88fc14df59317bf034ad78aabd4b1cd
 	
 // 	rotate(desired_angle-current_angle);
 // 	set_velocity(velocity);
 
+<<<<<<< HEAD
 // 	while (dist > DRIVE_TOLERANCE) {
 // 		update_location();
 // 		dist_x = p.x - current_loc.x;
@@ -88,6 +105,17 @@ void rotate(float degrees) {
 // 	}
 // 	brake();
 // }
+=======
+	while (dist > TARGET_TOLERANCE) {
+		// update_location();
+		dist_x = p.x - vps_position.x;
+		dist_y = p.y - vps_position.y;
+		dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
+		pause(100);
+	}
+	brake();
+}
+>>>>>>> 6ca2be28a88fc14df59317bf034ad78aabd4b1cd
 
 void move_for_time(float velocity, float millis) {
 	printf("Moving for a certain amount of time");
@@ -96,6 +124,7 @@ void move_for_time(float velocity, float millis) {
 	brake();
 }
 
+<<<<<<< HEAD
 void dumb_moving() {
 	float dist_x;
 	float dist_y;
@@ -122,3 +151,6 @@ float get_heading() {
 	//do some fancy averaging thing instead
 	return gyro_get_degrees();
 }
+=======
+#endif
+>>>>>>> 6ca2be28a88fc14df59317bf034ad78aabd4b1cd

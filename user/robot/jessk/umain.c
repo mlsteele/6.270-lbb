@@ -3,7 +3,7 @@
 
 // Include headers from OS
 #include <joyos.h>
-#include <encoder_utils.h>
+#include "../encoder_utils.h"
 
 // usetup is called during the calibration period. 
 int usetup (void) {

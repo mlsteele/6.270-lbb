@@ -1,6 +1,7 @@
 // 2d v2dtor manipulation
 
 #ifndef _VECTORTOOLS_H_
+#define _VECTORTOOLS_H_
 
 typedef struct {
   float x;

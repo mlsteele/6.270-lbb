@@ -6,6 +6,7 @@ struct Point vps_coords(uint8_t target) {
 	ret.y = game.coords[target].y * board_to_mm;
 	return ret;
 }
+
 float vps_theta() {
 	copy_objects();
 	float board_to_degrees = 0.08789;

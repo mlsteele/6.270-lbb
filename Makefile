@@ -1,5 +1,5 @@
 # User source files
-USERSRC = user/robot/umain.c
+USERSRC = user/robot/steele/cat_mouse/cat_mouse_main.c
 
 # Serial port
 AVRDUDE_USERPORT ?= COM4
@@ -48,7 +48,7 @@ AVRGDB = ${AVR}-gdb
 MCU = atmega128
 FTDI_EEPROM = ftdi_eeprom
 
-INCLUDES = -Isrc/inc
+INCLUDES = -Isrc/inc -Iuser/robot/inc
 # Two printf options: full for OS, minimal for bootloader
 BOOT_PRINTFOP = -Wl,-u,vfprintf -lprintf_min
 OS_PRINTFOP = -Wl,-u,vfprintf -lprintf_flt -lm
@@ -238,3 +238,6 @@ simulate:
 	@gcc $(SRC) src/drivers/socket.c $(INCLUDES) -o client -D SIMULATE -lpthread
 
 .PHONY: all
+
+monitor:
+	screen $(AVRDUDE_USERPORT) 19200

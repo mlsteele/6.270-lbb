@@ -1,4 +1,5 @@
 #ifndef _NAVIGATION_H_
+#define _NAVIGATION_H_
 
 #include <joyos.h>
 #include <motor.h>

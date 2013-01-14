@@ -15,12 +15,12 @@ int umain (void) {
   printf(" done\n");
 
   printf("entering hunting loop\n");
-  while(1) {
-    printf("calling move_towards_target_smooth...");
+  //while(1) {
+    printf("calling move_towards_target_smooth...\n");
     move_towards_target_smooth();
     printf(" done\n");
-    pause(10);
-  }
+  //  pause(10);
+  //}
 
   return 0;
 }

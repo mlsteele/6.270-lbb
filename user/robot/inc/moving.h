@@ -67,7 +67,7 @@ int robot_moving() {
 }
 
 void rotate(float degrees) {
-	printf("Rotating to a number of degrees");
+	printf("Rotating...\n");
 	printf("start angle = %f \n", get_gyro_current_angle());
 	float desired_angle = get_gyro_current_angle() + degrees;
 	printf("desired_angle = %f \n", desired_angle);
@@ -88,6 +88,7 @@ void rotate(float degrees) {
 			}
 		}
 		wheels_brake();
+		printf("End rotate.\n\n");
 	}
 }
 

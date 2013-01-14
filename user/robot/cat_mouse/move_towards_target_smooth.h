@@ -1,12 +1,15 @@
-#ifndef _B_H_
-#define _B_H_
+#ifndef _MOVE_TOWARDS_TARGET_SMOOTH_H_
+#define _MOVE_TOWARDS_TARGET_SMOOTH_H_
 
 #include <moving.h>
 
 void move_towards_target_smooth() {
-	set_velocity(0);
+	printf("Hello from move_towards_target_smooth()\n");
+	set_wheel_pows(0,0);
 	while(1) {
+		printf("Hello from the while loop!\n" );
 		acquire(&vps_data_lock);
+		printf("Hello from acquire vps_data_lock\n");
 		Point goal = vps_active_target;
 		Point current = vps_position;
 
@@ -17,18 +20,28 @@ void move_towards_target_smooth() {
 		if(delta_theta > 180) {delta_theta -= 360;}
 		float dist = sqrt(pow((current.x-goal.x), 2)+pow(current.y-goal.y, 2));
 
+		printf("\nGoal: (%.1f,%.1f)\n", goal.x, goal.y);
+		printf("Current: (%.1f,%.1f)\n", current.x, current.y);
+		printf("Current theta: %.1f\n", vps_theta);
+		printf("Delta theta: %.1f\n", delta_theta);
+		printf("Dist: %.3f\n", dist);
+
 		if(fabsf(delta_theta) >= 90 || dist <= 200){
+			printf("%.1f >= 90 || %.3f <= 200\nStopping and rotating\n", delta_theta, dist);
+
 			set_wheel_pows(0,0);
 			rotate(delta_theta);
-			set_wheel_pows(150/255);
+			set_wheel_pows(150/255, 150/255);
 		}else{
 			float vel_1 = 150/255 + fabsf(delta_theta)/255;
 			float vel_2 = 150/255;
 
 			if(delta_theta>0) {
+				printf("set_velocities(%.1f,%.1f)\n",vel_1, vel_2);
 				set_wheel_pows(vel_1, vel_2);
 			}
 			else {
+				printf("set_velocities(%.1f,%.1f)\n",vel_2, vel_1);
 				set_wheel_pows(vel_2, vel_1);
 			}
 		}

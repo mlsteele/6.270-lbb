@@ -1,10 +1,10 @@
 #include <joyos.h>
 #include "./vps_data_daemon.h"
+#include "./move_towards_target_smooth.h"
 
 int usetup (void) {
   return 0;
 }
-
 
 int umain (void) {
   printf("starting vps_data_daemon...");
@@ -13,8 +13,8 @@ int umain (void) {
 
   printf("entering hunting loop\n", );
   while(1) {
-    printf("calling move_towards_target...");
-    move_towards_target();
+    printf("calling move_towards_target_smooth...");
+    move_towards_target_smooth();
     printf(" done\n");
     pause(10);
   }

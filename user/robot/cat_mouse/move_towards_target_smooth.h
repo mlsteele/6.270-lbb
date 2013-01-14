@@ -3,7 +3,7 @@
 
 #include "../moving.h"
 
-void move_towards_target() {
+void move_towards_target_smooth() {
 	set_velocity(0);
 	while(1) {
 		acquire(&vps_data_lock);

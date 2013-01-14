@@ -1,5 +1,5 @@
 #include <joyos.h>
-#include <pin_config.h>
+#include <hw_config.h>
 #include "./vps_data_daemon.h"
 #include "./move_towards_target_smooth.h"
 

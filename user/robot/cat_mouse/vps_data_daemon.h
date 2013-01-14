@@ -24,9 +24,9 @@ void convert_vps_pos_to_mm_pos(board_coord* src, Point* target) {
 
 void vps_download_info() {
   acquire(&vps_data_lock);
-
+  //printf("Starting copy_objects()...\n");
   copy_objects();
-
+  //printf("game.coords: [0]: %d,%d ... [1]: %d,%d\n", game.coords[0].x,game.coords[0].y, game.coords[1].x,game.coords[1].y);
   convert_vps_pos_to_mm_pos(&game.coords[0], &vps_position);
   convert_vps_pos_to_mm_pos(&game.coords[1], &vps_active_target);
   vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;

@@ -1,14 +1,16 @@
 #ifndef _MOVING_H_
 #define _MOVING_H_
+
 #include <math.h>
 
 #define SPEED 150
 #define TARGET_TOLERANCE 150
 
-Point current_loc;
-float current_angle = 0; //probably want to set it to a different value
+float get_gyro_current_angle() {
+	fmod(gyro_get_degrees(),360);
+}
 
-void set_starting_loc(void) {
+void set_starting_loc() {
 	//use gps
 	current_loc.x = 0;
 	current_loc.y = 0;
@@ -35,8 +37,8 @@ void brake(void) {
 	motor_set_vel(PIN_MOTOR_DRIVE_L, 0);
 }
 
-void deccelerate(float millis) {
-	//deccelerates in the given amount of time
+void decelerate(float millis) {
+	//decelerates in the given amount of time
 	//use jess's code
 }
 
@@ -47,24 +49,23 @@ int robot_moving(void) {
 
 void rotate(float degrees) {
 	printf("Rotating to a number of degrees");
-	current_angle = fmod(get_heading(),360);
 	printf("start angle = %f \n", current_angle);
-	float desired_angle = current_angle + degrees;
+	float desired_angle = get_gyro_current_angle() + degrees;
 	printf("desired_angle = %f \n", desired_angle);
 	if (robot_moving()) {
 
 	}
 	else {
 		if (degrees>0) {
-			set_velocities(SPEED, -SPEED);
-			while (fmod(get_heading(),360) < desired_angle) {
-				printf("current angle = %f \n", fmod(get_heading(),360));
+			set_velocities(150, -150);
+			while (fmod(gyro_get_degrees(),360) < desired_angle) {
+				printf("current angle = %f \n", get_gyro_current_angle());
 			}
 		}
 		else {
-			set_velocities(-SPEED, SPEED);
-			while (fmod(get_heading(),360) > desired_angle) {
-				printf("current angle = %f \n", fmod(get_heading(),360));
+			set_velocities(-150, 150);
+			while (fmod(gyro_get_degrees(),360) > desired_angle) {
+				printf("current angle = %f \n", get_gyro_current_angle());
 			}
 		}
 		brake();
@@ -73,11 +74,13 @@ void rotate(float degrees) {
 
 void move_to(Point p, float velocity) {
 	//moves in a straight line to the desired point at the desired velocity
-	current_angle = gyro_get_degrees();
 	float dist_x = p.x - current_loc.x;
 	float dist_y = p.y - current_loc.y;
 	float dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
 	float desired_angle = atan(dist_y/dist_x);
+
+	rotate(desired_angle - get_gyro_current_angle());
+	set_velocity(velocity);
 
 // 	rotate(desired_angle-current_angle);
 // 	set_velocity(velocity);

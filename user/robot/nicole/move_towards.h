@@ -4,7 +4,7 @@
 
 bool test = false;
 
-void move_towards_target() {
+void target_tracking() {
 	float dist_x;
 	float dist_y;
 	float dist;

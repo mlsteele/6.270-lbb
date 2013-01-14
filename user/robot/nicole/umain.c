@@ -27,7 +27,7 @@
 #include <math.h>
 #include <Point.h>
 #include <hw_config.h>
-#include "move_towards.h"
+#include "./move_towards.h"
 
  #define LSB_US_PER_DEG 1386583
  #define GRYO 21
@@ -66,12 +66,14 @@ int usetup (void) {
 }
 
 int umain (void) {
-	printf("Setup complete");
+	printf("Setup complete\n");
 	test = true;
 	vps_data_daemon_init();
+	printf("Initiated vps daemon\n");
 	if (test) {
 		fake_data_daemon_init();
+		printf("Initiated fake data daemon\n");
 	}
-	move_towards_target();
+	target_tracking();
     return 0;
 }

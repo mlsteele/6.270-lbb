@@ -28,7 +28,7 @@ void generate_data() {
     fake_active_target = generate_new_target();
   }  
 
-  vps_daemon_has_run = true;
+  fake_daemon_has_run = true;
 
   release(&fake_data_lock);
   release(&vps_data_lock);

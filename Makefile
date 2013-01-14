@@ -1,5 +1,5 @@
 # User source files
-USERSRC = user/robot/steele/cat_mouse/cat_mouse_main.c
+USERSRC = user/robot/cat_mouse/cat_mouse_main.c
 
 # Serial port
 AVRDUDE_USERPORT ?= COM4

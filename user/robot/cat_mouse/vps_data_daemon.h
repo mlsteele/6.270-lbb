@@ -12,15 +12,14 @@
 
 Point vps_active_target;
 Point vps_position;
-
 float vps_theta;
 
 bool vps_daemon_has_run = false;
 struct lock vps_data_lock;
 
 void convert_vps_pos_to_mm_pos(board_coord* src, Point* target) {
-  target->x = src->x * board_to_mm;
-  target->y = src->y * board_to_mm;
+  target->x = src->x * UNITS_VPS_TO_DEG;
+  target->y = src->y * UNITS_VPS_TO_DEG;
 }
 
 int vps_data_daemon() {

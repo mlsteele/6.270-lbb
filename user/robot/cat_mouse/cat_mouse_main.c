@@ -1,4 +1,5 @@
 #include <joyos.h>
+#include <pin_config.h>
 #include "./vps_data_daemon.h"
 #include "./move_towards_target_smooth.h"
 
@@ -11,7 +12,7 @@ int umain (void) {
   vps_data_daemon_init();
   printf(" done\n");
 
-  printf("entering hunting loop\n", );
+  printf("entering hunting loop\n");
   while(1) {
     printf("calling move_towards_target_smooth...");
     move_towards_target_smooth();

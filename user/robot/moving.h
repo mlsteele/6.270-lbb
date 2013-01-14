@@ -1,8 +1,10 @@
-#ifndef MOVING_H
-#define MOVING_H
+#ifndef _MOVING_H_
+#define _MOVING_H_
 #include <math.h>
 
-struct Point current_loc;
+#define TARGET_TOLERANCE 150
+
+Point current_loc;
 float current_angle = 0; //probably want to set it to a different value
 
 void set_starting_loc(void) {
@@ -11,25 +13,25 @@ void set_starting_loc(void) {
 	current_loc.y = 0;
 }
 
-void update_location() {
-	//use gps
-}
+// void update_location() {
+// 	//use gps
+// }
 
 void set_velocity(float v) {
-	motor_set_vel(MOTOR_L, v);
-	motor_set_vel(MOTOR_R, v);
+	motor_set_vel(PIN_MOTOR_DRIVE_L, v);
+	motor_set_vel(PIN_MOTOR_DRIVE_R, v);
 }
 
 void set_velocities(float l, float r) {
-	motor_set_vel(MOTOR_L, l);
-	motor_set_vel(MOTOR_R, r);
+	motor_set_vel(PIN_MOTOR_DRIVE_L, l);
+	motor_set_vel(PIN_MOTOR_DRIVE_R, r);
 }
 
 void brake(void) {
-//	motor_brake(MOTOR_R);
-//	motor_brake(MOTOR_L);
-	motor_set_vel(MOTOR_R ,0);
-	motor_set_vel(MOTOR_L, 0);
+//	motor_brake(PIN_MOTOR_DRIVE_R);
+//	motor_brake(PIN_MOTOR_DRIVE_L);
+	motor_set_vel(PIN_MOTOR_DRIVE_R ,0);
+	motor_set_vel(PIN_MOTOR_DRIVE_L, 0);
 }
 
 void deccelerate(float millis) {
@@ -69,7 +71,7 @@ void rotate(float degrees) {
 	current_angle = gyro_get_degrees();
 }
 
-void move_to(struct Point p, float velocity) {
+void move_to(Point p, float velocity) {
 	//moves in a straight line to the desired point at the desired velocity
 	current_angle = gyro_get_degrees();
 	float dist_x = p.x - current_loc.x;
@@ -80,10 +82,10 @@ void move_to(struct Point p, float velocity) {
 	rotate(desired_angle-current_angle);
 	set_velocity(velocity);
 
-	while (dist > DRIVE_TOLERANCE) {
-		update_location();
-		dist_x = p.x - current_loc.x;
-		dist_y = p.y - current_loc.y;
+	while (dist > TARGET_TOLERANCE) {
+		// update_location();
+		dist_x = p.x - vps_position.x;
+		dist_y = p.y - vps_position.y;
 		dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
 		pause(100);
 	}
@@ -96,4 +98,5 @@ void move_for_time(float velocity, float millis) {
 	pause(millis);
 	brake();
 }
-#ENDIF
+
+#endif

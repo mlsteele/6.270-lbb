@@ -1,6 +1,7 @@
 #ifndef _B_H_
 #define _B_H_
 
+#include <math.h>
 #include "../moving.h"
 
 void move_towards_target_smooth() {
@@ -9,9 +10,9 @@ void move_towards_target_smooth() {
 		acquire(&vps_data_lock);
 		Point goal = vps_active_target;
 		Point current = vps_position;
-		release(&vps_data_lock);
 
-		float delta_theta = atan((goal.y-current.y)/(goal.x-current.x))*180/M_PI - CURRENT_ANGLE;
+		float delta_theta = atan((goal.y-current.y)/(goal.x-current.x))*180/M_PI - vps_theta;
+		release(&vps_data_lock);
 
 		float dist = sqrt(pow((current.x-goal.x), 2)+pow(current.y-goal.y, 2));
 

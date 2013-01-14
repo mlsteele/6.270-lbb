@@ -1,14 +1,23 @@
-## These are defaults meant to be overwritten by $(USER).mk
 # User source files
-USERSRC = user/robot/not_a_plan.c
+USERSRC = user/robot/nicole/umain.c
+
 # Serial port
-AVRDUDE_USERPORT ?= /dev/tty.usbserial-A901B1ZT
+AVRDUDE_USERPORT ?= COM6
+
 # Mac Users - you may need to change this to stk500 if you get an error when programming
 PROGRAMMER = stk500v1
 
-# override with user specific build parameters
--include $(USER).mk
 
+
+
+
+
+
+
+
+####################################################
+#   NOTHING NEEDS TO BE CHANGED BELOW THIS POINT   #
+####################################################
 
 # Serial port for JTAG programmer
 AVRDUDE_PORT ?= /dev/tty.usbserial-A100099c

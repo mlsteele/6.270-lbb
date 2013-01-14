@@ -18,8 +18,8 @@ int umain (void) {
   // encoder_reset(PIN_ENCODER_WHEEL_R);
   printf("encs_init [%i, %i]\n", encoder_read(PIN_ENCODER_WHEEL_L), encoder_read(PIN_ENCODER_WHEEL_R));
 
-  printf("enter turn loop\n");
-  set_wheel_pows(-0.5, 0.5);
+  printf("power and enter turn loop\n");
+  set_wheel_pows(-0.3, 0.3);
 
   while(1) {
     printf("loop step:: gyro_deg: %f    ms: %i\n", gyro_get_degrees(), get_time());

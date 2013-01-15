@@ -240,3 +240,5 @@ simulate:
 
 monitor:
 	screen $(AVRDUDE_USERPORT) 19200
+
+nicole: clean program

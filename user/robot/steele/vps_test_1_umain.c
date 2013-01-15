@@ -17,18 +17,13 @@ int usetup (void) {
   return 0;
 }
 
-void print_vps_pos() {
-  Point vpp = get_vps_position();
-  printf("<%f, %f>  theta_ %f\n", vpp.x, vpp.y, get_vps_theta());
-}
-
 // smallest angle difference between two angles in degrees
 float ang_diff(float a, float b) {
   return fmin(a - b, a - b + 360);
 }
 
 // direction 1 for CCW or -1 for CW
-void rotate_to_angle(float theta_target, int direction) {
+void vps_rotate_to_angle(float theta_target, int direction) {
   float max_drive_speed = 0.35;
   float min_drive_speed = 0.12;
   float drive_speed = 0.32;
@@ -90,7 +85,7 @@ int umain (void) {
   print_vps_pos();
 
   printf("rotating to angle\n");
-  rotate_to_angle(0, 1);
+  vps_rotate_to_angle(0, 1);
   printf("done\n");
 
   return 0;

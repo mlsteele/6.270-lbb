@@ -111,4 +111,10 @@ void ensure_vps_data_newer_than_us(uint32_t us) {
   }
 }
 
+void print_vps_pos() {
+  Point vpp = get_vps_position();
+  printf("<%f, %f>  theta_ %f\n", vpp.x, vpp.y, get_vps_theta());
+}
+
+
 #endif

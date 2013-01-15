@@ -349,6 +349,13 @@ void copy_objects(){
     release(&objects_lock);
 }
 
+uint32_t get_position_microtime() {
+    acquire(&objects_lock);
+    uint32_t ret = position_microtime;
+    release(&objects_lock);
+    return ret;
+}
+
 // get a packet; return pipe number
 uint8_t rf_get_packet(uint8_t *buf, uint8_t *size) {
     uint8_t pipe;

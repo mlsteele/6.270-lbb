@@ -49,6 +49,7 @@ uint8_t rf_has_char();
 uint8_t rf_send_packet(uint8_t address, uint8_t *data, uint8_t len);
 
 void copy_objects();
+uint32_t get_position_microtime();
 
 extern volatile uint8_t robot_id;
 

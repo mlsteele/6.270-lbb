@@ -15,7 +15,8 @@ left_right_float_t last_motor_pows = {0, 0};
 #define TARGET_TOLERANCE 50
 
 float get_gyro_current_angle() {
-	return fmod(gyro_get_degrees(), 360);
+	//return fmod(gyro_get_degrees(), 360);
+	return gyro_get_degrees();
 }
 
 // TODO: do this

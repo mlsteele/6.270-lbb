@@ -3,6 +3,15 @@
 
 #include <moving.h>
 
+Point get_position() {
+	//return get_vps_position();
+	return get_encoder_position();
+}
+
+float get_theta() {
+	return fmod(gyro_get_degrees(), 360);
+}
+
 void move_towards_target_smooth() {
 	printf("Hello from move_towards_target_smooth()\n");
 	set_wheel_pows(0,0);
@@ -10,10 +19,10 @@ void move_towards_target_smooth() {
 		printf("Hello from the while loop!\n" );
 		//acquire(&vps_data_lock);
 		//printf("Hello from acquire vps_data_lock\n");
-		Point goal = get_vps_active_target();
-		Point current = get_vps_position();
+		Point goal = vps_fake_active_target();
+		Point current = get_position();
 
-		float delta_theta = -atan((goal.y-current.y)/(goal.x-current.x))*180/M_PI + get_vps_theta();
+		float delta_theta = -atan2((goal.y-current.y),(goal.x-current.x))*180/M_PI + get_theta();
 		//release(&vps_data_lock);
 
 		if(delta_theta < -180) {delta_theta += 360;}
@@ -22,7 +31,7 @@ void move_towards_target_smooth() {
 
 		printf("\nGoal: (%.1f,%.1f)\n", goal.x, goal.y);
 		printf("Current: (%.1f,%.1f)\n", current.x, current.y);
-		printf("Current theta: %.1f\n", vps_theta);
+		printf("Current theta: %.1f\n", get_theta());
 		printf("Delta theta: %.1f\n", delta_theta);
 		printf("Dist: %.3f\n", dist);
 

@@ -13,6 +13,7 @@
 
 Point current_guess_pos = {0, 0};
 float current_guess_theta = 0;
+struct lock encoder_data_lock;
 
 int encoder_position_daemon() {
   uint32_t last_read = get_time();
@@ -41,9 +42,20 @@ int encoder_position_daemon() {
 }
 
 void encoder_position_daemon_init() {
-  // init_lock(&vps_data_lock, "vps_data_lock");
+  init_lock(&encoder_data_lock, "encoder_data_lock");
   create_thread(encoder_position_daemon, STACK_DEFAULT, 0, "encoder_position_daemon");
 }
 
+Point get_encoder_position() {
+  acquire(&encoder_data_lock);
+  return current_guess_pos;
+  release(&encoder_data_lock);
+}
+
+Point get_encoder_theta() {
+  acquire(&encoder_data_lock);
+  return current_guess_theta;
+  release(&encoder_data_lock);
+}
 
 #endif

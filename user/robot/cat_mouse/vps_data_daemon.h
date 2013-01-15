@@ -8,7 +8,7 @@
 #include <Point.h>
 
 #define UNITS_VPS_TO_MM 0.5953
-#define UNITS_VPS_TO_DEG 0.08789;
+#define UNITS_VPS_TO_DEG 0.08789
 
 Point vps_active_target;
 Point vps_position;

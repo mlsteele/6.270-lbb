@@ -13,9 +13,10 @@
 
 
 // PHYSICAL
-#warning these physical constant definitions are notoriously uninformed
+#warning mm_wheel_from_center is a lie
 #define MM_WHEEL_FROM_CENTER 50
-#define MM_PER_TICK_WHEELS 4
+// 32 inches in ~470 ticks
+#define MM_PER_TICK_WHEELS 1.7293617
 #define LSB_US_PER_DEG 1386583
 
 // CONVERSION

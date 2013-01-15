@@ -15,9 +15,10 @@ float read_rotational_encoding() {
 int umain() {
   encoder_reset(PIN_ENCODER_WHEEL_L);
   encoder_reset(PIN_ENCODER_WHEEL_R);
+  float start_gyro = gyro_get_degrees();
 
   set_wheel_pows(0.3, -0.3);
-  while(read_rotational_encoding() < 4 * M_PI * MM_WHEEL_FROM_CENTER) {
+  while(read_rotational_encoding() < 2.f * M_PI * MM_WHEEL_FROM_CENTER) {
     printf("cirtr: %f\n", read_rotational_encoding());
   }
 
@@ -25,4 +26,5 @@ int umain() {
   set_wheel_pows(0, 0);
   printf(" done\n");  
 
+  printf("%f\n", gyro_get_degrees() - start_gyro);
 }

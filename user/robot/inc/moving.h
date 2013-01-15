@@ -38,11 +38,13 @@ Point unimplemented_get_current_location() {
 // range [-1,1]
 // values out of bounds will be clipped to range
 void set_wheel_pows(float l, float r) {
+	// printf("set wheel pows to %f and %f\n", l, r);
 	motor_set_vel(PIN_MOTOR_DRIVE_L, l > -255 ? (l < 255 ? (l * 255) : 255) : -255);
-	// pause(0);
 	motor_set_vel(PIN_MOTOR_DRIVE_R, r > -255 ? (r < 255 ? (r * 255) : 255) : -255);
-	// pause(0);
-	printf("set wheel pows to %f and %f\n", l, r);
+
+	flush_encoder_position_integration();
+
+	// cache vals
 	last_motor_pows.l = l;
 	last_motor_pows.r = r;
 }

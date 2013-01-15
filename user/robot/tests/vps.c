@@ -1,7 +1,6 @@
-// Include headers from OS
 #include <joyos.h>
 #include <hw_config.h>
-#include "../cat_mouse/vps_data_daemon.h"
+#include <vps_data_daemon.h>
 
 int usetup (void) {
   extern volatile uint8_t robot_id;

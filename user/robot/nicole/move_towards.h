@@ -1,5 +1,5 @@
 #include <moving.h>
-#include "../cat_mouse/vps_data_daemon.h"
+#include <vps_data_daemon.h>
 #include "fake_vps_daemon.h"
 
 bool test = false;

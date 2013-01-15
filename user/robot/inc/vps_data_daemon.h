@@ -100,4 +100,15 @@ void wait_for_vps_read() {
   }
 }
 
+// block until a vps reading not older than us microseconds
+// UNTESTED
+void ensure_vps_data_newer_than_us(uint32_t us) {
+  // check in with vps
+  if (get_us_since_vps_read() > us) {
+    printf("waiting for vps...");
+    wait_for_vps_read();
+    printf(" done\n");
+  }
+}
+
 #endif

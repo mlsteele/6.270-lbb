@@ -82,4 +82,11 @@ float get_vps_theta() {
   return ret;
 }
 
+bool get_vps_daemon_has_run() {
+  acquire(&vps_data_lock);
+  bool ret = vps_daemon_has_run;
+  release(&vps_data_lock);
+  return ret;  
+}
+
 #endif

@@ -69,21 +69,28 @@ int usetup (void) {
 
 int umain (void) {
 	printf("Setup complete\n");
-	test = false;
-	// vps_data_daemon_init();
-	// printf("Initiated vps daemon\n");
-	// if (test) {
-	// 	fake_data_daemon_init();
-	// 	printf("Initiated fake data daemon\n");
-	// }
-	// target_tracking();
+	vps_data_daemon_init();
+	move_towards_test_mode = true;
+  printf("Initiated vps daemon\n");
+	if (move_towards_test_mode) {
+	 	fake_data_daemon_init();
+		printf("Initiated fake data daemon\n");
+  }
+
+  // wait for vps
+  while(!get_vps_daemon_has_run()) {
+    printf("waiting for vps to recv\n");
+    pause(500);
+  }
+
+	target_tracking();
 	//move_for_time(.5,1000);
-	rotate(-90);
-	pause(500);
-	rotate(-90);
-	pause(500);
-	rotate(-90);
-	pause(500);
-	rotate(-90);
+	// rotate(-90);
+	// pause(500);
+	// rotate(-90);
+	// pause(500);
+	// rotate(-90);
+	// pause(500);
+	// rotate(-90);
     return 0;
 }

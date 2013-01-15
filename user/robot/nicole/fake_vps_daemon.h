@@ -35,7 +35,7 @@ void generate_data() {
 }
 
 int fake_data_daemon() {
-  srand(gettime());
+  srand(get_time());
   first_run();
   while(1) {
     pause(20); // safety interval (arbitrary time)

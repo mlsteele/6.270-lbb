@@ -4,12 +4,46 @@
 #include <moving.h>
 
 Point get_position() {
-	//return get_vps_position();
-	return get_hybrid_position();
+	return get_vps_position();
+	//return get_hybrid_position();
 }
 
 float get_theta() {
-	return fmod(gyro_get_degrees(), 360);
+	//return fmod(gyro_get_degrees(), 360);
+	return get_vps_theta();
+}
+
+void rotate_to_angle(float theta_target, int direction) {
+  float max_drive_speed = 0.35;
+  float min_drive_speed = 0.12;
+  float drive_speed = 0.32;
+  float theta_thresh = 7;
+
+  set_wheel_pows(-drive_speed * direction, drive_speed * direction);
+
+  float angdiff = ang_diff(theta_target, get_vps_theta());
+  
+  printf("initial angdiff %f\n", angdiff);
+  while(angdiff > theta_thresh) {
+    // check in with vps
+    if (get_us_since_vps_read() > 100000) {
+      set_wheel_pows(0,0);
+      printf("waiting for vps...");
+      wait_for_vps_read();
+      printf(" done\n");
+    }
+
+    angdiff = ang_diff(theta_target, get_vps_theta());
+    printf("loop angdiff %f\n", angdiff);
+    print_vps_pos();
+    float drive_factor = fmin(angdiff / 90, 1);
+    drive_speed = max_drive_speed * drive_factor + min_drive_speed;
+    set_wheel_pows(-drive_speed * direction, drive_speed * direction);
+
+    pause(5);
+  }
+
+  set_wheel_pows(0, 0);
 }
 
 void move_towards_target_smooth() {
@@ -21,8 +55,9 @@ void move_towards_target_smooth() {
 		//printf("Hello from acquire vps_data_lock\n");
 		Point goal = vps_fake_active_target();
 		Point current = get_position();
+		float theta = get_theta();
 
-		float delta_theta = -atan2((goal.y-current.y),(goal.x-current.x))*180/M_PI + get_theta();
+		float delta_theta = -atan2((goal.y-current.y),(goal.x-current.x))*180/M_PI + theta;
 		//release(&vps_data_lock);
 
 		if(delta_theta < -180) {delta_theta += 360;}
@@ -31,7 +66,7 @@ void move_towards_target_smooth() {
 
 		printf("\nGoal: (%.1f,%.1f)\n", goal.x, goal.y);
 		printf("Current: (%.1f,%.1f)\n", current.x, current.y);
-		printf("Current theta: %.1f\n", get_theta());
+		printf("Current theta: %.1f\n", theta);
 		printf("Delta theta: %.1f\n", delta_theta);
 		printf("Dist: %.3f\n", dist);
 

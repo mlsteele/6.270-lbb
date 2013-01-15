@@ -8,13 +8,13 @@ void move_towards_target_smooth() {
 	set_wheel_pows(0,0);
 	while(1) {
 		printf("Hello from the while loop!\n" );
-		acquire(&vps_data_lock);
-		printf("Hello from acquire vps_data_lock\n");
-		Point goal = vps_active_target;
-		Point current = vps_position;
+		//acquire(&vps_data_lock);
+		//printf("Hello from acquire vps_data_lock\n");
+		Point goal = get_vps_active_target();
+		Point current = get_vps_position();
 
-		float delta_theta = -atan((goal.y-current.y)/(goal.x-current.x))*180/M_PI + vps_theta;
-		release(&vps_data_lock);
+		float delta_theta = -atan((goal.y-current.y)/(goal.x-current.x))*180/M_PI + get_vps_theta();
+		//release(&vps_data_lock);
 
 		if(delta_theta < -180) {delta_theta += 360;}
 		if(delta_theta > 180) {delta_theta -= 360;}
@@ -37,11 +37,11 @@ void move_towards_target_smooth() {
 			float vel_2 = 150/255;
 
 			if(delta_theta>0) {
-				printf("set_velocities(%.1f,%.1f)\n",vel_1, vel_2);
+				printf("set_wheel_pows(%.1f,%.1f)\n",vel_1, vel_2);
 				set_wheel_pows(vel_1, vel_2);
 			}
 			else {
-				printf("set_velocities(%.1f,%.1f)\n",vel_2, vel_1);
+				printf("set_wheel_pows(%.1f,%.1f)\n",vel_2, vel_1);
 				set_wheel_pows(vel_2, vel_1);
 			}
 		}

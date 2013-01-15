@@ -5,7 +5,7 @@ AVRDUDE_USERPORT ?= COM6
 # Mac Users - you may need to change this to stk500 if you get an error when programming
 PROGRAMMER = stk500v1
 
-
+-include miles.mk # loads miles make config if it's nearby
 
 
 

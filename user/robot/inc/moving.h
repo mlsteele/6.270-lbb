@@ -41,6 +41,7 @@ void set_wheel_pows(float l, float r) {
 	// pause(0);
 	motor_set_vel(PIN_MOTOR_DRIVE_R, r > -255 ? (r < 255 ? (r * 255) : 255) : -255);
 	// pause(0);
+	printf("set wheel pows to %f and %f\n", l, r);
 	last_motor_pows.l = l;
 	last_motor_pows.r = r;
 }
@@ -70,18 +71,25 @@ void rotate(float degrees) {
 
 	}
 	else {
+		if (get_gyro_current_angle() < desired_angle) {
+				printf("%f is less than %f\n", get_gyro_current_angle(), desired_angle);
+			}
+			else{
+				printf("%f is greater than %f\n", get_gyro_current_angle(), desired_angle);
+			}
 		if (degrees>0) {
-			set_wheel_pows(0.58, -0.58);
-			while (fmod(gyro_get_degrees(),360) < desired_angle) {
+			while (get_gyro_current_angle() < desired_angle) {
+				set_wheel_pows(-0.58, 0.58);
 				printf("current angle = %f \n", get_gyro_current_angle());
 			}
 		}
 		else {
-			set_wheel_pows(-0.58, 0.58);
-			while (fmod(gyro_get_degrees(),360) > desired_angle) {
+			while (get_gyro_current_angle() > desired_angle) {
+				set_wheel_pows(0.58, -0.58);
 				printf("current angle = %f \n", get_gyro_current_angle());
 			}
 		}
+		printf("Done rotating\n");
 		wheels_brake();
 		printf("End rotate.\n\n");
 	}

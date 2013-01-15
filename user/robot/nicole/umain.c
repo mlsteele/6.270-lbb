@@ -56,6 +56,8 @@ void deccelerate(float millis) {
 
 
 int usetup (void) {
+	extern volatile uint8_t robot_id;
+  	robot_id = 8;
 	printf("Stabilizing\n");
 	pause(500);
 	printf("Initiating gyro\n");
@@ -67,13 +69,21 @@ int usetup (void) {
 
 int umain (void) {
 	printf("Setup complete\n");
-	test = true;
-	vps_data_daemon_init();
-	printf("Initiated vps daemon\n");
-	if (test) {
-		fake_data_daemon_init();
-		printf("Initiated fake data daemon\n");
-	}
-	target_tracking();
+	test = false;
+	// vps_data_daemon_init();
+	// printf("Initiated vps daemon\n");
+	// if (test) {
+	// 	fake_data_daemon_init();
+	// 	printf("Initiated fake data daemon\n");
+	// }
+	// target_tracking();
+	//move_for_time(.5,1000);
+	rotate(-90);
+	pause(500);
+	rotate(-90);
+	pause(500);
+	rotate(-90);
+	pause(500);
+	rotate(-90);
     return 0;
 }

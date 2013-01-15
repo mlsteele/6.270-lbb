@@ -30,21 +30,15 @@
 #define UNITS_VPS_TO_DEG 0.08789
 
 
-// whatever
+// COMMON
+
+#define DIRECTION_CW -1
+#define DIRECTION_CCW 1
 
 typedef struct {
   float r;
   float l;
 } left_right_float_t;
-
-
-// float fmin(float a, float b) {
-//   return a > b ? b : a;
-// }
-
-// float fmax(float a, float b) {
-//   return a > b ? a : b;
-// }
 
 float fclamp(float n, float low, float high) {
   return (n < high) ? ((n > low) ? n : low) : high;

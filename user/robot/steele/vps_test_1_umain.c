@@ -42,7 +42,7 @@ void vps_rotate_to_angle(float theta_target, int direction) {
   printf("initial angdiff %f\n", angdiff);
   while(angdiff > theta_thresh) {
     // check in with vps
-    if (get_us_since_vps_read() > 100000) {
+    if (get_us_since_vps_read() > LOST_VPS_US) {
       set_wheel_pows(0,0);
       printf("waiting for vps...");
       wait_for_vps_read();
@@ -63,7 +63,7 @@ void vps_rotate_to_angle(float theta_target, int direction) {
 }
 
 void vps_rotate_towards_point(Point target, int direction) {
-  ensure_vps_data_newer_than_us(100000);
+  ensure_vps_data_newer_than_us(LOST_VPS_US);
   vps_rotate_to_angle(get_angle_between_points(get_vps_position(), get_vps_active_target()), DIRECTION_CCW);
 }
 
@@ -72,7 +72,7 @@ void vps_go_forward_until(bool (*are_we_there_yet) ()) {
   // float min_drive_speed = 0.12;
   while(!are_we_there_yet()) {
     set_wheel_pows(0, 0);
-    ensure_vps_data_newer_than_us(100000);
+    ensure_vps_data_newer_than_us(LOST_VPS_US);
     set_wheel_pows(max_drive_speed, max_drive_speed);
   }
   set_wheel_pows(0, 0);
@@ -110,23 +110,43 @@ int umain (void) {
   wait_for_vps_read();
   printf(" done\n");
 
-  // while(1) {
-  //   print_vps_pos();
-  //   pause(200);
-  // }
-
   print_vps_pos();
 
-  printf("rotating to angle\n");
-  vps_rotate_to_angle(0, 1);
-  printf("done\n");
+  printf("rotating to angle 0...");
+  vps_rotate_to_angle(0, DIRECTION_CCW);
+  printf("--> rotate done\n");
+  set_wheel_pows(0, 0);
+  print_vps_pos();
+  pause(500);
+
+  printf("rotating to angle 90...");
+  vps_rotate_to_angle(90, DIRECTION_CCW);
+  printf("--> rotate done\n");
+  set_wheel_pows(0, 0);
+  print_vps_pos();
+  pause(500);
+
+  printf("rotating to angle 180...");
+  vps_rotate_to_angle(180, DIRECTION_CCW);
+  printf("--> rotate done\n");
+  set_wheel_pows(0, 0);
+  print_vps_pos();
+  pause(500);
+
+  printf("rotating to angle 270...");
+  vps_rotate_to_angle(270, DIRECTION_CCW);
+  printf("--> rotate done\n");
+  set_wheel_pows(0, 0);
+  print_vps_pos();
+  pause(500);
+
 
   printf("entering section 2\n");
 
-  while(1) {
-    vps_rotate_towards_point(get_vps_active_target(), DIRECTION_CCW);
-    vps_go_forward_until(angle_is_too_far_from_target);
-  }
+  // while(1) {
+  //   vps_rotate_towards_point(get_vps_active_target(), DIRECTION_CCW);
+  //   vps_go_forward_until(angle_is_too_far_from_target);
+  // }
 
   return 0;
 }

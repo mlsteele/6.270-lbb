@@ -34,6 +34,7 @@
 
 #define DIRECTION_CW -1
 #define DIRECTION_CCW 1
+#define LOST_VPS_US 200000
 
 typedef struct {
   float r;

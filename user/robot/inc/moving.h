@@ -34,11 +34,6 @@ Point unimplemented_get_current_location() {
 // 	//use gps
 // }
 
-void set_velocity(float v) {
-	motor_set_vel(PIN_MOTOR_DRIVE_L, v * 255);
-	motor_set_vel(PIN_MOTOR_DRIVE_R, v * 255);
-}
-
 // range [-1,1]
 // values out of bounds will be clipped to range
 void set_wheel_pows(float l, float r) {
@@ -100,10 +95,10 @@ void move_to(Point p, float velocity) {
 	float desired_angle = atan(dist_y/dist_x);
 
 	rotate(desired_angle - get_gyro_current_angle());
-	set_velocity(velocity);
+	set_wheel_pows(velocity, velocity);
 
 // 	rotate(desired_angle-current_angle);
-// 	set_velocity(velocity);
+// 	set_wheel_pows(velocity, velocity);
 	while (dist > TARGET_TOLERANCE) {
 		// update_location();
 		dist_x = p.x - unimplemented_get_current_location().x;
@@ -116,7 +111,7 @@ void move_to(Point p, float velocity) {
 
 void move_for_time(float velocity, float millis) {
 	printf("Moving for a certain amount of time");
-	set_velocity(velocity);
+	set_wheel_pows(velocity, velocity);
 	pause(millis);
 	wheels_brake();
 }

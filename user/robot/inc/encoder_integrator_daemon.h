@@ -1,8 +1,5 @@
-// Periodically updates and converts values from the vps system.
-// When using vps data be sure to handle the vps_data_lock
-
-#ifndef _ENCODER_POSITION_DAEMON_H_
-#define _ENCODER_POSITION_DAEMON_H_
+#ifndef _ENCODER_INTEGRATOR_DAEMON_H_
+#define _ENCODER_INTEGRATOR_DAEMON_H_
 
 #include <joyos.h>
 #include <math.h>

@@ -27,4 +27,13 @@
 // CONVERSION
 #define DEGS_TO_RADS 0.01745328f
 
+
+// whatever
+
+typedef struct {
+  float r;
+  float l;
+} left_right_float_t;
+
+
 #endif

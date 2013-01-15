@@ -16,22 +16,6 @@ float get_gyro_current_angle() {
 	return gyro_get_degrees();
 }
 
-// TODO: do this
-Point unimplemented_get_current_location() {
-	Point p = {0,0};
-	return p;
-}
-
-// void set_starting_loc() {
-// 	//use gps
-// 	current_loc.x = 0;
-// 	current_loc.y = 0;
-// }
-
-// void update_location() {
-// 	//use gps
-// }
-
 // range [-1,1]
 // values out of bounds will be clipped to rangeht
 void set_wheel_pows(float l, float r) {
@@ -39,7 +23,7 @@ void set_wheel_pows(float l, float r) {
 	motor_set_vel(PIN_MOTOR_DRIVE_L, l > -255 ? (l < 255 ? (l * 255) : 255) : -255);
 	motor_set_vel(PIN_MOTOR_DRIVE_R, r > -255 ? (r < 255 ? (r * 255) : 255) : -255);
 
-	flush_hybrid_position_integration();
+	// flush_hybrid_position_integration();
 	// flush_encoder_position_integration();
 
 	// cache vals
@@ -96,27 +80,27 @@ void rotate(float degrees) {
 	}
 }
 
-void move_to(Point p, float velocity) {
-	//moves in a straight line to the desired point at the desired velocity
-	float dist_x = p.x - unimplemented_get_current_location().x;
-	float dist_y = p.y - unimplemented_get_current_location().y;
-	float dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
-	float desired_angle = atan(dist_y/dist_x);
+// void move_to(Point p, float velocity) {
+// 	//moves in a straight line to the desired point at the desired velocity
+// 	float dist_x = p.x - unimplemented_get_current_location().x;
+// 	float dist_y = p.y - unimplemented_get_current_location().y;
+// 	float dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
+// 	float desired_angle = atan(dist_y/dist_x);
 
-	rotate(desired_angle - get_gyro_current_angle());
-	set_wheel_pows(velocity, velocity);
-
-// 	rotate(desired_angle-current_angle);
+// 	rotate(desired_angle - get_gyro_current_angle());
 // 	set_wheel_pows(velocity, velocity);
-	while (dist > TARGET_TOLERANCE) {
-		// update_location();
-		dist_x = p.x - unimplemented_get_current_location().x;
-		dist_y = p.y - unimplemented_get_current_location().y;
-		dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
-		pause(100);
-	}
-	wheels_brake();
-}
+
+// // 	rotate(desired_angle-current_angle);
+// // 	set_wheel_pows(velocity, velocity);
+// 	while (dist > TARGET_TOLERANCE) {
+// 		// update_location();
+// 		dist_x = p.x - unimplemented_get_current_location().x;
+// 		dist_y = p.y - unimplemented_get_current_location().y;
+// 		dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
+// 		pause(100);
+// 	}
+// 	wheels_brake();
+// }
 
 void move_for_time(float velocity, float millis) {
 	printf("Moving for a certain amount of time");

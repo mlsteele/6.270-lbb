@@ -13,7 +13,6 @@
 
 
 // PHYSICAL
-#warning mm_wheel_from_center is a lie
 // this one is a lie
 // #define MM_WHEEL_FROM_CENTER 81.5
 // this one is the truth
@@ -27,6 +26,9 @@
 // CONVERSION
 #define DEGS_TO_RADS 0.01745328f
 
+#define UNITS_VPS_TO_MM 0.5953
+#define UNITS_VPS_TO_DEG 0.08789
+
 
 // whatever
 
@@ -35,5 +37,17 @@ typedef struct {
   float l;
 } left_right_float_t;
 
+
+// float fmin(float a, float b) {
+//   return a > b ? b : a;
+// }
+
+// float fmax(float a, float b) {
+//   return a > b ? a : b;
+// }
+
+float fclamp(float n, float low, float high) {
+  return (n < high) ? ((n > low) ? n : low) : high;
+}
 
 #endif

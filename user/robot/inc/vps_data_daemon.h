@@ -5,23 +5,19 @@
 #define _VPS_DATA_DAEMON_H_
 
 #include <joyos.h>
+#include <hw_config.h>
 #include <Point.h>
-
-#define UNITS_VPS_TO_MM 0.5953
-#define UNITS_VPS_TO_DEG 0.08789
 
 Point vps_active_target;
 Point vps_position;
 float vps_theta;
 
-uint32_t vps_last_good_read;
-
 bool vps_daemon_has_run = false;
 struct lock vps_data_lock;
 
-void convert_vps_pos_to_mm_pos(board_coord* src, Point* target) {
-  target->x = src->x * UNITS_VPS_TO_MM;
-  target->y = src->y * UNITS_VPS_TO_MM;
+Point convert_vps_pos_to_mm_pos(board_coord src) {
+  Point ret = {src.x * UNITS_VPS_TO_MM, src.y * UNITS_VPS_TO_MM};
+  return ret;
 }
 
 bool vps_coords_isnt_zero() {
@@ -36,12 +32,12 @@ void vps_download_info() {
   copy_objects();
   //printf("game.coords: [0]: %d,%d ... [1]: %d,%d\n", game.coords[0].x,game.coords[0].y, game.coords[1].x,game.coords[1].y);
 
-  //if(vps_coords_isnt_zero()){
-    convert_vps_pos_to_mm_pos(&game.coords[0], &vps_position);
-    convert_vps_pos_to_mm_pos(&game.coords[1], &vps_active_target);
+  if(vps_coords_isnt_zero() || vps_daemon_has_run) {
+    vps_position = convert_vps_pos_to_mm_pos(game.coords[0]);
+    vps_active_target = convert_vps_pos_to_mm_pos(game.coords[1]);
     vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;
     vps_daemon_has_run = true;
-  //}
+  }
   release(&vps_data_lock);
 }
 
@@ -87,6 +83,21 @@ bool get_vps_daemon_has_run() {
   bool ret = vps_daemon_has_run;
   release(&vps_data_lock);
   return ret;  
+}
+
+float get_vps_last_read_us() {
+  return get_position_microtime();
+}
+
+float get_us_since_vps_read() {
+  return get_time_us() - get_vps_last_read_us();
+}
+
+void wait_for_vps_read() {
+  uint32_t last_read_us = get_vps_last_read_us();
+  while(get_vps_last_read_us() == last_read_us) {
+    pause(1);
+  }
 }
 
 #endif

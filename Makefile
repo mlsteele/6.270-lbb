@@ -1,5 +1,6 @@
-# User source files
-USERSRC = user/robot/nicole/umain.c
+# User entry point (umain)
+USERMAIN ?= user/robot/nicole/umain.c
+
 # Serial port
 AVRDUDE_USERPORT ?= COM4
 
@@ -8,19 +9,8 @@ PROGRAMMER = stk500v1
 
 -include miles.mk # loads miles make config if it's nearby
 
-
-
-
-
-
-
-####################################################
-#   NOTHING NEEDS TO BE CHANGED BELOW THIS POINT   #
-####################################################
-
 # Serial port for JTAG programmer
 AVRDUDE_PORT ?= /dev/tty.usbserial-A100099c
-
 
 # Use Arduino Toolchain if on Darwin
 ifeq (${shell uname}, Darwin)
@@ -128,6 +118,9 @@ BOOTSRC = 	src/boot/hboot.c \
 			src/hal/io.c \
 			src/hal/delay.c \
 
+USERSRC = user/robot/src/mktestfoo.c \
+					$(USERMAIN)
+
 # ALL source files
 SRC = $(DRIVERSRC) $(KERNELSRC) $(HALSRC) $(USERSRC)
 
@@ -148,6 +141,9 @@ BOOTOBJ = $(BOOTSRC:.c=.o)
 
 # Objects for library
 DISTOBJ = $(DISTSRC:.c=.o)
+
+# User objects
+USEROBJ = $(USERSRC:.c=.o)
 
 all: $(OSLIB) $(HLLIB) $(BOOTTARGET) size docs
 
@@ -203,7 +199,7 @@ $(HLLIB): $(HLOBJ)
 
 clean:
 	@echo "-- Cleaning objects"
-	@rm -f $(OBJ) $(BOOTOBJ) $(HLOBJ)
+	@rm -f $(OBJ) $(BOOTOBJ) $(HLOBJ) $(USEROBJ)
 	@rm -f $(OSELF) $(OSTARGET) $(OSLIB) $(HLLIB)
 	@rm -f $(BOOTELF) $(BOOTTARGET)
 	@rm -f gdbinit
@@ -239,6 +235,7 @@ simulate:
 .PHONY: all
 
 monitor:
-	screen $(AVRDUDE_USERPORT) 19200
+	screen -L $(AVRDUDE_USERPORT) 19200
+	# screen $(AVRDUDE_USERPORT) 19200
 
 nicole: clean program

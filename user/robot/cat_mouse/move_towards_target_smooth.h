@@ -5,7 +5,7 @@
 
 Point get_position() {
 	//return get_vps_position();
-	return get_encoder_position();
+	return get_hybrid_position();
 }
 
 float get_theta() {

@@ -14,6 +14,8 @@ Point vps_active_target;
 Point vps_position;
 float vps_theta;
 
+uint32_t vps_last_good_read;
+
 bool vps_daemon_has_run = false;
 struct lock vps_data_lock;
 
@@ -21,18 +23,24 @@ void convert_vps_pos_to_mm_pos(board_coord* src, Point* target) {
   target->x = src->x * UNITS_VPS_TO_MM;
   target->y = src->y * UNITS_VPS_TO_MM;
 }
+bool vps_coords_isnt_zero() { // probably won't be used!?
+  return !( game.coords[0].x     == 0 &&
+            game.coords[0].y     == 0 &&
+            game.coords[0].theta == 0 && );
+}
 
 void vps_download_info() {
   acquire(&vps_data_lock);
   //printf("Starting copy_objects()...\n");
   copy_objects();
   //printf("game.coords: [0]: %d,%d ... [1]: %d,%d\n", game.coords[0].x,game.coords[0].y, game.coords[1].x,game.coords[1].y);
-  convert_vps_pos_to_mm_pos(&game.coords[0], &vps_position);
-  convert_vps_pos_to_mm_pos(&game.coords[1], &vps_active_target);
-  vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;
 
-  vps_daemon_has_run = true;
-
+  //if(vps_coords_isnt_zero()){
+    convert_vps_pos_to_mm_pos(&game.coords[0], &vps_position);
+    convert_vps_pos_to_mm_pos(&game.coords[1], &vps_active_target);
+    vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;
+    vps_daemon_has_run = true;
+  //}
   release(&vps_data_lock);
 }
 
@@ -51,5 +59,26 @@ void vps_data_daemon_init() {
   create_thread(vps_data_daemon, STACK_DEFAULT, 0, "vps_daemon");
 }
 
+//Accessors!
+Point get_vps_position() {
+  acquire(&vps_data_lock);
+  Point ret = vps_position;
+  release(&vps_data_lock);
+  return ret;
+}
+
+Point get_vps_active_target() {
+  acquire(&vps_data_lock);
+  Point ret = vps_active_target;
+  release(&vps_data_lock);
+  return ret;
+}
+
+float get_vps_theta() {
+  acquire(&vps_data_lock);
+  Point ret = vps_theta;
+  release(&vps_data_lock);
+  return ret;
+}
 
 #endif

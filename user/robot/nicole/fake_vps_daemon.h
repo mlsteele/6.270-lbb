@@ -35,7 +35,7 @@ void generate_data() {
 }
 
 int fake_data_daemon() {
-  srand(8);
+  srand(gettime());
   first_run();
   while(1) {
     pause(20); // safety interval (arbitrary time)
@@ -48,4 +48,11 @@ int fake_data_daemon() {
 void fake_data_daemon_init() {
   init_lock(&fake_data_lock, "fake_data_lock");
   create_thread(fake_data_daemon, STACK_DEFAULT, 0, "fake_daemon");
+}
+
+Point get_fake_vps_active_target() {
+  acquire(&fake_data_lock);
+  Point ret = fake_active_target;
+  release(&fake_data_lock);
+  return ret;
 }

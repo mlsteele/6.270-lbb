@@ -15,10 +15,10 @@ struct lock encoder_data_lock;
 Point current_guess_pos = {0, 0};
 float current_guess_theta = 0;
 
-left_right_float_t enc_int_last_encs = {0, 0};
+l_r_float_t enc_int_last_encs = {0, 0};
 
 void flush_encoder_position_integration() {
-  left_right_float_t delta_encs = {
+  l_r_float_t delta_encs = {
     (get_wheel_pows().l > 0 ? 1 : -1) * MM_PER_TICK_WHEELS * (encoder_read(PIN_ENCODER_WHEEL_L) - enc_int_last_encs.l) ,
     (get_wheel_pows().r > 0 ? 1 : -1) * MM_PER_TICK_WHEELS * (encoder_read(PIN_ENCODER_WHEEL_R) - enc_int_last_encs.r) };
 

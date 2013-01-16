@@ -21,7 +21,7 @@ void hybrid_orient_at(float theta, int direction) {
 // direction 1 for forwards or -1 for backwards
 void hybrid_go_straight_by(float mm, int direction) {
   float drive_speed = 0.4;
-  left_right_float_t start_encs = {encoder_read(PIN_ENCODER_WHEEL_L), encoder_read(PIN_ENCODER_WHEEL_R)};
+  l_r_float_t start_encs = {encoder_read(PIN_ENCODER_WHEEL_L), encoder_read(PIN_ENCODER_WHEEL_R)};
 
   set_wheel_pows(drive_speed * direction, drive_speed * direction);
   float avg_dist_trav = 0;

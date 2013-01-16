@@ -2,11 +2,12 @@
 #define _MOVING_H_
 
 #include <math.h>
+#include <hw_config.h>
 #include <Point.h>
 // #include <hybrid_integrator_daemon.h>
 // #include <encoder_integrator_daemon.h>
 
-left_right_float_t last_motor_pows = {0, 0};
+l_r_float_t last_motor_pows = {0, 0};
 
 #define DEFAULT_SPEED .58
 #define TARGET_TOLERANCE 50
@@ -14,6 +15,13 @@ left_right_float_t last_motor_pows = {0, 0};
 float get_gyro_current_angle() {
 	//return fmod(gyro_get_degrees(), 360);
 	return gyro_get_degrees();
+}
+
+l_r_uint16_t get_encoders() {
+  l_r_uint16_t encs;
+  encs.l = encoder_read(PIN_ENCODER_WHEEL_L);
+  encs.r = encoder_read(PIN_ENCODER_WHEEL_R);
+  return encs;
 }
 
 // range [-1,1]
@@ -31,20 +39,11 @@ void set_wheel_pows(float l, float r) {
 	last_motor_pows.r = r;
 }
 
-left_right_float_t get_wheel_pows() { return last_motor_pows; }
+l_r_float_t get_wheel_pows() { return last_motor_pows; }
+void print_wheel_pows() { printf("wheel_pows [%f, %f]\n", get_wheel_pows().l, get_wheel_pows().r); }
 
 void wheels_brake() {
 	set_wheel_pows(0, 0);
-}
-
-void decelerate(float millis) {
-	//decelerates in the given amount of time
-	//use jess's code
-}
-
-int robot_moving() {
-	//need to call jess's methods
-	return 0;
 }
 
 void rotate(float degrees) {
@@ -52,32 +51,31 @@ void rotate(float degrees) {
 	printf("start angle = %f \n", get_gyro_current_angle());
 	float desired_angle = get_gyro_current_angle() + degrees;
 	printf("desired_angle = %f \n", desired_angle);
-	if (robot_moving()) {
 
+	// NOTE: (miles) removed the no-op if statement that was waiting for robot_moving to be implemented
+	if (get_gyro_current_angle() < desired_angle) {
+		printf("%f is less than %f\n", get_gyro_current_angle(), desired_angle);
 	}
 	else {
-		if (get_gyro_current_angle() < desired_angle) {
-				printf("%f is less than %f\n", get_gyro_current_angle(), desired_angle);
-			}
-			else{
-				printf("%f is greater than %f\n", get_gyro_current_angle(), desired_angle);
-			}
-		if (degrees>0) {
-			while (get_gyro_current_angle() < desired_angle) {
-				set_wheel_pows(-0.58, 0.58);
-				printf("current angle = %f \n", get_gyro_current_angle());
-			}
-		}
-		else {
-			while (get_gyro_current_angle() > desired_angle) {
-				set_wheel_pows(0.58, -0.58);
-				printf("current angle = %f \n", get_gyro_current_angle());
-			}
-		}
-		printf("Done rotating\n");
-		wheels_brake();
-		printf("End rotate.\n\n");
+		printf("%f is greater than %f\n", get_gyro_current_angle(), desired_angle);
 	}
+
+	if (degrees > 0) {
+		while (get_gyro_current_angle() < desired_angle) {
+			set_wheel_pows(-0.58, 0.58);
+			printf("current angle = %f \n", get_gyro_current_angle());
+		}
+	}
+	else {
+		while (get_gyro_current_angle() > desired_angle) {
+			set_wheel_pows(0.58, -0.58);
+			printf("current angle = %f \n", get_gyro_current_angle());
+		}
+	}
+
+	printf("Done rotating\n");
+	wheels_brake();
+	printf("End rotate.\n\n");
 }
 
 // void move_to(Point p, float velocity) {
@@ -102,16 +100,52 @@ void rotate(float degrees) {
 // 	wheels_brake();
 // }
 
-void move_for_time(float velocity, float millis) {
-	printf("Moving for a certain amount of time");
+float get_heading() {
+	//do some fancy averaging thing instead
+	return gyro_get_degrees();
+}
+
+void move_for_time(float velocity, uint32_t millis) {
+	printf("Moving at vel [%f] for time: %ims", velocity, millis);
 	set_wheel_pows(velocity, velocity);
 	pause(millis);
 	wheels_brake();
 }
 
-float get_heading() {
-	//do some fancy averaging thing instead
-	return gyro_get_degrees();
+// ~1.2mm overshoot
+void move_distance_by_encoders(float distance_mm) {
+	set_wheel_pows(0, 0);
+
+	int direction = distance_mm > 0 ? 1 : -1;
+	if (direction == -1) distance_mm = fabs(distance_mm);
+
+	float drive_max = 0.68;
+	float drive_min = 0.25;
+
+	l_r_uint16_t encoders_start = get_encoders();
+	l_r_float_t delta_encs_mm = {0, 0};
+	while (delta_encs_mm.l < distance_mm || delta_encs_mm.r < distance_mm) {
+		delta_encs_mm.l = (get_encoders().l - encoders_start.l) * MM_PER_TICK_WHEELS;
+		delta_encs_mm.r = (get_encoders().r - encoders_start.r) * MM_PER_TICK_WHEELS;
+
+		float wheel_pow_maybe_l = direction * fclamp( (distance_mm - delta_encs_mm.l) / 400 * (drive_max - drive_min) + drive_min, 0, 1 );
+		float wheel_pow_maybe_r = direction * fclamp( (distance_mm - delta_encs_mm.r) / 400 * (drive_max - drive_min) + drive_min, 0, 1 );
+
+		set_wheel_pows(
+			delta_encs_mm.l < distance_mm ? wheel_pow_maybe_l : 0 ,
+			delta_encs_mm.r < distance_mm ? wheel_pow_maybe_r : 0 );
+
+		// printf("wheel_pows [%f, %f]    traveled: [%f, %f]\n",
+		// 	get_wheel_pows().l, get_wheel_pows().r, delta_encs_mm.l - distance_mm, delta_encs_mm.r - distance_mm);
+
+		pause(2);
+	}
+
+	set_wheel_pows(0, 0);
+
+	printf("move_distance_by_encoders stats: traveled [%f][%f]  target [%f][%f]  diff[%f][%f]\n",
+		delta_encs_mm.l, delta_encs_mm.r, distance_mm, distance_mm, delta_encs_mm.l - distance_mm, delta_encs_mm.r - distance_mm);
 }
+
 
 #endif

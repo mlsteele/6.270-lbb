@@ -235,7 +235,6 @@ simulate:
 .PHONY: all
 
 monitor:
-	screen -L $(AVRDUDE_USERPORT) 19200
-	# screen $(AVRDUDE_USERPORT) 19200
+	screen -L $(AVRDUDE_USERPORT) 19200 && cat screenlog.0
 
 nicole: clean program

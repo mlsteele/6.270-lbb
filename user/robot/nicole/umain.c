@@ -27,7 +27,7 @@
 #include <math.h>
 #include <Point.h>
 #include <hw_config.h>
-#include "./move_towards.h"
+#include "../cat_mouse/move_towards_target_smooth.h"
 
  #define LSB_US_PER_DEG 1386583
  #define GRYO 21
@@ -35,7 +35,7 @@
  #define MOTOR_R 1
  #define DRIVE_TOLERANCE 150
 
-uint8_t team_number[2] = {1,0};
+//uint8_t team_number[2] = {1,0};
 Point current_loc;
 float current_angle = 0; //probably want to set it to a different value
 
@@ -68,29 +68,37 @@ int usetup (void) {
 }
 
 int umain (void) {
-	printf("Setup complete\n");
 	vps_data_daemon_init();
-	move_towards_test_mode = true;
-  printf("Initiated vps daemon\n");
-	if (move_towards_test_mode) {
-	 	fake_data_daemon_init();
-		printf("Initiated fake data daemon\n");
-  }
+	while (!get_vps_daemon_has_run()) {
+		printf("Waiting for vps\n");
+		pause(300);
+	}
+	//hybrid_position_daemon_init();
 
-  // wait for vps
-  while(!get_vps_daemon_has_run()) {
-    printf("waiting for vps to recv\n");
-    pause(500);
-  }
+	move_towards_target_smooth();
+	// printf("Setup complete\n");
+	// vps_data_daemon_init();
+	// move_towards_test_mode = true;
+ //  printf("Initiated vps daemon\n");
+	// if (move_towards_test_mode) {
+	//  	fake_data_daemon_init();
+	// 	printf("Initiated fake data daemon\n");
+ //  }
 
-	target_tracking();
-	//move_for_time(.5,1000);
-	// rotate(-90);
-	// pause(500);
-	// rotate(-90);
-	// pause(500);
-	// rotate(-90);
-	// pause(500);
-	// rotate(-90);
+ //  // wait for vps
+ //  while(!get_vps_daemon_has_run()) {
+ //    printf("waiting for vps to recv\n");
+ //    pause(500);
+ //  }
+
+	// target_tracking();
+	// //move_for_time(.5,1000);
+	// // rotate(-90);
+	// // pause(500);
+	// // rotate(-90);
+	// // pause(500);
+	// // rotate(-90);
+	// // pause(500);
+	// // rotate(-90);
     return 0;
 }

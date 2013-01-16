@@ -1,4 +1,4 @@
-// BROKEN
+                                            // BROKEN
 
 #ifndef _HYBRID_INTEGRATOR_DAEMON_H_
 #define _HYBRID_INTEGRATOR_DAEMON_H_
@@ -16,10 +16,20 @@ Point hybrid_int_pos = {0, 0};
 
 left_right_float_t hybrid_int_last_encs = {0, 0};
 
+left_right_float_t get_encoder_vals() {
+  left_right_float_t vals;
+  vals.l = encoder_read(PIN_ENCODER_WHEEL_L);
+  vals.r = encoder_read(PIN_ENCODER_WHEEL_R);
+  return vals;
+}
+
 void flush_hybrid_position_integration() {
+  left_right_float_t encoders = get_encoder_vals();
   left_right_float_t delta_encs = {
-    (get_wheel_pows().l > 0 ? 1 : -1) * MM_PER_TICK_WHEELS * (encoder_read(PIN_ENCODER_WHEEL_L) - hybrid_int_last_encs.l) ,
-    (get_wheel_pows().r > 0 ? 1 : -1) * MM_PER_TICK_WHEELS * (encoder_read(PIN_ENCODER_WHEEL_R) - hybrid_int_last_encs.r) };
+    (get_wheel_pows().l<0 ? -1 : 1)*(MM_PER_TICK_WHEELS * encoders.l - hybrid_int_last_encs.l) ,
+    (get_wheel_pows().r<0 ? -1 : 1)*(MM_PER_TICK_WHEELS * encoders.r - hybrid_int_last_encs.r) };
+
+  hybrid_int_last_encs = encoders;
 
   acquire(&hybrid_integrator_data_lock);
 
@@ -29,14 +39,10 @@ void flush_hybrid_position_integration() {
   hybrid_int_pos.y += distance_traveled_fd_axis * sin(gyro_get_degrees() * DEGS_TO_RADS);
 
   release(&hybrid_integrator_data_lock);
-
-  hybrid_int_last_encs.l = encoder_read(PIN_ENCODER_WHEEL_L);
-  hybrid_int_last_encs.r = encoder_read(PIN_ENCODER_WHEEL_R);
 }
 
 int hybrid_position_daemon() {
-  hybrid_int_last_encs.l = encoder_read(PIN_ENCODER_WHEEL_L);
-  hybrid_int_last_encs.r = encoder_read(PIN_ENCODER_WHEEL_R);
+  hybrid_int_last_encs = get_encoder_vals();
 
   while(1) {
     flush_hybrid_position_integration();

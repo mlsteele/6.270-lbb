@@ -1,5 +1,6 @@
 #include <joyos.h>
 #include <Point.h>
+#include <vps_data_daemon.h>
 
 Point fake_active_target;
 struct lock fake_data_lock;

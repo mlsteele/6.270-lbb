@@ -1,66 +1,71 @@
 
-#define ENCODER_PIN 25
-
 // Include headers from OS
 #include <joyos.h>
-#include "../encoder_utils.h"
+#include <hw_config.h>
+#include <Point.h>
 #include <moving.h>
+#include "get_vps.h"
+#include <math.h>
+
 //#include "../cat_mouse/move_towards_target_smooth.h"
-
-void move_towards_target_smooth(Point goal, Point current, float vps_theta) {
-	//set_velocity(0);
-	//while(1) {
-		//acquire(&vps_data_lock);
-		//Point goal = vps_active_target;
-		//Point current = vps_position;
-
-		float delta_theta = atan((goal.y-current.y)/(goal.x-current.x))*180/M_PI - vps_theta;
-		//release(&vps_data_lock);
-
-		float dist = sqrt(pow((current.x-goal.x), 2)+pow(current.y-goal.y, 2));
-
-		printf("Goal: (%f,%f)\n", goal.x, goal.y);
-		printf("Current: (%f,%f)\n", current.x, current.y);
-		printf("Current theta: %f\n", vps_theta);
-		printf("Delta theta: %f\n", delta_theta);
-		printf("Dist: %f\n", dist);
-
-		if(fabsf(delta_theta) > 1000/dist){
-			printf("fabsf(%f) > %f\nStopping and rotating", delta_theta, 1000/dist);
-			//set_velocity(0);
-			//rotate(delta_theta);
-			//set_velocity(150);
-		}else{
-			float vel_1 = 150 + delta_theta;
-			float vel_2 = 150;
-
-			if(delta_theta>0) {
-				printf("set_velocities(%f,%f)\n",vel_1, vel_2);
-			//	set_velocities(vel_1, vel_2);
-			}
-			else {
-				printf("set_velocities(%f,%f)\n",vel_2, vel_1);
-			//	set_velocities(vel_2, vel_1);
-			}
-		}
-
-		//pause(300);
-	//}
-}
 
 // usetup is called during the calibration period. 
 int usetup (void) {
-    return 0;
+  extern volatile uint8_t robot_id;
+  robot_id = 8;
+
+  return 0;
+}
+float find_distance(Point target) {
+	Point current = get_vps_current();
+	return sqrt(pow(target.y-current.y,2)+pow(target.x-current.x,2));
+}
+float target_theta(Point target) {
+	Point current = get_vps_current();
+	return atan2(target.y-current.y,target.x-current.x) * 180./M_PI;
+}
+void vps_rotate(float target_theta) {
+	printf("Rotating from %.2f to %.2f\n", get_vps_theta(), target_theta);
+	while(fabsf(target_theta - get_vps_theta()) > 5) {
+		printf("\t%.2f\n", get_vps_theta());
+		set_wheel_pows(-0.3, 0.3);
+	}
+	set_wheel_pows(0,0);
+}
+void vps_drive(Point target) {
+	printf("Driving to (%.2f, %.2f)\n", target.x, target.y);
+	while(fabsf(target_theta(target) - get_vps_theta()) < 50) {
+		printf("\t%.2fmm away\n", find_distance(target));
+		set_wheel_pows(0.5,0.5);
+	}
+	set_wheel_pows(0,0);
 }
 
 // Entry point to contestant code.
 int umain (void) {
-	Point[] targets = {{1000,1000},{0,500},{500,250}};
-	Point[] currents = {{0,0},{0,0}{0,1000}};
-	float[] thetas = {30., 10., 180.};
-	for(int i=0; i>3; i++){
-		move_towards_target_smooth(targets[i], currents[i], thetas[i]);
-		pause(500);
+	while(1) {
+
+	/*float targets[3][2] = {
+		{6.5,403.5},
+		{347.5,786.5},
+		{-524.5,219.5}
+	};*/
+		//Point target = get_vps_target();
+		//int i;
+		//for(i=0; i<3; i++){
+			Point target;
+			target.x = 6.5; //targets[i][0];
+			target.y = 403.5; //targets[i][1];
+			//printf("Got new target (%.2f, %.2f)\n", target.x, target.y);
+			printf("Moving to target %d (%.2f, %.2f)\n", 1, target.x, target.y);
+			vps_rotate(target_theta(target));
+			vps_drive(target);
+		//}
+		/*while(1) {
+			vps_dump();
+			pause(500);
+		}*/
 	}
     return 0;
 }
+

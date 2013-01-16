@@ -1,5 +1,3 @@
-
-// Include headers from OS
 #include <joyos.h>
 #include <hw_config.h>
 #include <Point.h>
@@ -9,39 +7,42 @@
 
 //#include "../cat_mouse/move_towards_target_smooth.h"
 
-// usetup is called during the calibration period. 
 int usetup (void) {
   extern volatile uint8_t robot_id;
   robot_id = 8;
 
   return 0;
 }
+
 float find_distance(Point target) {
 	Point current = get_vps_current();
 	return sqrt(pow(target.y-current.y,2)+pow(target.x-current.x,2));
 }
+
 float target_theta(Point target) {
 	Point current = get_vps_current();
 	return atan2(target.y-current.y,target.x-current.x) * 180./M_PI;
 }
+
 void vps_rotate(float target_theta) {
 	printf("Rotating from %.2f to %.2f\n", get_vps_theta(), target_theta);
-	while(fabsf(target_theta - get_vps_theta()) > 5) {
+	while(fabs(ang_diff(target_theta, get_vps_theta())) > 5) {
 		printf("\t%.2f\n", get_vps_theta());
-		set_wheel_pows(-0.3, 0.3);
+		int direction = ang_diff(target_theta, get_vps_theta()) > 0 ? 1 : -1;
+		set_wheel_pows(-direction * 0.3, direction * 0.3);
 	}
 	set_wheel_pows(0,0);
 }
-void vps_drive(Point target) {
-	printf("Driving to (%.2f, %.2f)\n", target.x, target.y);
-	while(fabsf(target_theta(target) - get_vps_theta()) < 50) {
+
+void vps_drive_towards(Point target) {
+	printf("Driving towards (%.2f, %.2f)\n", target.x, target.y);
+	while(fabs(target_theta(target) - get_vps_theta()) < 50) {
 		printf("\t%.2fmm away\n", find_distance(target));
 		set_wheel_pows(0.5,0.5);
 	}
 	set_wheel_pows(0,0);
 }
 
-// Entry point to contestant code.
 int umain (void) {
 	while(1) {
 
@@ -59,7 +60,7 @@ int umain (void) {
 			//printf("Got new target (%.2f, %.2f)\n", target.x, target.y);
 			printf("Moving to target %d (%.2f, %.2f)\n", 1, target.x, target.y);
 			vps_rotate(target_theta(target));
-			vps_drive(target);
+			vps_drive_towards(target);
 		//}
 		/*while(1) {
 			vps_dump();

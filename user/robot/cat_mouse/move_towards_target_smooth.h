@@ -22,10 +22,6 @@ Point get_target() {
 	//return tar;
 }
 
-float ang_diff(float a, float b) {
-  return fmin(a - b, a - b + 360);
-}
-
 void rotate_to_angle(float theta_target) {
   float max_drive_speed = 0.35;
   float min_drive_speed = 0.12;

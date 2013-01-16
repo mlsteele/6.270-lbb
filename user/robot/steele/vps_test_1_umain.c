@@ -34,20 +34,24 @@ float get_angle_between_points(Point src, Point target) {
 }
 
 void vps_rotate_to_angle(float theta_target) {
-  float max_drive_speed = 0.35;
-  float min_drive_speed = 0.12;
+  float max_drive_speed = 0.75;
+  float min_drive_speed = 0.34;
   float theta_thresh = 18;
 
   float angdiff = ang_diff(theta_target, get_vps_theta());
   printf("initial angdiff %f\n", angdiff);
   while(fabs(angdiff) > theta_thresh) {
-    set_wheel_pows(0, 0);
-    ensure_vps_data_newer_than_us(LOST_VPS_US);
+    if (get_vps_us_since_read() >= LOST_VPS_US) {
+      set_wheel_pows(0, 0);
+      printf("catching up with vps...");
+      ensure_vps_data_newer_than_us(LOST_VPS_US);
+      printf(" done\n");
+    }
 
     angdiff = ang_diff(theta_target, get_vps_theta());
 
-    printf("loop angdiff %f\n", angdiff);
-    print_vps_pos();
+    printf("loop: angdiff[%f]  target[%f]  curang[%f]\n", angdiff, theta_target, get_vps_theta());
+    // print_vps_pos();
 
     float drive_factor = fmin(fabs(angdiff) / 90, 1);
     float drive_speed = max_drive_speed * drive_factor + min_drive_speed;
@@ -104,42 +108,44 @@ int umain (void) {
   //   pause(500);
   // }
 
-  printf("waiting for vps read...");
-  wait_for_vps_read();
-  printf(" done\n");
+  // printf("waiting for vps read...");
+  // wait_for_vps_read();
+  // printf(" done\n");
 
-  print_vps_pos();
+  // print_vps_pos();
 
-  printf("rotating to angle 0...");
-  vps_rotate_to_angle(0);
-  printf("--> rotate done\n");
-  set_wheel_pows(0, 0);
-  print_vps_pos();
-  pause(500);
+  // printf("rotating to angle 0...");
+  // vps_rotate_to_angle(0);
+  // printf("--> rotate done\n");
+  // set_wheel_pows(0, 0);
+  // print_vps_pos();
+  // pause(500);
 
-  printf("rotating to angle 90...");
-  vps_rotate_to_angle(90);
-  printf("--> rotate done\n");
-  set_wheel_pows(0, 0);
-  print_vps_pos();
-  pause(500);
+  // printf("rotating to angle 90...");
+  // vps_rotate_to_angle(90);
+  // printf("--> rotate done\n");
+  // set_wheel_pows(0, 0);
+  // print_vps_pos();
+  // pause(500);
 
-  printf("rotating to angle 180...");
-  vps_rotate_to_angle(180);
-  printf("--> rotate done\n");
-  set_wheel_pows(0, 0);
-  print_vps_pos();
-  pause(500);
+  // printf("rotating to angle 180...");
+  // vps_rotate_to_angle(180);
+  // printf("--> rotate done\n");
+  // set_wheel_pows(0, 0);
+  // print_vps_pos();
+  // pause(500);
 
-  printf("rotating to angle 270...");
-  vps_rotate_to_angle(270);
-  printf("--> rotate done\n");
-  set_wheel_pows(0, 0);
-  print_vps_pos();
-  pause(500);
+  // printf("rotating to angle 270...");
+  // vps_rotate_to_angle(270);
+  // printf("--> rotate done\n");
+  // set_wheel_pows(0, 0);
+  // print_vps_pos();
+  // pause(500);
 
 
   printf("entering section 2\n");
+
+  while(1) {}
 
   // while(1) {
   //   vps_rotate_towards_point(get_vps_active_target(), DIRECTION_CCW);

@@ -8,6 +8,10 @@
 #include <hw_config.h>
 #include <Point.h>
 
+// TODO remove forward decls
+uint32_t get_vps_last_read_us();
+void print_vps_pos();
+
 Point vps_active_target;
 Point vps_position;
 float vps_theta;
@@ -36,7 +40,7 @@ void vps_download_info() {
   copy_objects();
   //printf("game.coords: [0]: %d,%d ... [1]: %d,%d\n", game.coords[0].x,game.coords[0].y, game.coords[1].x,game.coords[1].y);
 
-  if(vps_coords_isnt_zero() || vps_daemon_has_run) {
+  if (vps_coords_isnt_zero() || vps_daemon_has_run) {
     // printf("swapping vps coords in\n");
     vps_position = convert_vps_pos_to_mm_pos(game.coords[0]);
     vps_active_target = convert_vps_pos_to_mm_pos(game.coords[1]);
@@ -44,6 +48,10 @@ void vps_download_info() {
     vps_daemon_has_run = true;
   }
   release(&vps_data_lock);
+
+  // TODO: remove this
+  printf("get_vps_last_read_us() -> %i\n", get_vps_last_read_us());
+  print_vps_pos();
 }
 
 
@@ -93,11 +101,11 @@ bool get_vps_daemon_has_run() {
   return ret;  
 }
 
-float get_vps_last_read_us() {
+uint32_t get_vps_last_read_us() {
   return get_position_microtime();
 }
 
-float get_us_since_vps_read() {
+float get_vps_us_since_read() {
   return get_time_us() - get_vps_last_read_us();
 }
 
@@ -112,7 +120,7 @@ void wait_for_vps_read() {
 // UNTESTED
 void ensure_vps_data_newer_than_us(uint32_t us) {
   // check in with vps
-  if (get_us_since_vps_read() > us) {
+  if (get_vps_us_since_read() > us) {
     printf("waiting for vps...");
     wait_for_vps_read();
     printf(" done\n");

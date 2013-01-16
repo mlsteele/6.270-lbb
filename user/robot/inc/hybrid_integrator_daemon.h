@@ -1,4 +1,4 @@
-                                            // BROKEN
+// BROKEN
 
 #ifndef _HYBRID_INTEGRATOR_DAEMON_H_
 #define _HYBRID_INTEGRATOR_DAEMON_H_

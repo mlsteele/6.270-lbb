@@ -132,11 +132,11 @@ void move_distance_by_encoders(float distance_mm) {
 		float wheel_pow_maybe_r = direction * fclamp( (distance_mm - delta_encs_mm.r) / 400 * (drive_max - drive_min) + drive_min, 0, 1 );
 
 		set_wheel_pows(
-			delta_encs_mm.l < distance_mm ? wheel_pow_maybe_l : 0 ,
-			delta_encs_mm.r < distance_mm ? wheel_pow_maybe_r : 0 );
+			(delta_encs_mm.l < distance_mm) ? wheel_pow_maybe_l : 0 ,
+			(delta_encs_mm.r < distance_mm) ? wheel_pow_maybe_r : 0 );
 
-		// printf("wheel_pows [%f, %f]    traveled: [%f, %f]\n",
-		// 	get_wheel_pows().l, get_wheel_pows().r, delta_encs_mm.l - distance_mm, delta_encs_mm.r - distance_mm);
+		printf("wheel_pows [%f, %f]    traveled: [%f, %f]\n",
+			get_wheel_pows().l, get_wheel_pows().r, delta_encs_mm.l - distance_mm, delta_encs_mm.r - distance_mm);
 
 		pause(2);
 	}
@@ -145,6 +145,26 @@ void move_distance_by_encoders(float distance_mm) {
 
 	printf("move_distance_by_encoders stats: traveled [%f][%f]  target [%f][%f]  diff[%f][%f]\n",
 		delta_encs_mm.l, delta_encs_mm.r, distance_mm, distance_mm, delta_encs_mm.l - distance_mm, delta_encs_mm.r - distance_mm);
+}
+
+
+void rotate_by_encoders(float delta_theta) {
+	const int direction = delta_theta > 0 ? 1 : -1;
+	l_r_uint16_t encoders_start = get_encoders();
+	l_r_float_t delta_encs_mm = {0, 0};
+	const float target_circumferential_distance = fabs(delta_theta) / 90 * M_PI * MM_WHEEL_FROM_CENTER;
+
+  set_wheel_pows(-direction * 0.3, direction * 0.3);
+  while(delta_encs_mm.l + delta_encs_mm.r < target_circumferential_distance) {
+		delta_encs_mm.l = (get_encoders().l - encoders_start.l) * MM_PER_TICK_WHEELS;
+		delta_encs_mm.r = (get_encoders().r - encoders_start.r) * MM_PER_TICK_WHEELS;
+		printf("delta_encs_mm: [%f, %f +> %f]  ==> [%f]\n",
+			delta_encs_mm.l, delta_encs_mm.r, delta_encs_mm.l + delta_encs_mm.r, target_circumferential_distance);
+  }
+
+  printf("stopping...");
+  set_wheel_pows(0, 0);
+  printf(" done\n");  
 }
 
 

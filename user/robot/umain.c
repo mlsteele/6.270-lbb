@@ -1,17 +1,8 @@
-
-#define ENCODER_PIN 25
-#define LSB_US_PER_DEG 1386583
-#define GRYO 21
-#define MOTOR_L 0
-#define MOTOR_R 1
-#define DRIVE_TOLERANCE 150
-
 // Include headers from OS
 #include <joyos.h>
-#include "Point.h"
-#include "encoder_utils.h"
-#include "moving.h"
-#include "vps_utils.h"
+#include <hw_config.h>
+#include <Point.h>
+#include <moving.h>
 
 // usetup is called during the calibration period. 
 int usetup (void) {

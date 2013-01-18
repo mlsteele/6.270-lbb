@@ -5,6 +5,15 @@
 #include <math.h>
 #include "get_vps.h"
 
+
+void explore() {
+	uint8_t starting_territory = current_territory();
+	move_to_territory(current_territory()+1);
+	while(current_territory()!=starting_territory){
+		move_to_territory(current_territory()+1);
+	}
+}
+
 int usetup (void) {
   extern volatile uint8_t robot_id;
   robot_id = 8;

@@ -24,7 +24,7 @@
        	    -------|-------
 
 */
-uint32_t starting_time;;
+uint32_t starting_time;
 
 void explore() {
 	uint8_t starting_territory = current_territory();
@@ -38,20 +38,59 @@ uint32_t time_left() {
 }
 void move_to_base() {
 
+	//Move to my side of the board:
+	switch(current_territory()){
+		case 0: break;
+		case 1: break;
+		case 5: break;
+		case 2: 
+			if(is_enemy_in_territory(1)) {
+				move_to_territory(5);
+			}else {move_to_territory(1);} break;
+		case 4: 
+			if(is_enemy_in_territory(5)) {
+				move_to_territory(1);
+			}else {move_to_territory(5);} break;
+		case 3: 
+			if(is_enemy_in_territory(4) || is_enemy_in_territory(5)){
+				move_to_territory(1);
+				else {
+					move_to_territory(5);
+				}
+			} break;
+	}
+	//TODO figure out better coords than 0,0
+	move_to({0,0});
 }
 void drop_balls() {
-
+	int starting_score = vps_score();
+	open_gate();
+	while(starting_score + numb_balls*40 < vps_score()) {
+		pause(100);
+	}
+	close_gate();
 }
 uint8_t owner(uint8_t territory) {
-
-	return owner;
+	return vps_owner(territory);
 }
 bool is_enemy_in_territory(uint8_t territory){
-
-	return is;
+	//TODO 
+	return 0; //not for mock competition 2!
 }
 void move_to_territory(uint8_t territory){
+	//It's someone else's job to make sure the enemy isn't in
+	// the territory that is passed to this
 
+	//IDGAF if I hit the enemy on the way there!! TODO fix that.
+
+	//Is CCW the best way there?
+	if((territory-current_territory())%6 <= 3) {
+		for(uint8_t diff = territory-current_territory(); 
+			diff > 0; 
+			move_to_territory(current_territory()+1))
+		{}
+	}
+	///START 
 }
 uint8_t next_unowned_territory() {
 

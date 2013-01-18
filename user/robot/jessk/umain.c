@@ -12,7 +12,24 @@ int usetup (void) {
 }
 
 int umain (void) {
-	
+
+	// THE HIGHEST LEVEL OF THOUGHT PROCESSES
+	// NOW AVAILABLE IN GLORIOUS, GLORIOUS PSEUDOCODE
+
+	while(time_elapsed()<10000){
+		//first 10 seconds, explore only
+		explore();
+	}
+
+	while(1) {
+		//Decide next move
+		if(numb_balls() >= max_balls() || time_left() > 20000) {
+			//if you are full of balls or time is about to run out (20sec)
+			move_to(base);
+			drop_balls();
+		}
+	}
+
     return 0;
 }
 

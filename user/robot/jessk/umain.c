@@ -25,10 +25,7 @@ int umain (void) {
 	// THE HIGHEST LEVEL OF THOUGHT PROCESSES
 	// NOW AVAILABLE IN GLORIOUS, GLORIOUS PSEUDOCODE
 
-	while(time_elapsed()<10000){
-		//first 10 seconds, explore only
-		explore();
-	}
+	explore();
 
 	while(1) {
 		//Decide next move

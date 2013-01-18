@@ -4,19 +4,15 @@
 #include <moving.h>
 #include <math.h>
 #include "get_vps.h"
-#include "vps_utils.h"
-
-//#include "../cat_mouse/move_towards_target_smooth.h"
 
 int usetup (void) {
   extern volatile uint8_t robot_id;
   robot_id = 8;
-
   return 0;
 }
 
 int umain (void) {
-
+	
     return 0;
 }
 

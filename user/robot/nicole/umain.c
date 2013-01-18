@@ -27,78 +27,56 @@
 #include <math.h>
 #include <Point.h>
 #include <hw_config.h>
-#include "../cat_mouse/move_towards_target_smooth.h"
+#include "get_vps.h"
+#include "vps_utils.h"
 
  #define LSB_US_PER_DEG 1386583
  #define GRYO 21
  #define MOTOR_L 0
  #define MOTOR_R 1
  #define DRIVE_TOLERANCE 150
-
-//uint8_t team_number[2] = {1,0};
-Point current_loc;
-float current_angle = 0; //probably want to set it to a different value
-
-void set_starting_loc(void) {
-	//use gps
-	current_loc.x = 0;
-	current_loc.y = 0;
-}
-
-void update_location() {
-	//use gps
-}
-
-void deccelerate(float millis) {
-	//deccelerates in the given amount of time
-	//use jess's code
-}
-
-
+ #define CENTER_BOARD_RADIUS 300  
+uint8_t start_time;
+uint8_t current_territory;
 int usetup (void) {
 	extern volatile uint8_t robot_id;
   	robot_id = 8;
-	printf("Stabilizing\n");
-	pause(500);
-	printf("Initiating gyro\n");
-	gyro_init(GRYO, LSB_US_PER_DEG, 500);
-	printf("Gryoscope initated\n");
-	set_starting_loc(); 
+  	start_time = get_time();
     return 0;
 }
 
 int umain (void) {
-	vps_data_daemon_init();
-	while (!get_vps_daemon_has_run()) {
-		printf("Waiting for vps\n");
-		pause(300);
-	}
-	//hybrid_position_daemon_init();
-
-	move_towards_target_smooth();
-	// printf("Setup complete\n");
-	// vps_data_daemon_init();
-	// move_towards_test_mode = true;
- //  printf("Initiated vps daemon\n");
-	// if (move_towards_test_mode) {
-	//  	fake_data_daemon_init();
-	// 	printf("Initiated fake data daemon\n");
- //  }
-
- //  // wait for vps
- //  while(!get_vps_daemon_has_run()) {
- //    printf("waiting for vps to recv\n");
- //    pause(500);
- //  }
-
-	// target_tracking();
-	// //move_for_time(.5,1000);
-	// // rotate(-90);
-	// // pause(500);
-	// // rotate(-90);
-	// // pause(500);
-	// // rotate(-90);
-	// // pause(500);
-	// // rotate(-90);
+	// while(1) {
+	// 	current_territory = current_territory();
+	// 	while (get_time() < start_time+10000) {
+	// 		move_to_territory(current_territory + 1);
+	// 	}
+	// }
+	
     return 0;
 }
+
+void move_to(Point p) {
+	if (can_take_straight_path(get_vps_current(), p)                                                                                                           can_take_straight_path(get_vps_current(),p)) {
+		vps_rotate(target_theta(p));
+		vps_drive_towards(p);
+	}
+	else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     9
+		//move in circular path
+	}
+}
+
+bool can_take_straight_path(Point a, Point b) {
+	bool can = true;
+	float slope = (b.y-a.y)/(b.x-a.x);
+	float y_val = a.y;
+	for (float x_val = a.x; x_val<b.x && can; x_val++) {
+		y_val += slope;
+		if (pow(x_val,2) + pow(y_val,2) <= 225) {
+			//straight path goes through center hole
+			can = false;
+		}
+	}
+	return can;
+}
+                                                                                                                                                                                                                                                                                       

@@ -17,7 +17,6 @@ Point get_vps_current() {
 	ret.x = game.coords[0].x * UNITS_VPS_TO_MM;
 	ret.y = game.coords[0].y * UNITS_VPS_TO_MM;
 	return ret;
-
 }
 float get_vps_theta() {
 	copy_objects();

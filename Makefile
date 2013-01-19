@@ -207,6 +207,10 @@ clean:
 	@rm -f gdbinit
 	@rm -rf doc/api/*
 
+userclean:
+	@echo "-- Cleaning user objects"
+	@rm -f $(USEROBJ)	
+
 gdb-config:
 	@rm -f gdbinit
 	@echo "define reset" >> gdbinit

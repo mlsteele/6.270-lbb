@@ -6,31 +6,37 @@
 #include "get_vps.h"
 
 /*
-			-------|-------
-		   /   L   |   G   \
-		  /G       |	   L\
-		/	       |		  \
-	   /\	   5   |	4	  /\
-	 /	   \	   |	   /     \
-	/L  	  \  //|\\ 	/		 G\
-   /	        |  |  |			   \
-   \	  0 	|ME| U|   	3	   /
-    \G   	  /	 \\|//	\		 L/
-     \	   /	   |	   \	 /
-       \/	   1   |	2	  \/
-       	\		   |		  /
-       	  \L	   |	   G/
-       	   \   G   |   L   /
-       	    -------|-------
+            -------|-------
+           /   L   |   G   \
+          /G       |       L\
+        /          |          \
+       /\      5   |    4     /\
+     /     \       |       /     \
+    /L        \  //|\\  /        G\
+   /            |  |  |            \
+   \      0     |ME| U|     3      /
+    \G        /  \\|//  \        L/
+     \     /       |       \     /
+       \/      1   |    2     \/
+        \          |          /
+          \L       |       G/
+           \   G   |   L   /
+            -------|-------
 
 */
 uint32_t starting_time;
+Point territories[6];
+Point gears[6];
+Point levers[6];
+Point base_5;
+Point base_0;
+Point base_1;
 
 void explore() {
 	uint8_t starting_territory = current_territory();
-	move_to_territory(current_territory()+1);
+	move_to_territory((current_territory()+1)%6);
 	while(current_territory()!=starting_territory){
-		move_to_territory(current_territory()+1);
+		move_to_territory((current_territory()+1)%6;
 	}
 }
 uint32_t time_left() {
@@ -38,29 +44,37 @@ uint32_t time_left() {
 }
 void move_to_base() {
 
-	//Move to my side of the board:
+	//Move to territory 5,0,or 1 then dump there:
 	switch(current_territory()){
-		case 0: break;
-		case 1: break;
-		case 5: break;
+		case 0: move_to(base_0); break;
+		case 1: move_to(base_1); break;
+		case 5: move_to(base_5); break;
 		case 2: 
 			if(is_enemy_in_territory(1)) {
 				move_to_territory(5);
-			}else {move_to_territory(1);} break;
+				move_to(base_5);
+			}else {
+				move_to_territory(1);
+				move_to(base_1);
+			} break;
 		case 4: 
 			if(is_enemy_in_territory(5)) {
 				move_to_territory(1);
-			}else {move_to_territory(5);} break;
+				move_to(base_1);
+			}else {
+				move_to_territory(5);
+				move_to(base_5);
+			} break;
 		case 3: 
 			if(is_enemy_in_territory(4) || is_enemy_in_territory(5)){
 				move_to_territory(1);
+				move_to(base_1);
 				else {
 					move_to_territory(5);
+					move_to(base_5);
 				}
 			} break;
 	}
-	//TODO figure out better coords than 0,0
-	move_to({0,0});
 }
 void drop_balls() {
 	int starting_score = vps_score();
@@ -84,17 +98,33 @@ void move_to_territory(uint8_t territory){
 	//IDGAF if I hit the enemy on the way there!! TODO fix that.
 
 	//Is CCW the best way there?
+	int dir;
 	if((territory-current_territory())%6 <= 3) {
-		for(uint8_t diff = territory-current_territory(); 
-			diff > 0; 
-			move_to_territory(current_territory()+1))
-		{}
-	}
-	///START 
+		dir = 1;
+	} else {dir = -1;}
+	for(uint8_t diff = territory-current_territory(); 
+		diff != 0; 
+		move_to(territories[(current_territory()+dir)%6]);
+	{}
+	 
 }
 uint8_t next_unowned_territory() {
-
-	return territory;
+	uint8_t cur = current_territory();
+	uint8_t order_of_preference[5] = {
+		(cur + 1)%6,
+		(cur - 1)%6,
+		(cur + 2)%6, 
+		(cur - 2)%6, 
+		(cur + 3)%6
+	};
+	for(uint8_t i=0; i<5; i++){
+		if(owner(order_of_preference[i])!=me
+		&& is_enemy_in_territory(order_of_preference[i])) {
+			//TODO is_enemy_in_territory is going to act weird.
+			//might want to avoid cur+2 if enemy is in cur+1.
+			return order_of_preference[i];
+		}
+	}
 }
 void claim_territory() {
 
@@ -119,6 +149,18 @@ int umain (void) {
 	// NOW AVAILABLE IN GLORIOUS, GLORIOUS PSEUDOCODE
 
 	starting_time = get_time();
+
+	//TODO transform function
+	territories[0] = {0,    -858};
+	territories[1] = {743,  -429};
+	territories[2] = {743,   429};
+	territories[3] = {0,     858};
+	territories[4] = {-743,  429};
+	territories[5] = {-743, -429};
+
+	base_5 = {-288, -167};
+	base_0 = {0,    -333};
+	base_1 = {288,  -167};
 
 	explore();
 

@@ -127,7 +127,7 @@ uint8_t next_unowned_territory() {
 	}
 }
 void claim_territory() {
-
+	
 }
 bool can_gather_resources(uint8_t territory) {
 

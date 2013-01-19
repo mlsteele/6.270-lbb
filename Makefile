@@ -1,5 +1,5 @@
 # User entry point (umain)
-USERMAIN ?= user/robot/jessk/umain.c
+USERMAIN ?= user/robot/jessk/umain_explore.c
 
 # Serial port
 AVRDUDE_USERPORT ?= COM7

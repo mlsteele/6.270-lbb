@@ -1,5 +1,4 @@
 // tracks position of robot using encoders
-// UNTESTED
 
 #include <joyos.h>
 #include <math.h>

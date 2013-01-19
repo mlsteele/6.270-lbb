@@ -27,3 +27,29 @@ void vps_drive_towards(Point target) {
 	}
 	set_wheel_pows(0,0);
 }
+
+void vps_aim_towards_target() {
+	float angdiff = ang_diff(target_theta(get_vps_target()), get_vps_theta());
+	float dist = find_distance(get_vps_target());
+
+	// fix for orbit bug
+	if (fabs(angdiff) > 20 && dist < 200) {
+		printf("orbit switch\n");
+		int direction = angdiff > 0 ? 1 : -1;
+		float recover_pow = 0.3;
+		set_wheel_pows(-direction * recover_pow, direction * recover_pow);
+		return;
+	}
+
+	float pow_com = fclamp(dist / 300.f, 0.27, 1) * fclamp((70 - fabs(angdiff)) / 70, 0, 1);
+	float pow_bias = fclampmag(pow(angdiff / 90, 3), 0, 0.6);
+	set_wheel_pows(
+		pow_com - pow_bias ,
+		pow_com + pow_bias );
+	printf("target < %f, %f >", get_vps_target().x, get_vps_target().y);
+	printf("  angdiff %f", angdiff);
+	printf("  dist %f", dist);
+	printf("  pow_com %f", pow_com);
+	printf("  pow_bias %f", pow_bias);
+	printf("  wheels [%f, %f]\n", get_wheel_pows().l, get_wheel_pows().r);
+}

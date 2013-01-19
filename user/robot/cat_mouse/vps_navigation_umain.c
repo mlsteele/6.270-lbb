@@ -14,18 +14,18 @@ int usetup (void) {
 }
 
 int umain (void) {
-	while(1) {
+  // 2-step rotate and go version
+	// while(1) {
+	// 	Point target = get_vps_target();
+	// 	printf("Got new target (%.2f, %.2f)\n", target.x, target.y);
+	// 	vps_rotate(target_theta(target));
+	// 	vps_drive_towards(target);
+	// }
 
-		Point target = get_vps_target();
-		printf("Got new target (%.2f, %.2f)\n", target.x, target.y);
-		vps_rotate(target_theta(target));
-		vps_drive_towards(target);
-
-		/*while(1) {
-			vps_dump();
-			pause(500);
-		}*/
-	}
-    return 0;
+  // proportional control version
+  while(1) {
+    vps_aim_towards_target();
+    pause(4);
+  }
+  return 0;
 }
-

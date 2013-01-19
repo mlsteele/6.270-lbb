@@ -6,10 +6,6 @@
 #define DEFAULT_SPEED .58
 #define TARGET_TOLERANCE 50
 
-// smallest angle difference between two angles in degrees
-// angle from b to a
-float ang_diff(float a, float b);
-
 float get_gyro_current_angle();
 
 l_r_uint16_t get_encoders();

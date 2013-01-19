@@ -14,6 +14,7 @@ typedef struct {
 } l_r_uint16_t;
 
 float fclamp(float n, float low, float high);
+float fclampmag(float n, float low, float high);
 
 // smallest angle difference between two angles in degrees
 // angle from b to a

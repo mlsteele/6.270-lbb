@@ -118,7 +118,9 @@ BOOTSRC = 	src/boot/hboot.c \
 			src/hal/io.c \
 			src/hal/delay.c \
 
-USERSRC = user/robot/src/mktestfoo.c \
+USERSRC = user/robot/src/util.c \
+					user/robot/src/moving.c \
+					user/robot/src/encoder_integrator_daemon.c \
 					$(USERMAIN)
 
 # ALL source files

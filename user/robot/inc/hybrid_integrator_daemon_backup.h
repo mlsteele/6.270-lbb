@@ -14,28 +14,29 @@ struct lock hybrid_integrator_data_lock;
 
 Point hybrid_int_pos = {0, 0};
 
-l_r_uint16_t hybrid_int_last_encs = {0, 0};
+l_r_float_t hybrid_int_last_encs = {0, 0};
 
 void flush_hybrid_position_integration() {
-  l_r_uint16_t encoders = get_encoders();
-  l_r_uint16_t delta_encs_mm = {
-    (get_wheel_pows().l<0 ? -1 : 1) * (encoders.l - hybrid_int_last_encs.l) ,
-    (get_wheel_pows().r<0 ? -1 : 1) * (encoders.r - hybrid_int_last_encs.r) };
-
-  hybrid_int_last_encs = encoders;
+  l_r_float_t delta_encs = {
+    (get_wheel_pows().l > 0 ? 1 : -1) * MM_PER_TICK_WHEELS * (encoder_read(PIN_ENCODER_WHEEL_L) - hybrid_int_last_encs.l) ,
+    (get_wheel_pows().r > 0 ? 1 : -1) * MM_PER_TICK_WHEELS * (encoder_read(PIN_ENCODER_WHEEL_R) - hybrid_int_last_encs.r) };
 
   acquire(&hybrid_integrator_data_lock);
 
-  float avg_delta_encs_mm = (delta_encs_mm.l + delta_encs_mm.r) / 2;
-  float distance_traveled_fd_axis = avg_delta_encs_mm * MM_PER_TICK_WHEELS;
+  float avg_delta_encs = (delta_encs.l + delta_encs.r) / 2;
+  float distance_traveled_fd_axis = avg_delta_encs * MM_PER_TICK_WHEELS;
   hybrid_int_pos.x += distance_traveled_fd_axis * cos(gyro_get_degrees() * DEGS_TO_RADS);
   hybrid_int_pos.y += distance_traveled_fd_axis * sin(gyro_get_degrees() * DEGS_TO_RADS);
 
   release(&hybrid_integrator_data_lock);
+
+  hybrid_int_last_encs.l = encoder_read(PIN_ENCODER_WHEEL_L);
+  hybrid_int_last_encs.r = encoder_read(PIN_ENCODER_WHEEL_R);
 }
 
 int hybrid_position_daemon() {
-  hybrid_int_last_encs = get_encoders();
+  hybrid_int_last_encs.l = encoder_read(PIN_ENCODER_WHEEL_L);
+  hybrid_int_last_encs.r = encoder_read(PIN_ENCODER_WHEEL_R);
 
   while(1) {
     flush_hybrid_position_integration();
@@ -51,7 +52,6 @@ void hybrid_position_daemon_init() {
 }
 
 Point get_hybrid_position() {
-#error lock problems
   acquire(&hybrid_integrator_data_lock);
   return hybrid_int_pos;
   release(&hybrid_integrator_data_lock);

@@ -31,23 +31,8 @@
 
 
 // COMMON
-
 #define DIRECTION_CW -1
 #define DIRECTION_CCW 1
 #define LOST_VPS_US 200000
-
-typedef struct {
-  float r;
-  float l;
-} l_r_float_t;
-
-typedef struct {
-  uint16_t r;
-  uint16_t l;
-} l_r_uint16_t;
-
-float fclamp(float n, float low, float high) {
-  return (n < high) ? ((n > low) ? n : low) : high;
-}
 
 #endif

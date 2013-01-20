@@ -17,8 +17,8 @@ int umain (void) {
 
 	Point territories[6];
 	territories[0] = (Point) {0,    -858};
-	territories[2] = (Point) {743,   429};
 	territories[1] = (Point) {743,  -429};
+	territories[2] = (Point) {743,   429};
 	territories[3] = (Point) {0,     858};
 	territories[4] = (Point) {-743,  429};
 	territories[5] = (Point) {-743, -429};

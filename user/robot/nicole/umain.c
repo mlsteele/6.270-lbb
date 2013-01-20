@@ -27,8 +27,8 @@
 #include <math.h>
 #include <Point.h>
 #include <hw_config.h>
-#include "get_vps.h"
-#include "vps_utils.h"
+#include "../cat_mouse/get_vps.h"
+#include "../cat_mouse/vps_utils.h"
 
  #define LSB_US_PER_DEG 1386583
  #define GRYO 21
@@ -38,6 +38,7 @@
  #define CENTER_BOARD_RADIUS 300  
 uint8_t start_time;
 uint8_t current_territory;
+
 int usetup (void) {
 	extern volatile uint8_t robot_id;
   	robot_id = 8;

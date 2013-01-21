@@ -2,6 +2,8 @@
 #include <hw_config.h>
 #include <math.h>
 #include <vps_data_daemon.h>
+#include <transport.h>
+#include <moving.h>
 float terr_angles[7] = {-120,-60,0,60,120,180,240};
 
 void territory_init() {
@@ -51,11 +53,11 @@ void move_to_territory(uint8_t territory){
 
 	//move into the target territory
 	while(territory-current_territory() != 0){ 
-		vps_aim_towards_target(territories[(current_territory()+dir)%6]);
+		vps_aim_towards_target(territories[(current_territory()+dir)%6], 1);
 	}
 	//move to center of current territory
-	while(find_distance(territories[territory])>200){
-		vps_aim_towards_target(territories[current_territory()]);
+	while(points_distance(get_vps_position(), territories[territory])>200){
+		vps_aim_towards_target(territories[current_territory()], 1);
 		pause(10);
 	}
 	set_wheel_pows(0,0);
@@ -63,9 +65,9 @@ void move_to_territory(uint8_t territory){
 
 void move_to_next_territory(){
 	uint8_t target_territory = (current_territory()+1)%6;
-	while(find_distance(territories[target_territory])>200){
-		printf("\t%.2f away...\n", find_distance(territories[target_territory]));
-		vps_aim_towards_target(territories[target_territory]);
+	while(points_distance(get_vps_position(), territories[target_territory])>200){
+		printf("\t%.2f away...\n", points_distance(get_vps_position(), territories[target_territory]));
+		vps_aim_towards_target(territories[target_territory], 1);
 		pause(10);
 	}
 	set_wheel_pows(0,0);

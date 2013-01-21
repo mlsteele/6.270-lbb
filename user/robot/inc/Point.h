@@ -8,4 +8,8 @@ typedef struct {
 
 float points_distance(Point a, Point b);
 
+// angle from b to a
+float points_angle(Point a, Point b);
+
+
 #endif

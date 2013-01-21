@@ -121,6 +121,7 @@ BOOTSRC = 	src/boot/hboot.c \
 USERSRC = 	user/robot/src/util.c \
 			user/robot/src/Point.c \
 			user/robot/src/moving.c \
+			user/robot/src/transport.c \
 			user/robot/src/encoder_integrator_daemon.c \
 			user/robot/src/vps_data_daemon.c \
 			user/robot/src/territory.c \

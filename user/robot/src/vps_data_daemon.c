@@ -11,6 +11,8 @@ static float vps_theta;
 static bool vps_daemon_has_run = false;
 static struct lock vps_data_lock;
 
+static uint8_t vps_territory_offset;
+
 static Point convert_vps_pos_to_mm_pos(board_coord src) {
   Point ret = {src.x * UNITS_VPS_TO_MM, src.y * UNITS_VPS_TO_MM};
   return ret;
@@ -57,12 +59,6 @@ static int vps_data_daemon() {
   return 0;
 }
 
-void vps_data_daemon_init() {
-  init_lock(&vps_data_lock, "vps_data_lock");
-  create_thread(vps_data_daemon, STACK_DEFAULT, 0, "vps_daemon");
-  // printf("vps_data_daemon_init()\n");
-}
-
 // accessors
 Point get_vps_position() {
   acquire(&vps_data_lock);
@@ -83,6 +79,14 @@ float get_vps_theta() {
   float ret = vps_theta;
   release(&vps_data_lock);
   return ret;
+}
+
+void vps_data_daemon_init() {
+  init_lock(&vps_data_lock, "vps_data_lock");
+  create_thread(vps_data_daemon, STACK_DEFAULT, 0, "vps_daemon");
+  // printf("vps_data_daemon_init()\n");
+  Point starting_pos = get_vps_position();
+  vps_territory_offset = (starting_pos.x > 0)? 3 : 0;
 }
 
 // TODO: fix this
@@ -125,20 +129,15 @@ void print_vps_pos() {
   printf("<%f, %f>  theta_ %f\n", vpp.x, vpp.y, get_vps_theta());
 }
 
-uint8_t vps_owner(uint8_t territory) {
+uint8_t vps_owner(uint8_t terr) {
   acquire(&vps_data_lock);
-  uint8_t ret = game.territories[us_to_vps_numbering(territory)].owner;
+  uint8_t ret = game.territories[us_to_vps_numbering(terr)].owner;
   release(&vps_data_lock);
   return ret;
 }
 
 uint8_t us_to_vps_numbering(uint8_t terr) {
-  //takes a territory in our numbering system and provides the mapping to vps numbers
-  //TODO make this legit
-  acquire(&vps_data_lock);
-  uint8_t ret = terr;
-  release(&vps_data_lock);
-  return ret;
+  return (ret+vps_territory_offset)%6;
 }
 
 uint8_t enemy_location() {

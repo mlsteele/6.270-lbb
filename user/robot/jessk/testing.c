@@ -11,13 +11,8 @@ float terr_angles[7] = {-120,-60,0,60,120,180,240};
 
 uint8_t territory_of_point(Point p) {
 	float ang = atan2(p.y, p.x) / DEGS_TO_RADS;
-	//if(ang<0){ang+=360;}
 	printf("\tAngle: %.2f\n", ang);
 	int i;
-	//while (ang<terr_angles[i%6]) {
-	//	printf("\t%.2f > %.2f\n", ang, terr_angles[i]);
-	//	i++;
-	//}
 	for(i=0;i<6;i++){
 		if((ang>terr_angles[i] && ang<terr_angles[i+1])
 		|| ((ang+360)>terr_angles[i] && (ang+360)<terr_angles[i+1]))  {

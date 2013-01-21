@@ -1,5 +1,5 @@
 # User entry point (umain)
-USERMAIN ?= user/robot/jessk/umain_explore.c
+USERMAIN ?= user/robot/jessk/umain_move_to_territory.c
 
 # Serial port
 AVRDUDE_USERPORT ?= COM7
@@ -118,12 +118,12 @@ BOOTSRC = 	src/boot/hboot.c \
 			src/hal/io.c \
 			src/hal/delay.c \
 
-USERSRC = user/robot/src/util.c \
-          user/robot/src/Point.c \
-					user/robot/src/moving.c \
-					user/robot/src/encoder_integrator_daemon.c \
-					user/robot/src/vps_data_daemon.c \
-					$(USERMAIN)
+USERSRC = 	user/robot/src/util.c \
+			user/robot/src/Point.c \
+			user/robot/src/moving.c \
+			user/robot/src/encoder_integrator_daemon.c \
+			user/robot/src/vps_data_daemon.c \
+			$(USERMAIN)
 
 # ALL source files
 SRC = $(DRIVERSRC) $(KERNELSRC) $(HALSRC) $(USERSRC)

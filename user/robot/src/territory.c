@@ -1,3 +1,7 @@
+#include <territory.h>
+#include <hw_config.h>
+#include <math.h>
+#include <vps_data_daemon.h>
 float terr_angles[7] = {-120,-60,0,60,120,180,240};
 Point territories[6];
 
@@ -12,7 +16,7 @@ uint8_t territory_of_point(Point p) {
 	return 255;
 }
 uint8_t current_territory() {
-	return territory_of_point(get_vps_current());
+	return territory_of_point(get_vps_position());
 }
 
 void move_to_territory(uint8_t territory){

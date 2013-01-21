@@ -1,3 +1,9 @@
+#ifndef _TERRITORY_H_
+#define _TERRITORY_H_
+
+#include <joyos.h>
+#include <Point.h>
+
 float terr_angles[7];
 Point territories[] = { (Point){0,    -858}, (Point){743,  -429}, (Point){743,   429}, 
 	(Point){0,     858}, (Point){-743,  429}, (Point){-743, -429} };
@@ -11,3 +17,5 @@ uint8_t current_territory();
 
 void move_to_territory(uint8_t territory);
 void move_to_next_territory();
+
+#endif

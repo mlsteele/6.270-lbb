@@ -123,7 +123,7 @@ USERSRC = 	user/robot/src/util.c \
 			user/robot/src/moving.c \
 			user/robot/src/encoder_integrator_daemon.c \
 			user/robot/src/vps_data_daemon.c \
-			user/robot/src/territory.h \
+			user/robot/src/territory.c \
 			$(USERMAIN)
 
 # ALL source files

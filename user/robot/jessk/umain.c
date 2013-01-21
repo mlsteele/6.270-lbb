@@ -28,9 +28,6 @@
 
 */
 uint32_t starting_time;
-Point territories[6];
-Point gears[6];
-Point levers[6];
 Point base_5;
 Point base_0;
 Point base_1;
@@ -164,13 +161,8 @@ int umain (void) {
 	starting_time = get_time();
 
 	//TODO transform function
-	territories[0] = {0,    -858};
-	territories[1] = {743,  -429};
-	territories[2] = {743,   429};
-	territories[3] = {0,     858};
-	territories[4] = {-743,  429};
-	territories[5] = {-743, -429};
 
+	
 	base_5 = {-288, -167};
 	base_0 = {0,    -333};
 	base_1 = {288,  -167};

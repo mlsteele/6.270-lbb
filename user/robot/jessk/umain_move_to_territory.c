@@ -5,7 +5,7 @@
 #include <math.h>
 #include "../cat_mouse/get_vps.h"
 #include "../cat_mouse/vps_utils.h"
-#include "territory.h"
+#include <territory.h>
 
 int usetup (void) {
   extern volatile uint8_t robot_id;

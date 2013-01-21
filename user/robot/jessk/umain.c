@@ -3,7 +3,7 @@
 #include <Point.h>
 #include <moving.h>
 #include <math.h>
-#include "../nicole/territory.h"
+#include <territory.h>
 #include "get_vps.h"
 #include "encoder_daemon.h"
 

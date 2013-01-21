@@ -173,8 +173,13 @@ uint8_t vps_owner(uint8_t terr) {
   return ret;
 }
 
+<<<<<<< HEAD
 uint8_t us_to_vps_numbering(uint8_t terr_id) {
   return (terr_id +vps_territory_offset)%6;
+=======
+uint8_t us_to_vps_numbering(uint8_t terr) {
+  return (terr+vps_territory_offset)%6;
+>>>>>>> fixed territory.h and moving_to_territory()
 }
 
 uint8_t enemy_location() {

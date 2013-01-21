@@ -1,5 +1,5 @@
 float terr_angles[7] = {-120,-60,0,60,120,180,240};
-
+Point territories[6];
 
 uint8_t territory_of_point(Point p) {
 	float ang = atan2(p.y, p.x) / DEGS_TO_RADS;
@@ -28,7 +28,7 @@ void move_to_territory(uint8_t territory){
 		vps_aim_towards_target(territories[(current_territory()+dir)%6]);
 	}
 	//move to center of current territory
-	while(find_distance(territories[target_territory])>200){
+	while(find_distance(territories[territory])>200){
 		vps_aim_towards_target(territories[current_territory()]);
 		pause(10);
 	}

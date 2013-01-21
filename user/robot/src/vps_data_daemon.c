@@ -1,5 +1,9 @@
 #include <vps_data_daemon.h>
 
+#include <math.h>
+#include <hw_config.h>
+#include <util.h>
+
 static Point vps_active_target;
 static Point vps_position;
 static float vps_theta;
@@ -13,7 +17,7 @@ static Point convert_vps_pos_to_mm_pos(board_coord src) {
 }
 
 static bool vps_coords_isnt_zero() {
-  int ret = !( game.coords[0].x     == 0 &&
+  int ret = !(  game.coords[0].x     == 0 &&
                 game.coords[0].y     == 0 &&
                 game.coords[0].theta == 0 );
   // printf("vps_coords_inst_zero: %i\n", ret);

@@ -4,6 +4,7 @@
 #ifndef _VPS_DATA_DAEMON_H_
 #define _VPS_DATA_DAEMON_H_
 
+#include <joyos.h>
 #include <Point.h>
 
 void vps_data_daemon_init();

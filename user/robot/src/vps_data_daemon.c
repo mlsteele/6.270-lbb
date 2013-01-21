@@ -106,10 +106,11 @@ void vps_data_daemon_init() {
   print_vps_pos();
 
   // wait for vps transform
-  /*printf("waiting for vps transform init...\n");
+  printf("waiting for vps transform init...\n");
   while(!vps_init_transform()) pause(30);
+  printf("have set vps transform, applying...\n");
   vps_download_info(); // immediately update coordinates to reflect transform
-  printf("have set vps transform\n");*/
+  printf("have applied vps transform\n");
   print_vps_pos();
 }
 

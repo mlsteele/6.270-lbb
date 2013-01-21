@@ -28,8 +28,8 @@ void vps_drive_towards(Point target) {
 	set_wheel_pows(0,0);
 }
 
-void vps_aim_towards_target(Point target) {
-	float angdiff = ang_diff(target_theta(target), get_vps_theta());
+void vps_aim_towards_target(Point target, uint8_t dir) {
+	float angdiff = ang_diff(target_theta(target) + (dir<0 ? 180 : 0), get_vps_theta());
 	float dist = find_distance(target);
 
 	printf("target < %f, %f >", target.x, target.y);

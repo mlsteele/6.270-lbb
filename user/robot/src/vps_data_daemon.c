@@ -184,6 +184,7 @@ uint8_t us_to_vps_numbering(uint8_t terr) {
 
 uint8_t enemy_location() {
   //TODO fix for real competition
+  //don't forget to return it in our numbering system.
   acquire(&vps_data_lock);
   uint8_t ret = 0;
   release(&vps_data_lock);

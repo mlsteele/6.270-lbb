@@ -5,6 +5,7 @@
 #include <math.h>
 #include "../nicole/territory.h"
 #include "get_vps.h"
+#include "encoder_daemon.h"
 
 #define me 8
 /*
@@ -130,18 +131,27 @@ uint8_t next_unowned_territory() {
 	}
 }
 void claim_territory() {
-	
+	while(find_distance(territories[i])>100 && !robot_stuck()){
+		vps_aim_towards_target(gearbox(current_territory()), -1);
+		pause(10);
+	}
+	set_wheel_pows(0,0);
+
+	//TODO set servos to turn gearbox until territory is captured.
+	//should have a timeout to try readjusting postion after x seconds
 }
 bool can_gather_resources(uint8_t territory) {
 	bool can = has_balls_remaining(territory) && not_over_rate_limit(territory);
 	return can;
 }
 void gather_resources() {
-
+//TODO
 }
 int usetup (void) {
   extern volatile uint8_t robot_id;
   robot_id = 8;
+  vps_data_daemon_init();
+  encoder_daemon_init();
   return 0;
 }
 

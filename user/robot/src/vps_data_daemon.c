@@ -34,13 +34,13 @@ static bool vps_init_transform() {
   float angle_tolerance = 40;
 
   if (points_distance(get_vps_position(), (Point){-858, 0}) < position_tolerance && fabs(ang_diff(get_vps_theta(), 0)) < angle_tolerance) {
-    printf("vps_init_transform decided %f\n", vps_transform_theta_offset);
     vps_transform_theta_offset = 90;
+    printf("vps_init_transform decided %f\n", vps_transform_theta_offset);
     vps_territory_offset = 0;
     return true;
   } else if (points_distance(get_vps_position(), (Point){858, 0}) < position_tolerance && fabs(ang_diff(get_vps_theta(), 180)) < angle_tolerance) {
-    printf("vps_init_transform decided %f\n", vps_transform_theta_offset);
     vps_transform_theta_offset = 270;
+    printf("vps_init_transform decided %f\n", vps_transform_theta_offset);
     vps_territory_offset = 3;
     return true;
   } else {

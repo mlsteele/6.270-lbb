@@ -129,7 +129,7 @@ uint8_t next_unowned_territory() {
 }
 void claim_territory() {
 	while(find_distance(territories[i])>100 && !robot_stuck()){
-		vps_aim_towards_target(gears(current_territory()), -1);
+		vps_aim_towards_target(gears[current_territory()], -1);
 		pause(10);
 	}
 	set_wheel_pows(0,0);
@@ -171,7 +171,7 @@ int umain (void) {
 
 	while(1) {
 		//Do I have to take a dump?
-		if(numb_balls >= MAX_BALLS || time_left() > 20000) {
+		if(numb_balls >= MAX_BALLS || time_left() < 20000) {
 			//if you are full of balls or time is about to run out (20sec)
 			move_to_base();
 			drop_balls();
@@ -180,12 +180,15 @@ int umain (void) {
 		//Should I move to another territory before I start claming shit?
 		if (owner(current_territory())==me 
 		 || is_enemy_in_territory(current_territory())){
+			printf("moving to territory %d", next_unowned_territory());
 			move_to_territory(next_unowned_territory());
 		}
+		printf("attempting to claim territory %d", current_territory());
 		claim_territory();
 
 		//Can I gather resources from here?
 		if(can_gather_resources(current_territory())){
+			printf("can gather resources in territory %d", current_territory());
 			gather_resources();
 		}
 	}

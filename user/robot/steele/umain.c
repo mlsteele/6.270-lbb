@@ -6,8 +6,8 @@
 int usetup() {
   extern volatile uint8_t robot_id;
   robot_id = 8;
-  vps_data_daemon_init();
   gyro_init(PIN_GYRO, LSB_US_PER_DEG, 500);
+  vps_data_daemon_init();
 
   return 0;
 }

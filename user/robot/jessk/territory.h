@@ -30,6 +30,7 @@ void move_to_territory(uint8_t territory){
 	//move to center of current territory
 	while(find_distance(territories[target_territory])>200){
 		vps_aim_towards_target(territories[current_territory()]);
+		pause(10);
 	}
 	set_wheel_pows(0,0);
 }
@@ -39,6 +40,7 @@ void move_to_next_territory(){
 	while(find_distance(territories[target_territory])>200){
 		printf("\t%.2f away...\n", find_distance(territories[target_territory]));
 		vps_aim_towards_target(territories[target_territory]);
+		pause(10);
 	}
 	set_wheel_pows(0,0);
 }

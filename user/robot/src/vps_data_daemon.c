@@ -124,3 +124,26 @@ void print_vps_pos() {
   Point vpp = get_vps_position();
   printf("<%f, %f>  theta_ %f\n", vpp.x, vpp.y, get_vps_theta());
 }
+
+uint8_t vps_owner(uint8_t territory) {
+  return game.territories[us_to_vps_numbering(territory)].owner;
+}
+
+uint8_t us_to_vps_numbering(uint8_t terr) {
+  //takes a territory in our numbering system and provides the mapping to vps numbers
+  //TODO make this legit
+  return terr;
+}
+
+uint8_t enemy_location() {
+  //TODO fix for real competition
+  return 0;
+}
+
+bool has_balls_remaining(uint8_t terr) {
+  return game.territories[us_to_vps_numbering(terr)].remaining > 0
+}
+
+bool not_over_rate_limit(uint8_t terr) {
+  return game.territories[us_to_vps_numbering(terr)].rate_limit < 1000;
+}

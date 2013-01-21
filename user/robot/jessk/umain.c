@@ -3,8 +3,10 @@
 #include <Point.h>
 #include <moving.h>
 #include <math.h>
+#include "../nicole/territory.h"
 #include "get_vps.h"
 
+#define me 8
 /*
             -------|-------
            /   L   |   G   \
@@ -88,7 +90,8 @@ uint8_t owner(uint8_t territory) {
 	return vps_owner(territory);
 }
 bool is_enemy_in_territory(uint8_t territory){
-	//TODO 
+	bool ret = enemy_location()==current_territory();
+	//return ret;
 	return 0; //not for mock competition 2!
 }
 void move_to_territory(uint8_t territory){
@@ -130,7 +133,7 @@ void claim_territory() {
 	
 }
 bool can_gather_resources(uint8_t territory) {
-
+	bool can = has_balls_remaining(territory) && not_over_rate_limit(territory);
 	return can;
 }
 void gather_resources() {

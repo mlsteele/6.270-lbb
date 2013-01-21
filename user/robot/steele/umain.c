@@ -14,9 +14,13 @@ int usetup() {
 
 int umain() {
   printf("reached umain\n");
+  while(1) {
+    print_vps_pos();
+    pause(400);
+  }
 
   set_wheel_pows(0.3, 0.3);
-  pause(1);
+  pause(100);
   set_wheel_pows(0, 0);
 
   return 0;

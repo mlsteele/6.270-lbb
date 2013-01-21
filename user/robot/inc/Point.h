@@ -6,4 +6,6 @@ typedef struct {
   float y;
 } Point;
 
+float points_distance(Point a, Point b);
+
 #endif

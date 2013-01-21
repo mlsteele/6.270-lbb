@@ -7,6 +7,10 @@
 #include <joyos.h>
 #include <Point.h>
 
+// A note to the wary:
+// this blocks until there is a vps reading,
+// and then it block some more until the robot is near a valid starting location
+// valid starting locations are one of two points on the board across the x axis.
 void vps_data_daemon_init();
 
 Point get_vps_position();
@@ -19,4 +23,5 @@ uint8_t us_to_vps_numbering(uint8_t terr);
 uint8_t enemy_location();
 bool has_balls_remaining(uint8_t terr);
 bool not_over_rate_limit(uint8_t terr);
+
 #endif

@@ -3,8 +3,30 @@
 #include <math.h>
 #include <vps_data_daemon.h>
 float terr_angles[7] = {-120,-60,0,60,120,180,240};
-Point territories[6];
 
+void territory_init() {
+	territories[0] = (Point){0,    -858};
+	territories[1] = (Point){743,  -429};
+	territories[2] = (Point){743,   429}; 
+	territories[3] = (Point){0,     858}; 
+	territories[4] = (Point){-743,  429}; 
+	territories[5] = (Point){-743, -429};
+
+	gears[0] = (Point){297.2, -1206.4};
+	gears[1] = (Point){1193.4,   -346};
+	gears[2] = (Point){896.3,   860.5};
+	gears[3] = (Point){-297.2, 1206.4};
+	gears[4] = (Point){-1193.4,   346};
+	gears[5] = (Point){-896.3, -860.5};
+
+	mines[0] = (Point){-291, -1215}; 
+	mines[1] = (Point){907,   -859}; 
+	mines[2] = (Point){1197,   356}; 
+	mines[3] = (Point){291,   1215};
+	mines[4] = (Point){-907,   859}; 
+	mines[5] = (Point){-1197, -356}; 
+
+}
 uint8_t territory_of_point(Point p) {
 	float ang = atan2(p.y, p.x) / DEGS_TO_RADS;
 	for(int i=0;i<6;i++){

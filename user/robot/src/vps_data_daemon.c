@@ -49,7 +49,8 @@ static bool vps_init_transform() {
     vps_territory_offset = 3;
     return true;
   } else {
-    // printf("WARN: vps_init_transform felt indecisive\n");
+    printf("WARN: vps_init_transform felt indecisive\n");
+    print_vps_pos();
     return false;
   }
 }
@@ -105,10 +106,11 @@ void vps_data_daemon_init() {
   print_vps_pos();
 
   // wait for vps transform
-  printf("waiting for vps transform init...\n");
+  /*printf("waiting for vps transform init...\n");
   while(!vps_init_transform()) pause(30);
   vps_download_info(); // immediately update coordinates to reflect transform
-  printf("have set vps transform\n");
+  printf("have set vps transform\n");*/
+  print_vps_pos();
 }
 
 // accessors

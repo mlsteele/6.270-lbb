@@ -3,24 +3,20 @@
 #include <Point.h>
 #include <moving.h>
 #include <math.h>
-#include "../cat_mouse/get_vps.h"
-#include "../cat_mouse/vps_utils.h"
+//#include "../cat_mouse/get_vps.h"
+//#include "../cat_mouse/vps_utils.h"
+#include <vps_data_daemon.h>
 #include <territory.h>
 
 int usetup (void) {
   extern volatile uint8_t robot_id;
   robot_id = 8;
+  vps_data_daemon_init();
+  territory_init();
   return 0;
 }
 
 int umain (void) {
-
-	territories[0] = (Point) {0,    -858};
-	territories[1] = (Point) {743,  -429};
-	territories[2] = (Point) {743,   429};
-	territories[3] = (Point) {0,     858};
-	territories[4] = (Point) {-743,  429};
-	territories[5] = (Point) {-743, -429};
 
 	//move around the board twice
 	for(int i=0;i<12;i++){

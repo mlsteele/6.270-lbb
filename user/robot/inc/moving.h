@@ -29,5 +29,7 @@ void move_for_time(float velocity, uint32_t millis);
 void move_distance_by_encoders(float distance_mm);
 
 void rotate_by_encoders(float delta_theta);
-
+float find_distance(Point target);
+float target_theta(Point target);
+void vps_aim_towards_target(Point target, uint8_t dir);
 #endif

@@ -126,24 +126,41 @@ void print_vps_pos() {
 }
 
 uint8_t vps_owner(uint8_t territory) {
-  return game.territories[us_to_vps_numbering(territory)].owner;
+  acquire(&vps_data_lock);
+  uint8_t ret = game.territories[us_to_vps_numbering(territory)].owner;
+  release(&vps_data_lock);
+  return ret;
 }
 
 uint8_t us_to_vps_numbering(uint8_t terr) {
   //takes a territory in our numbering system and provides the mapping to vps numbers
   //TODO make this legit
-  return terr;
+  acquire(&vps_data_lock);
+  uint8_t ret = terr;
+  release(&vps_data_lock);
+  return ret;
 }
 
 uint8_t enemy_location() {
   //TODO fix for real competition
-  return 0;
+  acquire(&vps_data_lock);
+  uint8_t ret = 0;
+  release(&vps_data_lock);
+  return ret;
 }
 
 bool has_balls_remaining(uint8_t terr) {
-  return game.territories[us_to_vps_numbering(terr)].remaining > 0
+  acquire(&vps_data_lock);
+  bool ret = game.territories[us_to_vps_numbering(terr)].remaining > 0;
+  release(&vps_data_lock);
+  return ret;
 }
 
 bool not_over_rate_limit(uint8_t terr) {
-  return game.territories[us_to_vps_numbering(terr)].rate_limit < 1000;
+  //assumes rate_limit returns milliseconds until territory can be mined
+  //TODO verify this assumption
+  acquire(&vps_data_lock);
+  bool ret = game.territories[us_to_vps_numbering(terr)].rate_limit < 1000;
+  release(&vps_data_lock);
+  return ret;
 }

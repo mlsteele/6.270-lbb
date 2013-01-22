@@ -37,14 +37,14 @@ static bool vps_init_transform() {
   print_vps_pos();
 
   if (points_distance(get_vps_position(), (Point){-858, 0}) < position_tolerance && fabs(ang_diff(get_vps_theta(), 0)) < angle_tolerance) {
-    vps_transform_board_spin = 0;
-    vps_transform_robot_spin = 0;
+    vps_transform_board_spin = 90;
+    vps_transform_robot_spin = 90;
     printf("vps_init_transform decided board:%f robot:%f\n", vps_transform_board_spin, vps_transform_robot_spin);
     vps_territory_offset = 0;
     return true;
   } else if (points_distance(get_vps_position(), (Point){858, 0}) < position_tolerance && fabs(ang_diff(get_vps_theta(), 180)) < angle_tolerance) {
-    vps_transform_board_spin = 180;
-    vps_transform_robot_spin = 180;
+    vps_transform_board_spin = 270;
+    vps_transform_robot_spin = 270;
     printf("vps_init_transform decided board:%f robot:%f\n", vps_transform_board_spin, vps_transform_robot_spin);
     vps_territory_offset = 3;
     return true;

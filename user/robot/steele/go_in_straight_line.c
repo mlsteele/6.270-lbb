@@ -11,11 +11,11 @@ int usetup (void) {
 int umain (void) {
   printf("print encs_snapshot\n");
 
-  float start_angle = get_gyro_current_angle();
+  float start_angle = gyro_get_degrees();
 
   printf("begin follow loop\n");
   while(1) {
-    float theta_offset = start_angle - get_gyro_current_angle();
+    float theta_offset = start_angle - gyro_get_degrees();
     float wheel_bias = theta_offset / 90;
     float pow_base = 0.3;
     set_wheel_pows(pow_base - wheel_bias, pow_base + wheel_bias);

@@ -1,15 +1,16 @@
 #include <math.h>
 #include <hw_config.h>
 #include <Point.h>
+// #include <gyro.h>
+#include <vps_data_daemon.h>
 
 #include <moving.h>
 
 static l_r_float_t last_motor_pows = {0, 0};
 
-float get_gyro_current_angle() {
-  //return fmod(gyro_get_degrees(), 360);
-  return gyro_get_degrees();
-}
+void bind_gyro_to_vps() {
+  gyro_set_degrees(get_vps_theta());
+};
 
 l_r_uint16_t get_encoders() {
   l_r_uint16_t encs;
@@ -42,28 +43,28 @@ void wheels_brake() {
 
 void rotate(float degrees) {
   printf("Rotating...\n");
-  printf("start angle = %f \n", get_gyro_current_angle());
-  float desired_angle = get_gyro_current_angle() + degrees;
+  printf("start angle = %f \n", gyro_get_degrees());
+  float desired_angle = gyro_get_degrees() + degrees;
   printf("desired_angle = %f \n", desired_angle);
 
   // NOTE: (miles) removed the no-op if statement that was waiting for robot_moving to be implemented
-  if (get_gyro_current_angle() < desired_angle) {
-    printf("%f is less than %f\n", get_gyro_current_angle(), desired_angle);
+  if (gyro_get_degrees() < desired_angle) {
+    printf("%f is less than %f\n", gyro_get_degrees(), desired_angle);
   }
   else {
-    printf("%f is greater than %f\n", get_gyro_current_angle(), desired_angle);
+    printf("%f is greater than %f\n", gyro_get_degrees(), desired_angle);
   }
 
   if (degrees > 0) {
-    while (get_gyro_current_angle() < desired_angle) {
+    while (gyro_get_degrees() < desired_angle) {
       set_wheel_pows(-0.58, 0.58);
-      printf("current angle = %f \n", get_gyro_current_angle());
+      printf("current angle = %f \n", gyro_get_degrees());
     }
   }
   else {
-    while (get_gyro_current_angle() > desired_angle) {
+    while (gyro_get_degrees() > desired_angle) {
       set_wheel_pows(0.58, -0.58);
-      printf("current angle = %f \n", get_gyro_current_angle());
+      printf("current angle = %f \n", gyro_get_degrees());
     }
   }
 
@@ -79,7 +80,7 @@ void rotate(float degrees) {
 //  float dist = sqrt(pow(dist_x, 2)+pow(dist_y, 2));
 //  float desired_angle = atan(dist_y/dist_x);
 
-//  rotate(desired_angle - get_gyro_current_angle());
+//  rotate(desired_angle - gyro_get_degrees());
 //  set_wheel_pows(velocity, velocity);
 
 // //   rotate(desired_angle-current_angle);

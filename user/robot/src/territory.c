@@ -114,7 +114,7 @@ void move_to_next_territory(){
 
 	while(points_distance(get_vps_position(), territories[target_territory]) > 200){
 		printf("%.2f away... from target %.2f, %.2f\n", points_distance(get_vps_position(), territories[target_territory]), territories[target_territory].x, territories[target_territory].y);
-		vps_aim_towards_target(territories[target_territory], 1);
+		vps_gyro_aim_towards_target(territories[target_territory], 1);
 		pause(10);
 	}
 	set_wheel_pows(0,0);

@@ -1,12 +1,13 @@
 #ifndef _MOVING_H_
 #define _MOVING_H_
 
+#include <joyos.h>
 #include <util.h>
 
 #define DEFAULT_SPEED .58
 #define TARGET_TOLERANCE 50
 
-float get_gyro_current_angle();
+void bind_gyro_to_vps();
 
 l_r_uint16_t get_encoders();
 

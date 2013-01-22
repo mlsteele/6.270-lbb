@@ -10,10 +10,11 @@ Point gears[6];
 Point mines[6];
 
 void territory_init();
-uint8_t territory_of_point(Point p);
-uint8_t current_territory();
+void territory_check();
+int8_t territory_of_point(Point p);
+int8_t current_territory();
 
-void move_to_territory(uint8_t territory);
+void move_to_territory(int8_t territory);
 void move_to_next_territory();
 
 #endif

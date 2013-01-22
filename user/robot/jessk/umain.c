@@ -113,9 +113,9 @@ uint8_t next_unowned_territory() {
 	uint8_t cur = current_territory();
 	uint8_t order_of_preference[5] = {
 		(cur + 1)%6,
-		(cur - 1)%6,
+		(cur + 5)%6,
 		(cur + 2)%6, 
-		(cur - 2)%6, 
+		(cur + 4)%6, 
 		(cur + 3)%6
 	};
 	for(uint8_t i=0; i<5; i++){

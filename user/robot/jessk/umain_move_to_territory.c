@@ -13,6 +13,7 @@ int usetup (void) {
   robot_id = 8;
 
   territory_init();
+  gyro_init(PIN_GYRO, LSB_US_PER_DEG, 500);
   return 0;
 }
 

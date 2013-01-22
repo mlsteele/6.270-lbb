@@ -53,6 +53,20 @@ static bool vps_init_transform() {
     print_vps_pos();
     return false;
   }
+
+  // for (int i = 0; i < 6; i++) {
+  //   float angle = atan2(territories[i].y, territories[i].x) * RADS_TO_DEGS;
+  //   if (points_distance(get_vps_position(), territories[i]) < position_tolerance && fabs(ang_diff(get_vps_theta(), angle + 180)) < angle_tolerance) {
+  //     vps_transform_board_spin = 90 + angle;
+  //     vps_transform_robot_spin = 90 + angle;
+  //     printf("vps_init_transform decided [%i] board:%f robot:%f\n", i, vps_transform_board_spin, vps_transform_robot_spin);
+  //     return true;
+  //   }
+  // }
+
+  printf("WARN: vps_init_transform felt indecisive\n");
+  print_vps_pos();
+  return false;
 }
 
 static bool vps_coords_isnt_zero() {

@@ -4,7 +4,7 @@
 #include <vps_data_daemon.h>
 #include <transport.h>
 #include <moving.h>
-#include <util.h>
+float terr_angles[7] = {-120,-60,0,60,120,180,240};
 
 void territory_init() {
 	for (int i = 0; i < 6; i++) {
@@ -70,14 +70,14 @@ void territory_check() {
 }
 
 int8_t territory_of_point(Point p) {
-	float ang = fmod(angdiff(atan2(p.y, p.x) / DEGS_TO_RAD,0),360);
+	float ang = atan2(p.y, p.x) / DEGS_TO_RADS;
 	for(int i=0;i<6;i++){
-		if(ang >= fmod(240+60*i,360)      // CW bound of territory
-	    && ang <  fmod(240+60*i+60,360)){ //CCW bound of territory
+		if((ang>terr_angles[i] && ang<terr_angles[i+1])
+		|| (ang+360>terr_angles[i] && ang+360<terr_angles[i+1]))  {
 			return i;
 		}	
 	}
-	return -1;
+	return 255;
 }
 
 int8_t current_territory() {

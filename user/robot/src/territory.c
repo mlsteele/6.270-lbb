@@ -8,9 +8,9 @@ float terr_angles[7] = {-120,-60,0,60,120,180,240};
 
 void territory_init() {
 	for (int i = 0; i < 6; i++) {
-		float light_angle = 270 + 60*i;
-		float gear_angle = 360 - 76.16 + 60*i;
-		float lever_angle = 180 + 76.55 + 60*i;
+		float light_angle = 180 + 90  + 0     + 60 * i;
+		float gear_angle  = 180 + 180 - 76.16 + 60 * i;
+		float lever_angle = 180 + 0   + 76.55 + 60 * i;
 		territories[i] = (Point) {
 			TERRITORY_RAD_TO_LIGHT * cos(light_angle * DEGS_TO_RADS) ,
 			TERRITORY_RAD_TO_LIGHT * sin(light_angle * DEGS_TO_RADS) };
@@ -114,7 +114,7 @@ void move_to_next_territory(){
 
 	while(points_distance(get_vps_position(), territories[target_territory]) > 200){
 		printf("%.2f away... from target %.2f, %.2f\n", points_distance(get_vps_position(), territories[target_territory]), territories[target_territory].x, territories[target_territory].y);
-		vps_gyro_aim_towards_target(territories[target_territory], 1);
+		vps_aim_towards_target(territories[target_territory], 1);
 		pause(10);
 	}
 	set_wheel_pows(0,0);

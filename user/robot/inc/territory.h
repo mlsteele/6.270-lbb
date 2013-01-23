@@ -4,6 +4,7 @@
 #include <joyos.h>
 #include <Point.h>
 
+// in local coordinates, assume robot starts in center of territory '0' at 0, -y and angle 90
 float terr_angles[7];
 Point territories[6];
 Point gears[6];

@@ -1,8 +1,9 @@
 #include <vps_data_daemon.h>
 
 #include <math.h>
-#include <hw_config.h>
 #include <util.h>
+#include <hw_config.h>
+#include <territory.h>
 
 static Point vps_active_target;
 static Point vps_position;
@@ -30,41 +31,28 @@ static float vps_transform_rotate(float theta) {
 // robot has not moved
 // return success
 static bool vps_init_transform() {
-  float position_tolerance = 400;
-  float angle_tolerance = 40;
+  float position_tolerance = 200;
+  float angle_tolerance = 30;
 
   printf("printing probably untransformed position\n");
   print_vps_pos();
 
-  if (points_distance(get_vps_position(), (Point){-858, 0}) < position_tolerance && fabs(ang_diff(get_vps_theta(), 0)) < angle_tolerance) {
-    vps_transform_board_spin = 90;
-    vps_transform_robot_spin = 90;
-    printf("vps_init_transform decided board:%f robot:%f\n", vps_transform_board_spin, vps_transform_robot_spin);
-    vps_territory_offset = 0;
+  for (int i = 0; i < 6; i++) {
+    float angle = i * 60;
+    Point territory_light_pos = {
+      TERRITORY_RAD_TO_LIGHT * cos(angle * DEGS_TO_RADS) ,
+      TERRITORY_RAD_TO_LIGHT * sin(angle * DEGS_TO_RADS) };
+    if (   points_distance(get_vps_position(), territory_light_pos) < position_tolerance 
+        && fabs(ang_diff(get_vps_theta(), angle + 180)) < angle_tolerance) {
+      vps_transform_board_spin = fmod(1080 - 90 - 60 * i, 360);
+      vps_transform_robot_spin = fmod(1080 - 90 - 60 * i, 360);
+    }
+    vps_territory_offset = 6 - i;
+    printf("vps_init_transform decided guess: [%i] toffset: [%i] board:%f robot:%f\n", i, vps_territory_offset, vps_transform_board_spin, vps_transform_robot_spin);
     return true;
-  } else if (points_distance(get_vps_position(), (Point){858, 0}) < position_tolerance && fabs(ang_diff(get_vps_theta(), 180)) < angle_tolerance) {
-    vps_transform_board_spin = 270;
-    vps_transform_robot_spin = 270;
-    printf("vps_init_transform decided board:%f robot:%f\n", vps_transform_board_spin, vps_transform_robot_spin);
-    vps_territory_offset = 3;
-    return true;
-  } else {
-    printf("WARN: vps_init_transform felt indecisive\n");
-    print_vps_pos();
-    return false;
   }
 
-  // for (int i = 0; i < 6; i++) {
-  //   float angle = atan2(territories[i].y, territories[i].x) * RADS_TO_DEGS;
-  //   if (points_distance(get_vps_position(), territories[i]) < position_tolerance && fabs(ang_diff(get_vps_theta(), angle + 180)) < angle_tolerance) {
-  //     vps_transform_board_spin = 90 + angle;
-  //     vps_transform_robot_spin = 90 + angle;
-  //     printf("vps_init_transform decided [%i] board:%f robot:%f\n", i, vps_transform_board_spin, vps_transform_robot_spin);
-  //     return true;
-  //   }
-  // }
-
-  printf("WARN: vps_init_transform felt indecisive\n");
+  printf("WARN: vps_init_transform did not match coordinates\n");
   print_vps_pos();
   return false;
 }

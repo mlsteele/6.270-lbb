@@ -52,9 +52,9 @@ void vps_gyro_aim_towards_target(Point target, uint8_t dir) {
     return;
   }
 
-  float pow_com = fclamp(dist / 300.f, 0.34, 1) * fclamp((40 - fabs(angdiff)) / 40, 0, 1);
+  float pow_com = fclamp(dist / 300.f, 0.28, 0.68) * fclamp((24 - fabs(angdiff)) / 24, 0, 1);
   // float pow_bias = fclampmag(pow(angdiff / 90, 3), 0, 0.6);
-  float pow_bias = (angdiff > 0 ? 1 : -1) * (1 - pow_com) / 2;
+  float pow_bias = (angdiff > 0 ? 1 : -1) * (0.68 - fclamp(pow_com, 0, 0.68)) / 2;
   set_wheel_pows(
     pow_com - pow_bias ,
     pow_com + pow_bias );

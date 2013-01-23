@@ -4,6 +4,8 @@
 #include <vps_data_daemon.h>
 #include <transport.h>
 #include <moving.h>
+#include "../cat_mouse/vps_utils.h"
+
 float terr_angles[7] = {-120,-60,0,60,120,180,240};
 
 void territory_init() {

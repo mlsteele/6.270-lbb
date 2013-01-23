@@ -90,7 +90,7 @@ uint8_t owner(uint8_t territory) {
 bool is_enemy_in_territory(uint8_t territory){
 	bool ret = enemy_location()==current_territory();
 	//return ret;
-	return 0; //not for mock competition 2!
+	return 0; //TODO change this when not in mock competition
 }
 void move_to_territory(uint8_t territory){
 	//It's someone else's job to make sure the enemy isn't in

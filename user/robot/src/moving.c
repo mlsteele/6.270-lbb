@@ -73,6 +73,27 @@ void rotate(float degrees) {
   printf("End rotate.\n\n");
 }
 
+void rotate_by_gyro(float dtheta) {
+  const float drive_max = 0.68;
+  const float drive_min = 0.3;
+  const float angle_tolerance = 5;
+  float final = gyro_get_degrees() + dtheta;
+
+  while(fabs(ang_diff(final, gyro_get_degrees())) > angle_tolerance) {
+    float angdiff = ang_diff(final, gyro_get_degrees());
+    int direction = angdiff > 0 ? 1 : -1;
+    float pow = fclamp(fabs(angdiff) / 90, drive_min, drive_max);
+    set_wheel_pows(
+      -direction * pow ,
+      direction  * pow  );
+
+    printf("rotating by %.2f  ", dtheta);
+    printf("angdiff %.2f  ", angdiff);
+    printf("gyro %.2f %> %.2f  ", gyro_get_degrees(), fmod(gyro_get_degrees(), 360));
+    printf("wpows [ %.2f , %.2f ]\n", get_wheel_pows().l, get_wheel_pows().r);
+  }
+}
+
 // void move_to(Point p, float velocity) {
 //  //moves in a straight line to the desired point at the desired velocity
 //  float dist_x = p.x - unimplemented_get_current_location().x;

@@ -1,3 +1,5 @@
+// low level movement
+
 #ifndef _MOVING_H_
 #define _MOVING_H_
 
@@ -21,6 +23,7 @@ void print_wheel_pows();
 void wheels_brake();
 
 void rotate(float degrees);
+void rotate_by_gyro(float dtheta);
 
 float get_heading();
 

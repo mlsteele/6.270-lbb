@@ -21,18 +21,19 @@ int umain (void) {
   vps_data_daemon_init();
   bind_gyro_to_vps();
 
-  // while(true) {
-  //   vps_gyro_aim_towards_target((Point){0, -850});
-  //   // vps_aim_towards_target((Point){0, -850});
-  //   pause(10);
-  // }
-
-  // move around the board twice
-  for(int i=0;i<12;i++){
-    move_to_next_territory();
-    set_wheel_pows(0, 0);
-    pause(1000);
+  while(true) {
+    vps_aim_towards_target((Point){0, -850});
+    // vps_aim_towards_target(territories[0]);
+    // vps_aim_towards_target(territories[1]);
+    pause(10);
   }
+
+  // // move around the board twice
+  // for(int i=0;i<12;i++){
+  //   move_to_next_territory();
+  //   set_wheel_pows(0, 0);
+  //   pause(1000);
+  // }
 
   pause(2000);
 

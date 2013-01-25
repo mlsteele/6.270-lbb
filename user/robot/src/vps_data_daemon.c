@@ -12,50 +12,50 @@ static float vps_theta;
 static bool vps_daemon_has_run = false;
 static struct lock vps_data_lock;
 
-static float vps_transform_board_spin = 0; // in degrees
-static float vps_transform_robot_spin = 0; // in degrees
-static uint8_t vps_territory_offset = 0; // index shift for territories
+// static float vps_transform_board_spin = 0; // in degrees
+// static float vps_transform_robot_spin = 0; // in degrees
+// static uint8_t vps_territory_offset = 0; // index shift for territories
 
-static Point vps_transform_spin(Point p) {
-  float dtheta = vps_transform_board_spin * DEGS_TO_RADS;
-  return (Point) {
-    (p.x * UNITS_VPS_TO_MM) * cos(dtheta) - (p.y * UNITS_VPS_TO_MM) * sin(dtheta),
-    (p.x * UNITS_VPS_TO_MM) * sin(dtheta) + (p.y * UNITS_VPS_TO_MM) * cos(dtheta)  };
-}
+// static Point vps_transform_spin(Point p) {
+//   float dtheta = vps_transform_board_spin * DEGS_TO_RADS;
+//   return (Point) {
+//     (p.x * UNITS_VPS_TO_MM) * cos(dtheta) - (p.y * UNITS_VPS_TO_MM) * sin(dtheta),
+//     (p.x * UNITS_VPS_TO_MM) * sin(dtheta) + (p.y * UNITS_VPS_TO_MM) * cos(dtheta)  };
+// }
 
-static float vps_transform_rotate(float theta) {
-  return fmod(theta * UNITS_VPS_TO_DEG + vps_transform_robot_spin, 360);
-}
+// static float vps_transform_rotate(float theta) {
+//   return fmod(theta * UNITS_VPS_TO_DEG + vps_transform_robot_spin, 360);
+// }
 
 // prereq: vps has initialized, transform is 0
 // robot has not moved
 // return success
-static bool vps_init_transform() {
-  float position_tolerance = 200;
-  float angle_tolerance = 30;
+// static bool vps_init_transform() {
+//   float position_tolerance = 200;
+//   float angle_tolerance = 30;
 
-  printf("printing probably untransformed position\n");
-  print_vps_pos();
+//   printf("printing probably untransformed position\n");
+//   print_vps_pos();
 
-  for (int i = 0; i < 6; i++) {
-    float angle = i * 60;
-    Point territory_light_pos = {
-      TERRITORY_RAD_TO_LIGHT * cos(angle * DEGS_TO_RADS) ,
-      TERRITORY_RAD_TO_LIGHT * sin(angle * DEGS_TO_RADS) };
-    if (   points_distance(get_vps_position(), territory_light_pos) < position_tolerance 
-        && fabs(ang_diff(get_vps_theta(), angle + 180)) < angle_tolerance) {
-      vps_transform_board_spin = fmod(1080 - 90 - 60 * i, 360);
-      vps_transform_robot_spin = fmod(1080 - 90 - 60 * i, 360);
-    }
-    vps_territory_offset = 6 - i;
-    printf("vps_init_transform decided guess: [%i] toffset: [%i] board:%f robot:%f\n", i, vps_territory_offset, vps_transform_board_spin, vps_transform_robot_spin);
-    return true;
-  }
+//   for (int i = 0; i < 6; i++) {
+//     float angle = i * 60;
+//     Point territory_light_pos = {
+//       TERRITORY_RAD_TO_LIGHT * cos(angle * DEGS_TO_RADS) ,
+//       TERRITORY_RAD_TO_LIGHT * sin(angle * DEGS_TO_RADS) };
+//     if (   points_distance(get_vps_position(), territory_light_pos) < position_tolerance 
+//         && fabs(ang_diff(get_vps_theta(), angle + 180)) < angle_tolerance) {
+//       vps_transform_board_spin = fmod(1080 - 90 - 60 * i, 360);
+//       vps_transform_robot_spin = fmod(1080 - 90 - 60 * i, 360);
+//     }
+//     vps_territory_offset = 6 - i;
+//     printf("vps_init_transform decided guess: [%i] toffset: [%i] board:%f robot:%f\n", i, vps_territory_offset, vps_transform_board_spin, vps_transform_robot_spin);
+//     return true;
+//   }
 
-  printf("WARN: vps_init_transform did not match coordinates\n");
-  print_vps_pos();
-  return false;
-}
+//   printf("WARN: vps_init_transform did not match coordinates\n");
+//   print_vps_pos();
+//   return false;
+// }
 
 static bool vps_coords_isnt_zero() {
   int ret = !(  game.coords[0].x     == 0 &&
@@ -75,9 +75,9 @@ static void vps_download_info() {
 
   if (vps_daemon_has_run || vps_coords_isnt_zero()) {
     // printf("swapping vps coords in\n");
-    vps_position = vps_transform_spin((Point) {game.coords[0].x, game.coords[0].y});
-    vps_active_target = vps_transform_spin((Point) {game.coords[1].x, game.coords[1].y});
-    vps_theta = vps_transform_rotate(game.coords[0].theta);
+    vps_position = (Point) {game.coords[0].x * UNITS_VPS_TO_MM, game.coords[0].y * UNITS_VPS_TO_MM};
+    vps_active_target = (Point) {game.coords[1].x * UNITS_VPS_TO_MM, game.coords[1].y * UNITS_VPS_TO_MM};
+    vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;
     vps_daemon_has_run = true;
   }
   release(&vps_data_lock);
@@ -108,12 +108,12 @@ void vps_data_daemon_init() {
   print_vps_pos();
 
   // wait for vps transform
-  printf("waiting for vps transform init...\n");
-  while(!vps_init_transform()) pause(30);
-  printf("have set vps transform, applying...\n");
-  vps_download_info(); // immediately update coordinates to reflect transform
-  printf("have applied vps transform\n");
-  print_vps_pos();
+  // printf("waiting for vps transform init...\n");
+  // while(!vps_init_transform()) pause(30);
+  // printf("have set vps transform, applying...\n");
+  // vps_download_info(); // immediately update coordinates to reflect transform
+  // printf("have applied vps transform\n");
+  // print_vps_pos();
 }
 
 // accessors
@@ -178,38 +178,38 @@ void print_vps_pos() {
   printf("<%f, %f>  theta_ %f\n", vpp.x, vpp.y, get_vps_theta());
 }
 
-uint8_t vps_owner(uint8_t terr) {
-  acquire(&vps_data_lock);
-  uint8_t ret = game.territories[us_to_vps_numbering(terr)].owner;
-  release(&vps_data_lock);
-  return ret;
-}
+// uint8_t vps_owner(uint8_t terr) {
+//   acquire(&vps_data_lock);
+//   uint8_t ret = game.territories[us_to_vps_numbering(terr)].owner;
+//   release(&vps_data_lock);
+//   return ret;
+// }
 
-uint8_t us_to_vps_numbering(uint8_t terr) {
-  return (terr+vps_territory_offset)%6;
-}
+// uint8_t us_to_vps_numbering(uint8_t terr) {
+//   return (terr+vps_territory_offset)%6;
+// }
 
-uint8_t enemy_location() {
-  //TODO fix for real competition
-  //don't forget to return it in our numbering system.
-  acquire(&vps_data_lock);
-  uint8_t ret = 0;
-  release(&vps_data_lock);
-  return ret;
-}
+// uint8_t enemy_location() {
+//   //TODO fix for real competition
+//   //don't forget to return it in our numbering system.
+//   acquire(&vps_data_lock);
+//   uint8_t ret = 0;
+//   release(&vps_data_lock);
+//   return ret;
+// }
 
-bool has_balls_remaining(uint8_t terr) {
-  acquire(&vps_data_lock);
-  bool ret = game.territories[us_to_vps_numbering(terr)].remaining > 0;
-  release(&vps_data_lock);
-  return ret;
-}
+// bool has_balls_remaining(uint8_t terr) {
+//   acquire(&vps_data_lock);
+//   bool ret = game.territories[us_to_vps_numbering(terr)].remaining > 0;
+//   release(&vps_data_lock);
+//   return ret;
+// }
 
-bool not_over_rate_limit(uint8_t terr) {
-  //assumes rate_limit returns milliseconds until territory can be mined
-  //TODO verify this assumption
-  acquire(&vps_data_lock);
-  bool ret = game.territories[us_to_vps_numbering(terr)].rate_limit < 1000;
-  release(&vps_data_lock);
-  return ret;
-}
+// bool not_over_rate_limit(uint8_t terr) {
+//   //assumes rate_limit returns milliseconds until territory can be mined
+//   //TODO verify this assumption
+//   acquire(&vps_data_lock);
+//   bool ret = game.territories[us_to_vps_numbering(terr)].rate_limit < 1000;
+//   release(&vps_data_lock);
+//   return ret;
+// }

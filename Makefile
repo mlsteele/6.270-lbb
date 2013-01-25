@@ -1,8 +1,8 @@
 # User entry point (umain)
-USERMAIN ?= user/robot/nicole/milestone_2_umain.c
+USERMAIN ?= user/robot/jessk/umain_move_to_territory.c
 
 # Serial port
-AVRDUDE_USERPORT ?= COM7
+AVRDUDE_USERPORT ?= COM4
 
 # Mac Users - you may need to change this to stk500 if you get an error when programming
 PROGRAMMER = stk500v1

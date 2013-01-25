@@ -1,5 +1,6 @@
 #include <territory.h>
 #include <moving.h>
+#include <hwconfig.h>
 #include <vps_data_daemon.h>
 #include "../jessk/encoder_daemon.h"
 #include <transport.h>
@@ -113,34 +114,51 @@ void gather_resources() {
 // }
 
 void explore() {
-	uint8_t starting_territory = current_territory();
-	move_to_territory((current_territory()+1)%6);
-	while(current_territory()!=starting_territory){
-		move_to_territory((current_territory()+1)%6);
-	}
+	// borked
+	// uint8_t starting_territory = current_territory();
+	// move_to_territory((current_territory()+1)%6);
+	// while(current_territory()!=starting_territory){
+	// 	move_to_territory((current_territory()+1)%6);
+	// }
+
+	//from umain_move_to_territory.c
+	 // move around the board twice
+  for(int i=0;i<12;i++){
+  	printf("Going to explore next territory");
+    move_to_next_territory();
+    set_wheel_pows(0, 0);
+    printf("In next territory");
+    pause(1000);
+  }
+  pause(2000);
+  return 0;
 }
 
 int usetup (void) {
   extern volatile uint8_t robot_id;
   robot_id = 8;
+  gyro_init(PIN_GYRO, LSB_US_PER_DEG, 500);
   vps_data_daemon_init();
   encoder_daemon_init();
+  territory_init();
   return 0;
 }
 
 int umain (void) {
+	bind_gyro_to_vps();
 	starting_time = get_time();
 	
 	base_5 = (Point){-288, -167};
 	base_0 = (Point){0,    -333};
 	base_1 = (Point){288,  -167};
 
-	explore();
+//	explore();
 
 	while(1) {
 		if(
 			//numb_balls >= MAX_BALLS ||
 			 time_left() < 20000) {
+			printf("Competition almost over, moving to base");
 			//if you are full of balls or time is about to run out (20sec)
 			move_to_base();
 		//	drop_balls(); TODO
@@ -150,7 +168,7 @@ int umain (void) {
 		if (owner(current_territory())==me 
 		// || is_enemy_in_territory(current_territory())
 			){
-			printf("moving to territory %d", next_unowned_territory());
+			printf("I own current territory (%d), moving to territory %d", current_territory(), next_unowned_territory());
 			move_to_territory(next_unowned_territory());
 		}
 		printf("attempting to claim territory %d", current_territory());

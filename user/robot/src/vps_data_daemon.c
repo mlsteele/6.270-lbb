@@ -17,10 +17,10 @@ static float vps_transform_robot_spin = 0; // in degrees
 static uint8_t vps_territory_offset = 0; // index shift for territories
 
 static Point vps_transform_spin(Point p) {
-  float vps_transform_board_spin_radians = vps_transform_board_spin * DEGS_TO_RADS;
+  float dtheta = vps_transform_board_spin * DEGS_TO_RADS;
   return (Point) {
-    (p.x * UNITS_VPS_TO_MM) * cos(vps_transform_board_spin_radians) - (p.y * UNITS_VPS_TO_MM) * sin(vps_transform_board_spin_radians),
-    (p.x * UNITS_VPS_TO_MM) * sin(vps_transform_board_spin_radians) + (p.y * UNITS_VPS_TO_MM) * cos(vps_transform_board_spin_radians)  };
+    (p.x * UNITS_VPS_TO_MM) * cos(dtheta) - (p.y * UNITS_VPS_TO_MM) * sin(dtheta),
+    (p.x * UNITS_VPS_TO_MM) * sin(dtheta) + (p.y * UNITS_VPS_TO_MM) * cos(dtheta)  };
 }
 
 static float vps_transform_rotate(float theta) {

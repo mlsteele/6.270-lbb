@@ -14,11 +14,23 @@ int usetup() {
 }
 
 int umain() {
-  rotate(30);
+  rotate_by_gyro(30);
+  set_wheel_pows(0,0);
+  pause(500);
   for (int i = 0; i < 6; i++) {
     move_distance_by_encoders(points_distance(territories[0], territories[1]));
+    set_wheel_pows(0,0);
+    pause(500);
     rotate_by_gyro(60);
   }
+
+  // const int pows_len = 5;
+  // float pows[5] = {0.3, 0.6, 1, 0.5, 0.2};
+
+  // for (int i = 0; i < pows_len; i++) {
+  //   set_wheel_pows(pows[i], pows[i]);
+  //   pause(500);
+  // }
 
   set_wheel_pows(0, 0);
 

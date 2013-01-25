@@ -74,12 +74,16 @@ void rotate(float degrees) {
 }
 
 void rotate_by_gyro(float dtheta) {
-  const float drive_max = 0.68;
-  const float drive_min = 0.3;
+  const float drive_max = 0.7;
+  const float drive_min = 0.13;
   const float angle_tolerance = 5;
+  const float correct_hold_time = 400;
   float final = gyro_get_degrees() + dtheta;
 
-  while(fabs(ang_diff(final, gyro_get_degrees())) > angle_tolerance) {
+  bool correct_timer_active = false;
+  uint32_t correct_timer_start = 0;
+
+  while(!correct_timer_active || get_time() < correct_timer_start + correct_hold_time) {
     float angdiff = ang_diff(final, gyro_get_degrees());
     int direction = angdiff > 0 ? 1 : -1;
     float pow = fclamp(fabs(angdiff) / 90, drive_min, drive_max);
@@ -87,10 +91,22 @@ void rotate_by_gyro(float dtheta) {
       -direction * pow ,
       direction  * pow  );
 
+    if (fabs(ang_diff(final, gyro_get_degrees())) < angle_tolerance) {
+      if (!correct_timer_active) {
+        correct_timer_start = get_time();
+      }
+      correct_timer_active = true;
+    } else {
+      correct_timer_active = false;
+    }
+
     printf("rotating by %.2f  ", dtheta);
     printf("angdiff %.2f  ", angdiff);
     printf("gyro %.2f %> %.2f  ", gyro_get_degrees(), fmod(gyro_get_degrees(), 360));
-    printf("wpows [ %.2f , %.2f ]\n", get_wheel_pows().l, get_wheel_pows().r);
+    printf("wpows [ %.2f , %.2f ]  ", get_wheel_pows().l, get_wheel_pows().r);
+    printf("timer:%i start:%i since:%i\n", correct_timer_active, correct_timer_start, get_time() - correct_timer_start);
+
+    pause(2);
   }
 }
 
@@ -135,7 +151,7 @@ void move_distance_by_encoders(float distance_mm) {
   int direction = distance_mm > 0 ? 1 : -1;
   if (direction == -1) distance_mm = fabs(distance_mm);
 
-  float drive_max = 0.68;
+  float drive_max = 0.45;
   float drive_min = 0.25;
 
   l_r_uint16_t encoders_start = get_encoders();
@@ -151,8 +167,9 @@ void move_distance_by_encoders(float distance_mm) {
       (delta_encs_mm.l < distance_mm) ? wheel_pow_maybe_l : 0 ,
       (delta_encs_mm.r < distance_mm) ? wheel_pow_maybe_r : 0 );
 
-    printf("wheel_pows [%f, %f]    traveled: [%f, %f]\n",
-      get_wheel_pows().l, get_wheel_pows().r, delta_encs_mm.l - distance_mm, delta_encs_mm.r - distance_mm);
+    printf("traveled: [%f, %f]  ", delta_encs_mm.l, delta_encs_mm.r);
+    printf("remaining: [%f, %f]  ", distance_mm - delta_encs_mm.l, distance_mm - delta_encs_mm.r);
+    printf("wheel_pows [%f, %f]\n", get_wheel_pows().l, get_wheel_pows().r);
 
     pause(2);
   }

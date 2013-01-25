@@ -187,20 +187,21 @@ void move_distance_by_encoders(float distance_mm) {
 }
 
 // ~1.2mm overshoot
+// TODO: handle backwards
 void move_distance_by_encoders_gyro(float distance_mm) {
   const float drive_max = 0.45;
-  const float drive_min = 0.25;
-
+  const float drive_min = 0.3;
 
   set_wheel_pows(0, 0);
 
   float starting_angle = gyro_get_degrees();
-  int direction = distance_mm > 0 ? 1 : -1;
-  if (direction == -1) distance_mm = fabs(distance_mm);
+  // int direction = distance_mm > 0 ? 1 : -1;
+  // if (direction == -1) distance_mm = fabs(distance_mm);
 
   l_r_uint16_t encoders_start = get_encoders();
   l_r_float_t delta_encs_mm = {0, 0};
-  while (delta_encs_mm.l < distance_mm || delta_encs_mm.r < distance_mm) {
+  float avg_dist_traveled = 0;
+  while (avg_dist_traveled < distance_mm) {
     delta_encs_mm.l = (get_encoders().l - encoders_start.l) * MM_PER_TICK_WHEELS;
     delta_encs_mm.r = (get_encoders().r - encoders_start.r) * MM_PER_TICK_WHEELS;
 

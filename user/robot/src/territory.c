@@ -94,3 +94,18 @@ int8_t current_territory() {
 // 	}
 // 	set_wheel_pows(0,0);
 // }
+
+void move_to_gear() {
+	//These numbers will have to be tweaked
+	//maybe we don't even need the loop
+	while(points_distance(get_vps_position(),gears[current_territory()]) > 200){
+		vps_aim_towards_target(gears[current_territory()], 1);
+		pause(20);
+	}
+	set_wheel_pows(0,0);
+}
+
+void spin_gear() {
+  //motor_set_vel(PIN_MOTOR_DRIVE_L, l > -255 ? (l < 255 ? (l * 255) : 255) : -255);
+
+}

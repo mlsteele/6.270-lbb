@@ -146,13 +146,14 @@ void move_for_time(float velocity, uint32_t millis) {
 
 // ~1.2mm overshoot
 void move_distance_by_encoders(float distance_mm) {
+  const float drive_max = 0.45;
+  const float drive_min = 0.25;
+  const float catchup_max = 50; // distance by which the wheels are allowed to skew
+
   set_wheel_pows(0, 0);
 
   int direction = distance_mm > 0 ? 1 : -1;
   if (direction == -1) distance_mm = fabs(distance_mm);
-
-  float drive_max = 0.45;
-  float drive_min = 0.25;
 
   l_r_uint16_t encoders_start = get_encoders();
   l_r_float_t delta_encs_mm = {0, 0};
@@ -163,9 +164,12 @@ void move_distance_by_encoders(float distance_mm) {
     float wheel_pow_maybe_l = direction * fclamp( (distance_mm - delta_encs_mm.l) / 400 * (drive_max - drive_min) + drive_min, 0, 1 );
     float wheel_pow_maybe_r = direction * fclamp( (distance_mm - delta_encs_mm.r) / 400 * (drive_max - drive_min) + drive_min, 0, 1 );
 
+    bool allow_wheel_l = delta_encs_mm.l < delta_encs_mm.r + catchup_max;
+    bool allow_wheel_r = delta_encs_mm.r < delta_encs_mm.l + catchup_max;
+
     set_wheel_pows(
-      (delta_encs_mm.l < distance_mm) ? wheel_pow_maybe_l : 0 ,
-      (delta_encs_mm.r < distance_mm) ? wheel_pow_maybe_r : 0 );
+      (delta_encs_mm.l < distance_mm && allow_wheel_l) ? wheel_pow_maybe_l : 0 ,
+      (delta_encs_mm.r < distance_mm && allow_wheel_r) ? wheel_pow_maybe_r : 0 );
 
     printf("traveled: [%f, %f]  ", delta_encs_mm.l, delta_encs_mm.r);
     printf("remaining: [%f, %f]  ", distance_mm - delta_encs_mm.l, distance_mm - delta_encs_mm.r);
@@ -177,7 +181,55 @@ void move_distance_by_encoders(float distance_mm) {
   set_wheel_pows(0, 0);
 
   printf("move_distance_by_encoders stats: traveled [%f][%f]  target [%f][%f]  diff[%f][%f]\n",
-    delta_encs_mm.l, delta_encs_mm.r, distance_mm, distance_mm, delta_encs_mm.l - distance_mm, delta_encs_mm.r - distance_mm);
+    delta_encs_mm.l, delta_encs_mm.r,
+    distance_mm, distance_mm,
+    delta_encs_mm.l - distance_mm,delta_encs_mm.r - distance_mm);
+}
+
+// ~1.2mm overshoot
+void move_distance_by_encoders_gyro(float distance_mm) {
+  const float drive_max = 0.45;
+  const float drive_min = 0.25;
+
+
+  set_wheel_pows(0, 0);
+
+  float starting_angle = gyro_get_degrees();
+  int direction = distance_mm > 0 ? 1 : -1;
+  if (direction == -1) distance_mm = fabs(distance_mm);
+
+  l_r_uint16_t encoders_start = get_encoders();
+  l_r_float_t delta_encs_mm = {0, 0};
+  while (delta_encs_mm.l < distance_mm || delta_encs_mm.r < distance_mm) {
+    delta_encs_mm.l = (get_encoders().l - encoders_start.l) * MM_PER_TICK_WHEELS;
+    delta_encs_mm.r = (get_encoders().r - encoders_start.r) * MM_PER_TICK_WHEELS;
+
+    float avg_dist_traveled = delta_encs_mm.l + delta_encs_mm.r / 2;
+    float angdiff = ang_diff(starting_angle, gyro_get_degrees());
+
+    float pow_com = fclamp( (distance_mm - avg_dist_traveled) / 400 * (drive_max - drive_min) + drive_min, 0, 1 );
+    float pow_bias = angdiff / 90;
+
+    set_wheel_pows(
+      pow_com - pow_bias ,
+      pow_com + pow_bias );
+
+    printf("traveled: [%.2f, %.2f] <%.2f>  ", delta_encs_mm.l, delta_encs_mm.r, avg_dist_traveled);
+    printf("remaining: [%.2f, %.2f] <%.2f>  ", distance_mm - delta_encs_mm.l, distance_mm - delta_encs_mm.r, distance_mm - avg_dist_traveled);
+    printf("gyro_diff: %.2f  ", angdiff);
+    printf("pows: %.2f %.2f  ", pow_com, pow_bias);
+    printf("wheel_pows [%.2f, %.2f]\n", get_wheel_pows().l, get_wheel_pows().r);
+
+    pause(2);
+  }
+
+  set_wheel_pows(0, 0);
+
+  printf("move_distance_by_gyro_encoders stats: traveled [%f][%f]  target [%f][%f]  diff[%f][%f]  angle_bias %f\n",
+    delta_encs_mm.l, delta_encs_mm.r,
+    distance_mm, distance_mm,
+    delta_encs_mm.l - distance_mm,delta_encs_mm.r - distance_mm,
+    ang_diff(starting_angle, gyro_get_degrees()));
 }
 
 

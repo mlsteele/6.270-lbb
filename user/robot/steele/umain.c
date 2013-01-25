@@ -14,11 +14,11 @@ int usetup() {
 }
 
 int umain() {
-  rotate_by_gyro(30);
+  rotate_by_gyro(-30);
   set_wheel_pows(0,0);
   pause(500);
   for (int i = 0; i < 6; i++) {
-    move_distance_by_encoders(points_distance(territories[0], territories[1]));
+    move_distance_by_encoders_gyro(points_distance(territories[0], territories[1]));
     set_wheel_pows(0,0);
     pause(500);
     rotate_by_gyro(60);

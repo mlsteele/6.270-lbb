@@ -76,7 +76,7 @@ int8_t territory_of_point(Point p) {
 	for(int i=0;i<6;i++){
 		if((ang>terr_angles[i] && ang<terr_angles[i+1])
 		|| (ang+360>terr_angles[i] && ang+360<terr_angles[i+1]))  {
-			return i;
+			return (i+5)%6;
 		}	
 	}
 	return 255;

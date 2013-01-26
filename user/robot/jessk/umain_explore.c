@@ -27,7 +27,7 @@ int umain (void) {
 		printf("Moving to target %d (%.2f, %.2f)\n", i, territories[i].x, territories[i].y);
 		while(find_distance(territories[i])>200){
 			printf("\t%.2f away...\n", find_distance(territories[i]));
-			vps_aim_towards_target(territories[i]);
+			aim_towards_target_vps(territories[i]);
 		}
 	}
 	set_wheel_pows(0,0);

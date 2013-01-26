@@ -24,7 +24,7 @@ int umain (void) {
 
   // proportional control version
   while(1) {
-    vps_aim_towards_target();
+    aim_towards_target_vps();
     pause(4);
   }
   return 0;

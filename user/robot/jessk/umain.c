@@ -129,7 +129,7 @@ uint8_t next_unowned_territory() {
 }
 void claim_territory() {
 	while(find_distance(territories[i])>100 && !robot_stuck()){
-		vps_aim_towards_target(gears[current_territory()], -1);
+		aim_towards_target_vps(gears[current_territory()], -1);
 		pause(10);
 	}
 	set_wheel_pows(0,0);

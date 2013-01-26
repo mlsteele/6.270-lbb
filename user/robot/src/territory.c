@@ -45,7 +45,7 @@ void territory_init() {
 	// gears[0] = (Point){297.2, -1206.4};
 	// gears[1] = (Point){1193.4,   -346};
 	// gears[2] = (Point){896.3,   860.5};
-	// gears[3] = (Point){-297.2, 1206.4};
+	// gears[3] = (Point){-297.2206.4};
 	// gears[4] = (Point){-1193.4,   346};
 	// gears[5] = (Point){-896.3, -860.5};
 
@@ -96,11 +96,11 @@ void move_to_territory(int8_t territory){
 
 	//move into the target territory
 	while(territory-current_territory() != 0){ 
-		vps_aim_towards_target(territories[(current_territory()+dir)%6], 1);
+		aim_towards_target_vps(territories[(current_territory()+dir)%6]);
 	}
 	//move to center of current territory
 	while(points_distance(get_vps_position(), territories[territory])>200){
-		vps_aim_towards_target(territories[current_territory()], 1);
+		aim_towards_target_vps(territories[current_territory()]);
 		pause(10);
 	}
 	set_wheel_pows(0,0);
@@ -116,7 +116,7 @@ void move_to_next_territory(){
 
 	while(points_distance(get_vps_position(), territories[target_territory]) > 200){
 		printf("%.2f away... from target %.2f, %.2f\n", points_distance(get_vps_position(), territories[target_territory]), territories[target_territory].x, territories[target_territory].y);
-		vps_aim_towards_target(territories[target_territory], 1);
+		aim_towards_target_vps(territories[target_territory]);
 		pause(10);
 	}
 	set_wheel_pows(0,0);

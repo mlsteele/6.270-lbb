@@ -45,9 +45,9 @@ uint8_t next_unowned_territory() {
 	return order_of_preference[0];
 }
 void move_to_target(Point p, int dir) {
-	//generic moving to a point using vps_aim_towards_target
+	//generic moving to a point using aim_towards_target_vps
 	while (points_distance(get_vps_position(), p) > 200) {
-		vps_aim_towards_target(p, dir);
+		aim_towards_target_vps(p, dir);
 		pause(10);
 	}
 	set_wheel_pows(0,0);
@@ -87,7 +87,7 @@ void move_to_base() {
 }
 void claim_territory() {
 	while(points_distance(get_vps_position(),gears[current_territory()])>100 && !is_robot_stuck()){
-		vps_aim_towards_target(gears[current_territory()], -1);
+		aim_towards_target_vps(gears[current_territory()], -1);
 		pause(10);
 	}
 	set_wheel_pows(0,0);

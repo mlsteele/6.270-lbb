@@ -23,9 +23,9 @@ int umain (void) {
   bind_gyro_to_vps();
 
   // while(true) {
-  //   vps_aim_towards_target((Point){0, -850});
-  //   // vps_aim_towards_target(territories[0]);
-  //   // vps_aim_towards_target(territories[1]);
+  //   aim_towards_target_vps((Point){0, -850});
+  //   // aim_towards_target_vps(territories[0]);
+  //   // aim_towards_target_vps(territories[1]);
   //   pause(10);
   // }
 
@@ -39,7 +39,7 @@ int umain (void) {
   for (int i = i_start; i < i_start + 6; i++) {
     printf("[3] starting targeting %i\n", i);
     while(points_distance(get_vps_position(), territories[i]) > 250) {
-      vps_aim_towards_target(territories[i % 6], 1);
+      aim_towards_target_vps(territories[i % 6]);
       pause(6);
       print_vps_pos();
     }

@@ -5,7 +5,7 @@
 #include <hw_config.h>
 #include <territory.h>
 
-static Point vps_active_target;
+static Point vps_antagonist;
 static Point vps_position;
 static float vps_theta;
 
@@ -76,7 +76,7 @@ static void vps_download_info() {
   if (vps_daemon_has_run || vps_coords_isnt_zero()) {
     // printf("swapping vps coords in\n");
     vps_position = (Point) {game.coords[0].x * UNITS_VPS_TO_MM, game.coords[0].y * UNITS_VPS_TO_MM};
-    vps_active_target = (Point) {game.coords[1].x * UNITS_VPS_TO_MM, game.coords[1].y * UNITS_VPS_TO_MM};
+    vps_antagonist = (Point) {game.coords[1].x * UNITS_VPS_TO_MM, game.coords[1].y * UNITS_VPS_TO_MM};
     vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;
     vps_daemon_has_run = true;
   }
@@ -124,9 +124,9 @@ Point get_vps_position() {
   return ret;
 }
 
-Point get_vps_active_target() {
+Point get_vps_antagonist() {
   acquire(&vps_data_lock);
-  Point ret = vps_active_target;
+  Point ret = vps_antagonist;
   release(&vps_data_lock);
   return ret;
 }
@@ -175,7 +175,7 @@ float get_vps_theta() {
 
 void print_vps_pos() {
   Point vpp = get_vps_position();
-  printf("<%f, %f>  theta_ %f\n", vpp.x, vpp.y, get_vps_theta());
+  printf("[1] <%.5f, %.5f>  theta %.5f\n", vpp.x, vpp.y, get_vps_theta());
 }
 
 // uint8_t vps_owner(uint8_t terr) {

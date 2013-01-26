@@ -36,13 +36,15 @@ int umain (void) {
   }
   printf("i_start %i\n", i_start);
 
-  for (int i = i_start; i < i_start + 3; i++) {
+  for (int i = i_start; i < i_start + 6; i++) {
+    printf("[3] starting targeting %i\n", i);
     while(points_distance(get_vps_position(), territories[i]) > 250) {
       vps_aim_towards_target(territories[i % 6], 1);
       pause(6);
       print_vps_pos();
     }
     set_wheel_pows(0,0);
+    printf("[3] reached target %i\n", i);
     pause(250);
   }
 

@@ -14,7 +14,7 @@
 void vps_data_daemon_init();
 
 Point get_vps_position();
-Point get_vps_active_target();
+Point get_vps_antagonist();
 float get_vps_theta();
 void print_vps_pos();
 

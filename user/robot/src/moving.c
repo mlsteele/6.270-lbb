@@ -23,8 +23,8 @@ l_r_uint16_t get_encoders() {
 // values out of bounds will be clipped to rangeht
 void set_wheel_pows(float l, float r) {
   // printf("set wheel pows to %f and %f\n", l, r);
-  motor_set_vel(PIN_MOTOR_DRIVE_L, l > -255 ? (l < 255 ? (l * 255) : 255) : -255);
-  motor_set_vel(PIN_MOTOR_DRIVE_R, r > -255 ? (r < 255 ? (r * 255) : 255) : -255);
+  motor_set_vel(PIN_MOTOR_DRIVE_L, l >= -1 ? (l <= 1 ? (l * 255) : 255) : -255);
+  motor_set_vel(PIN_MOTOR_DRIVE_R, r >= -1 ? (r <= 1 ? (r * 255) : 255) : -255);
 
   // flush_hybrid_position_integration();
   // flush_encoder_position_integration();

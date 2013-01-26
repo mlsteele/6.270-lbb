@@ -6,8 +6,8 @@
 // PINS
 #define PIN_MOTOR_DRIVE_L 0
 #define PIN_MOTOR_DRIVE_R 1
+#define PIN_MOTOR_GEAR 3
 #define PIN_GYRO 21
-
 #define PIN_ENCODER_WHEEL_L 27
 #define PIN_ENCODER_WHEEL_R 26
 

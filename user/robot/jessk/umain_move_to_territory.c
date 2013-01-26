@@ -2,6 +2,7 @@
 #include <hw_config.h>
 #include <Point.h>
 #include <moving.h>
+#include <transport.h>
 #include <math.h>
 //#include "../cat_mouse/get_vps.h"
 //#include "../cat_mouse/vps_utils.h"
@@ -21,11 +22,28 @@ int umain (void) {
   vps_data_daemon_init();
   bind_gyro_to_vps();
 
-  while(true) {
-    vps_aim_towards_target((Point){0, -850});
-    // vps_aim_towards_target(territories[0]);
-    // vps_aim_towards_target(territories[1]);
-    pause(10);
+  // while(true) {
+  //   vps_aim_towards_target((Point){0, -850});
+  //   // vps_aim_towards_target(territories[0]);
+  //   // vps_aim_towards_target(territories[1]);
+  //   pause(10);
+  // }
+
+  int i_start = 0;
+  float angle = atan2(get_vps_position().y, get_vps_position().x) * RADS_TO_DEGS;
+  if (fabs(ang_diff(angle, 0)) > 90) {
+    i_start = 3;
+  }
+  printf("i_start %i\n", i_start);
+
+  for (int i = i_start; i < i_start + 3; i++) {
+    while(points_distance(get_vps_position(), territories[i]) > 250) {
+      vps_aim_towards_target(territories[i % 6], 1);
+      pause(6);
+      print_vps_pos();
+    }
+    set_wheel_pows(0,0);
+    pause(250);
   }
 
   // // move around the board twice

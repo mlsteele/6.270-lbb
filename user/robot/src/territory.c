@@ -10,9 +10,9 @@ float terr_angles[7] = {-120,-60,0,60,120,180,240};
 
 void territory_init() {
 	for (int i = 0; i < 6; i++) {
-		float light_angle = 180 + 90  + 0     + 60 * i;
-		float gear_angle  = 180 + 180 - 76.16 + 60 * i;
-		float lever_angle = 180 + 0   + 76.55 + 60 * i;
+		float light_angle = 1080 - 90 + 90  + 0     + 60 * i;
+		float gear_angle  = 1080 - 90 + 180 - 76.16 + 60 * i;
+		float lever_angle = 1080 - 90 + 0   + 76.55 + 60 * i;
 		territories[i] = (Point) {
 			TERRITORY_RAD_TO_LIGHT * cos(light_angle * DEGS_TO_RADS) ,
 			TERRITORY_RAD_TO_LIGHT * sin(light_angle * DEGS_TO_RADS) };

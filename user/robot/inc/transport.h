@@ -8,5 +8,7 @@
 
 void aim_towards_target_vps(Point target);
 void aim_towards_target_vps_gyro(Point target);
+void go_to_territory(int8_t terr_i);
+void face_towards_gears(int8_t terr_i);
 
 #endif

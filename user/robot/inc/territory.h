@@ -5,13 +5,14 @@
 #include <Point.h>
 
 // in local coordinates, assume robot starts in center of territory '0' at 0, -y and angle 90
-float terr_angles[7];
 Point territories[6];
 Point gears[6];
 Point mines[6];
+float territory_angle_mid[6]; // bounding angles of territories
+float territory_angle_cw[6]; // bounding angles of territories
+float territory_angle_ccw[6];
 
-void territory_init();
-void territory_check();
+void territory_init(); // initialize positions
 int8_t territory_of_point(Point p);
 int8_t current_territory();
 

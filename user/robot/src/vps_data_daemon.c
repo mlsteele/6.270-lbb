@@ -9,7 +9,7 @@ static Point vps_antagonist;
 static Point vps_position;
 static float vps_theta;
 
-static bool vps_daemon_has_run = false;
+static bool vps_daemon_has_recvd = false;
 static struct lock vps_data_lock;
 
 // static float vps_transform_board_spin = 0; // in degrees
@@ -73,12 +73,12 @@ static void vps_download_info() {
   copy_objects();
   //printf("game.coords: [0]: %d,%d ... [1]: %d,%d\n", game.coords[0].x,game.coords[0].y, game.coords[1].x,game.coords[1].y);
 
-  if (vps_daemon_has_run || vps_coords_isnt_zero()) {
+  if (vps_daemon_has_recvd || vps_coords_isnt_zero()) {
     // printf("swapping vps coords in\n");
     vps_position = (Point) {game.coords[0].x * UNITS_VPS_TO_MM, game.coords[0].y * UNITS_VPS_TO_MM};
     vps_antagonist = (Point) {game.coords[1].x * UNITS_VPS_TO_MM, game.coords[1].y * UNITS_VPS_TO_MM};
     vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;
-    vps_daemon_has_run = true;
+    vps_daemon_has_recvd = true;
   }
   release(&vps_data_lock);
 
@@ -99,11 +99,12 @@ static int vps_data_daemon() {
 }
 
 void vps_data_daemon_init() {
+  printf("initializing vps data daemon...\n");
   init_lock(&vps_data_lock, "vps_data_lock");
   create_thread(vps_data_daemon, STACK_DEFAULT, 0, "vps_daemon");
 
   printf("waiting for vps first read...\n");
-  while(!vps_daemon_has_run) pause(30);
+  while(!vps_daemon_has_recvd) pause(30);
   printf("recvd first vps read, printing below\n");
   print_vps_pos();
 
@@ -140,9 +141,9 @@ float get_vps_theta() {
 
 // TODO: fix this
 
-// bool get_vps_daemon_has_run() {
+// bool get_vps_daemon_has_recvd() {
 //   acquire(&vps_data_lock);
-//   bool ret = vps_daemon_has_run;
+//   bool ret = vps_daemon_has_recvd;
 //   release(&vps_data_lock);
 //   return ret;  
 // }

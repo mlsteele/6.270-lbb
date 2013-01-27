@@ -4,6 +4,7 @@
 #include <math.h>
 #include <moving.h>
 #include <vps_data_daemon.h>
+#include <territory.h>
 
 static void aim_towards_target(Point target, float (*theta_accessor)()) {
   float angdiff = ang_diff(points_angle(target, get_vps_position()), theta_accessor());
@@ -39,4 +40,33 @@ void aim_towards_target_vps(Point target) {
 
 void aim_towards_target_vps_gyro(Point target) {
   aim_towards_target(target, gyro_get_degrees);
+}
+
+void go_to_territory(int8_t terr_i) {
+  terr_i = (6 + terr_i) % 6;
+  printf("[3] starting targeting territory %i\n", terr_i);
+  while(points_distance(get_vps_position(), territories[terr_i]) > 200) {
+    aim_towards_target_vps_gyro(territories[terr_i]);
+    pause(6);
+    print_vps_pos();
+  }
+  set_wheel_pows(0,0);
+  printf("[3] reached target %i\n", terr_i);
+  pause(100);
+  bind_gyro_to_vps();
+}
+
+void face_towards_gears(int8_t terr_i) {
+  pause(100);
+  float target_theta = points_angle(gears[terr_i % 6], get_vps_position()) + 180;
+  bind_gyro_to_vps();
+  rotate_by_gyro(ang_diff(target_theta, get_vps_theta()));
+}
+
+void face_towards_mine(int8_t terr_i) {
+  terr_i = (6 + terr_i) % 6;
+  pause(100);
+  float target_theta = points_angle(mines[terr_i], get_vps_position());
+  bind_gyro_to_vps();
+  rotate_by_gyro(ang_diff(target_theta, get_vps_theta()));
 }

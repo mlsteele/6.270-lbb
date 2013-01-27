@@ -36,16 +36,18 @@ int umain (void) {
   }
   printf("i_start %i\n", i_start);
 
-  for (int i = i_start; i < i_start + 6; i++) {
+  for (int i = i_start; i < i_start + 7; i++) {
     printf("[3] starting targeting %i\n", i);
     while(points_distance(get_vps_position(), territories[i]) > 250) {
-      aim_towards_target_vps(territories[i % 6]);
+      aim_towards_target_vps_gyro(territories[i % 6]);
       pause(6);
       print_vps_pos();
     }
     set_wheel_pows(0,0);
     printf("[3] reached target %i\n", i);
-    pause(250);
+    pause(100);
+    bind_gyro_to_vps();
+    pause(100);
   }
 
   // // move around the board twice

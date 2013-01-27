@@ -13,11 +13,11 @@ int usetup (void) {
   robot_id = 8;
 
   printf("stabilizing... ");
-  pause(500);
+  pause(700);
   printf("done\n");
   territory_init();
   printf("calibrating gyro... ");
-  gyro_init(PIN_GYRO, LSB_US_PER_DEG, 500);
+  gyro_init(PIN_GYRO, LSB_US_PER_DEG, 4000);
   printf("done\n");
   vps_data_daemon_init();
   pause(300);
@@ -35,20 +35,9 @@ int umain (void) {
   pause(300);
   go_to_territory(current_territory() + 1);
   pause(300);
-
-  // attack current territory
-  face_towards_gears(current_territory());
-  set_wheel_pows(0.5, 0.5);
-  pause(400);
-  set_wheel_pows(0,0);
-  pause(200);
-  motor_set_vel(PIN_MOTOR_GEAR, 100);
+  capture_gears();
   pause(500);
-  motor_set_vel(PIN_MOTOR_GEAR, 0);
-  pause(200);
-  set_wheel_pows(-0.5, -0.5);
-  pause(500);
-  face_towards_mine(current_territory());
+  face_towards_mine();
 
   set_wheel_pows(0,0);
   printf("umain done\n");

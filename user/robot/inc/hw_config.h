@@ -39,6 +39,8 @@
 // COMMON
 #define DIRECTION_CW -1
 #define DIRECTION_CCW 1
+#define FD_LEVERSIDE 0
+#define FD_SPINSIDE 1
 #define LOST_VPS_US 200000
 
 #endif

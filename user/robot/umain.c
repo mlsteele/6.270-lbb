@@ -17,7 +17,7 @@ int usetup (void) {
   printf("done\n");
   territory_init();
   printf("calibrating gyro... ");
-  gyro_init(PIN_GYRO, LSB_US_PER_DEG, 4000);
+  gyro_init(PIN_GYRO, LSB_US_PER_DEG, 2000);
   printf("done\n");
   vps_data_daemon_init();
   pause(300);
@@ -30,14 +30,18 @@ int usetup (void) {
 }
 
 int umain (void) {
-  printf("[1] starting territory is %i\n", current_territory());
-  go_to_territory(current_territory() + 5);
-  pause(300);
-  go_to_territory(current_territory() + 1);
-  pause(300);
-  capture_gears();
-  pause(500);
-  face_towards_mine();
+  // printf("[1] starting territory is %i\n", current_territory());
+  // go_to_territory(current_territory() + 5);
+  // pause(300);
+  // go_to_territory(current_territory() + 1);
+  // pause(300);
+  // capture_gears();
+  // pause(500);
+  // face_towards_mine();
+
+  while(1) {
+    go_to_point(territories[0]);
+  }
 
   set_wheel_pows(0,0);
   printf("umain done\n");

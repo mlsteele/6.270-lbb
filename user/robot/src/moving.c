@@ -41,37 +41,37 @@ void wheels_brake() {
   set_wheel_pows(0, 0);
 }
 
-void rotate(float degrees) {
-  printf("Rotating...\n");
-  printf("start angle = %f \n", gyro_get_degrees());
-  float desired_angle = gyro_get_degrees() + degrees;
-  printf("desired_angle = %f \n", desired_angle);
-
-  // NOTE: (miles) removed the no-op if statement that was waiting for robot_moving to be implemented
-  if (gyro_get_degrees() < desired_angle) {
-    printf("%f is less than %f\n", gyro_get_degrees(), desired_angle);
-  }
-  else {
-    printf("%f is greater than %f\n", gyro_get_degrees(), desired_angle);
-  }
-
-  if (degrees > 0) {
-    while (gyro_get_degrees() < desired_angle) {
-      set_wheel_pows(-0.58, 0.58);
-      printf("current angle = %f \n", gyro_get_degrees());
-    }
-  }
-  else {
-    while (gyro_get_degrees() > desired_angle) {
-      set_wheel_pows(0.58, -0.58);
-      printf("current angle = %f \n", gyro_get_degrees());
-    }
-  }
-
-  printf("Done rotating\n");
-  wheels_brake();
-  printf("End rotate.\n\n");
-}
+// void rotate(float degrees) {
+//   printf("Rotating...\n");
+//   printf("start angle = %f \n", gyro_get_degrees());
+//   float desired_angle = gyro_get_degrees() + degrees;
+//   printf("desired_angle = %f \n", desired_angle);
+//
+//   // NOTE: (miles) removed the no-op if statement that was waiting for robot_moving to be implemented
+//   if (gyro_get_degrees() < desired_angle) {
+//     printf("%f is less than %f\n", gyro_get_degrees(), desired_angle);
+//   }
+//   else {
+//     printf("%f is greater than %f\n", gyro_get_degrees(), desired_angle);
+//   }
+//
+//   if (degrees > 0) {
+//     while (gyro_get_degrees() < desired_angle) {
+//       set_wheel_pows(-0.58, 0.58);
+//       printf("current angle = %f \n", gyro_get_degrees());
+//     }
+//   }
+//   else {
+//     while (gyro_get_degrees() > desired_angle) {
+//       set_wheel_pows(0.58, -0.58);
+//       printf("current angle = %f \n", gyro_get_degrees());
+//     }
+//   }
+//
+//   printf("Done rotating\n");
+//   wheels_brake();
+//   printf("End rotate.\n\n");
+// }
 
 void rotate_by_gyro(float dtheta) {
   const float drive_max = 0.7;
@@ -110,6 +110,10 @@ void rotate_by_gyro(float dtheta) {
   }
 }
 
+void rotate_by_gyro_to(float theta) {
+  rotate_by_gyro(ang_diff(theta, gyro_get_degrees()));
+}
+
 // void move_to(Point p, float velocity) {
 //  //moves in a straight line to the desired point at the desired velocity
 //  float dist_x = p.x - unimplemented_get_current_location().x;
@@ -131,11 +135,6 @@ void rotate_by_gyro(float dtheta) {
 //  }
 //  wheels_brake();
 // }
-
-float get_heading() {
-  //do some fancy averaging thing instead
-  return gyro_get_degrees();
-}
 
 void move_for_time(float velocity, uint32_t millis) {
   printf("Moving at vel [%f] for time: %ims", velocity, millis);

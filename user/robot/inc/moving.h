@@ -22,10 +22,8 @@ void print_wheel_pows();
 
 void wheels_brake();
 
-void rotate(float degrees);
 void rotate_by_gyro(float dtheta);
-
-float get_heading();
+void rotate_by_gyro_to(float theta);
 
 void move_for_time(float velocity, uint32_t millis);
 

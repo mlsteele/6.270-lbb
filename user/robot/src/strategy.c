@@ -8,7 +8,7 @@
 
 void determine_team_color() {
   printf("determining team color... ");
-  team_color = get_vps_position().x > 0 ? TEAM_RED : TEAM_BLUE;
+  team_color = get_vps_position().x < 0 ? TEAM_RED : TEAM_BLUE;
   if (team_color == TEAM_RED)
     printf("TEAM_RED\n");
   if (team_color == TEAM_BLUE)

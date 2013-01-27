@@ -31,17 +31,13 @@ int usetup (void) {
 
 int umain (void) {
   // printf("[1] starting territory is %i\n", current_territory());
-  // go_to_territory(current_territory() + 5);
-  // pause(300);
-  // go_to_territory(current_territory() + 1);
-  // pause(300);
-  // capture_gears();
-  // pause(500);
-  // face_towards_mine();
-
-  while(1) {
-    go_to_point(territories[0]);
-  }
+  go_to_territory(current_territory() + 5);
+  pause(300);
+  go_to_territory(current_territory() + 1);
+  pause(300);
+  capture_gears();
+  pause(500);
+  face_towards_mine();
 
   set_wheel_pows(0,0);
   printf("umain done\n");

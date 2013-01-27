@@ -97,17 +97,27 @@ void go_to_territory(int8_t terr_i) {
 }
 
 void face_towards_gears() {
+  float angle_threshold = 15;
   pause(100);
-  float target_theta = points_angle(gears[current_territory()], get_vps_position()) + 180;
   bind_gyro_to_vps();
-  rotate_by_gyro(ang_diff(target_theta, get_vps_theta()));
+  for (int i = 0; i < 3; i++) {
+    float target_theta = points_angle(gears[current_territory()], get_vps_position()) + 180;
+    rotate_by_gyro_to(target_theta);
+    pause(100);
+    if (fabs(ang_diff(target_theta, get_vps_theta()))) return;
+  }
 }
 
 void face_towards_mine() {
+  float angle_threshold = 10;
   pause(100);
-  float target_theta = points_angle(mines[current_territory()], get_vps_position());
   bind_gyro_to_vps();
-  rotate_by_gyro(ang_diff(target_theta, get_vps_theta()));
+  for (int i = 0; i < 3; i++) {
+    float target_theta = points_angle(mines[current_territory()], get_vps_position());
+    rotate_by_gyro_to(target_theta);
+    pause(100);
+    if (fabs(ang_diff(target_theta, get_vps_theta()))) return;
+  }
 }
 
 void capture_gears() {

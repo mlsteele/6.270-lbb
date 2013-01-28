@@ -179,12 +179,12 @@ void print_vps_pos() {
   printf("[1] <%.5f, %.5f>  theta %.5f\n", vpp.x, vpp.y, get_vps_theta());
 }
 
-// uint8_t vps_owner(uint8_t terr) {
-//   acquire(&vps_data_lock);
-//   uint8_t ret = game.territories[us_to_vps_numbering(terr)].owner;
-//   release(&vps_data_lock);
-//   return ret;
-// }
+uint8_t vps_owner(uint8_t terr) {
+  acquire(&vps_data_lock);
+  uint8_t ret = game.territories[terr].owner;
+  release(&vps_data_lock);
+  return ret;
+}
 
 // uint8_t us_to_vps_numbering(uint8_t terr) {
 //   return (terr+vps_territory_offset)%6;

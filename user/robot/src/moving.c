@@ -96,11 +96,11 @@ void rotate_by_gyro(float dtheta) {
       correct_timer_active = false;
     }
 
-    printf("rotating by %.2f  ", dtheta);
-    printf("angdiff %.2f  ", angdiff);
-    printf("gyro %.2f %> %.2f  ", gyro_get_degrees(), fmod(gyro_get_degrees(), 360));
-    printf("wpows [ %.2f , %.2f ]  ", get_wheel_pows().l, get_wheel_pows().r);
-    printf("timer:%i start:%i since:%i\n", correct_timer_active, correct_timer_start, get_time() - correct_timer_start);
+     printf("rotating by %.2f  ", dtheta);
+     printf("angdiff %.2f  ", angdiff);
+     printf("gyro %.2f %> %.2f  ", gyro_get_degrees(), fmod(gyro_get_degrees(), 360));
+     printf("wpows [ %.2f , %.2f ]  ", get_wheel_pows().l, get_wheel_pows().r);
+     printf("timer:%i start:%i since:%i\n", correct_timer_active, correct_timer_start, get_time() - correct_timer_start);
 
     pause(2);
   }

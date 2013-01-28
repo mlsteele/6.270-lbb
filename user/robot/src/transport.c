@@ -110,6 +110,7 @@ void go_to_territory(int8_t terr_i, bool initial_rotate) {
 }
 
 void face_towards_gears() {
+  printf("Facing towards gears\n");
   const float angle_threshold = 15;
   pause(100);
   gyro_set_degrees(get_vps_theta());
@@ -117,8 +118,9 @@ void face_towards_gears() {
     Point current_pos = get_vps_position();
     float target_theta = points_angle(&gears[current_territory()], &current_pos) + 180;
     rotate_by_gyro_to(target_theta);
+    printf("Current position:%f,%f\nTarget angle:%f", current_pos.x, current_pos.y,target_theta);
     pause(100);
-    if (fabs(ang_diff(target_theta, get_vps_theta())) < angle_threshold) return;
+    if (fabs(ang_diff(target_theta, get_vps_theta())) < angle_threshold) {printf("done"); return;}
   }
 }
 

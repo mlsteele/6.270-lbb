@@ -8,10 +8,6 @@
 
 static l_r_float_t last_motor_pows = {0, 0};
 
-void bind_gyro_to_vps() {
-  gyro_set_degrees(get_vps_theta());
-};
-
 l_r_uint16_t get_encoders() {
   l_r_uint16_t encs;
   encs.l = encoder_read(PIN_ENCODER_WHEEL_L);

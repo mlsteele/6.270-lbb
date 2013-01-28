@@ -145,7 +145,7 @@ int usetup (void) {
 }
 
 int umain (void) {
-	bind_gyro_to_vps();
+	gyro_set_degrees(get_vps_theta());
 	starting_time = get_time();
 	
 	base_5 = (Point){-288, -167};

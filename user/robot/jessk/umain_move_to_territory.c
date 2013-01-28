@@ -20,7 +20,7 @@ int usetup (void) {
 
 int umain (void) {
   vps_data_daemon_init();
-  bind_gyro_to_vps();
+  gyro_set_degrees(get_vps_theta());
 
   // while(true) {
   //   aim_towards_target_vps((Point){0, -850});
@@ -36,19 +36,19 @@ int umain (void) {
   }
   printf("i_start %i\n", i_start);
 
-  for (int i = i_start; i < i_start + 7; i++) {
-    printf("[3] starting targeting %i\n", i);
-    while(points_distance(get_vps_position(), territories[i]) > 250) {
-      aim_towards_target_vps_gyro(territories[i % 6]);
-      pause(6);
-      print_vps_pos();
-    }
-    set_wheel_pows(0,0);
-    printf("[3] reached target %i\n", i);
-    pause(100);
-    bind_gyro_to_vps();
-    pause(100);
-  }
+  // for (int i = i_start; i < i_start + 7; i++) {
+  //   printf("[3] starting targeting %i\n", i);
+  //   while(points_distance(get_vps_position(), territories[i]) > 250) {
+  //     aim_towards_target_vps_gyro(territories[i % 6]);
+  //     pause(6);
+  //     print_vps_pos();
+  //   }
+  //   set_wheel_pows(0,0);
+  //   printf("[3] reached target %i\n", i);
+  //   pause(100);
+  //   gyro_set_degrees(get_vps_theta());
+  //   pause(100);
+  // }
 
   // // move around the board twice
   // for(int i=0;i<12;i++){
@@ -57,12 +57,11 @@ int umain (void) {
   //   pause(1000);
   // }
 
-  pause(2000);
-
   // //Move to 3 random territories
   // for(int i=0;i<3;i++){
   //  move_to_territory(get_time()%6);
   //  pause(500);
   // }
+
   return 0;
 }

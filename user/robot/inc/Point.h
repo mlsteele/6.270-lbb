@@ -6,10 +6,10 @@ typedef struct {
   float y;
 } Point;
 
-float points_distance(Point a, Point b);
+float points_distance(Point* a, Point* b);
 
 // angle from b to a
-float points_angle(Point a, Point b);
+float points_angle(Point* a, Point* b);
 
 
 #endif

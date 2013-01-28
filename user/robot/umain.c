@@ -36,8 +36,10 @@ int umain (void) {
   go_to_territory(current_territory() + 1);
   pause(300);
   capture_gears();
+  go_to_territory(current_territory());
   pause(500);
   face_towards_mine();
+  go_to_point(mines[current_territory()]);
 
   set_wheel_pows(0,0);
   printf("umain done\n");

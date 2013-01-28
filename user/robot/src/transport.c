@@ -7,7 +7,7 @@
 #include <vps_data_daemon.h>
 #include <territory.h>
 
-
+// sets wheels and returns
 static void aim_towards_target(Point target, uint8_t which_forward, float (*theta_accessor)()) {
   float angdiff;
   if (which_forward == FD_LEVERSIDE) {
@@ -26,7 +26,7 @@ static void aim_towards_target(Point target, uint8_t which_forward, float (*thet
   printf("  dist %f", dist);
 
   // fix for orbit bug
-  if (fabs(angdiff) > 20 && dist < 200) {
+  if (fabs(angdiff) > 20 && dist < 70) {
     printf("\n[2] orbit switch\n");
     int recover_turn_direction = angdiff > 0 ? 1 : -1;
     recover_turn_direction *= (which_forward == FD_LEVERSIDE) ? 1 : -1;
@@ -56,34 +56,49 @@ void aim_towards_target_vps_gyro(Point target, uint8_t which_forward) {
 }
 
 void go_to_point(Point target) {
+  const float close_enough = 200;
+  const uint32_t close_enough_time = 250;
+  const float close_min = 70;
   const uint32_t gyro_sync_between = 2000;
 
   printf("[3] starting targeting point (%.5f, %.5f)\n", target.x, target.y);
 
+  // initial rotation
   printf("initial rotation...\n");
-  printf("WARN: skipping initial rotation\n");
-  // TODO: enable this again
-  // float angdiff_init = ang_diff(points_angle(target, get_vps_position()), get_vps_theta());
-  // if (fabs(angdiff_init) < 90) {
-  //   rotate_by_gyro_to(points_angle(target, get_vps_position()) + 180);
-  // } else {
-  //   rotate_by_gyro_to(points_angle(target, get_vps_position()));
-  // }
+  float angdiff_init = ang_diff(points_angle(target, get_vps_position()), get_vps_theta());
+  if (fabs(angdiff_init) < 90) {
+    rotate_by_gyro_to(points_angle(target, get_vps_position()) + 180);
+  } else {
+    rotate_by_gyro_to(points_angle(target, get_vps_position()));
+  }
   printf("initial rotation done\n");
 
   bind_gyro_to_vps();
   uint32_t last_gyro_sync = get_time();
 
-  while(points_distance(get_vps_position(), target) > 200) {
+  uint32_t close_enough_timer_start = 0;
+  bool close_enough_timer_enabled = false;
+  while(points_distance(get_vps_position(), target) > close_min
+    && !(close_enough_timer_enabled && get_time() > close_enough_timer_start + close_enough_time)) {
+    // sync gyro
     if (get_time() > last_gyro_sync + gyro_sync_between) {
       set_wheel_pows(0, 0);
       pause(120);
       bind_gyro_to_vps();
       last_gyro_sync = get_time();
     }
+
+    // escape if close enough for long enough (stuck in seek loop)
+    if (!close_enough_timer_enabled && points_distance(get_vps_position(), target) < close_enough) {
+      close_enough_timer_enabled = true;
+      close_enough_timer_start = get_time();
+    }
+
+    // actuate motors
     float angdiff = ang_diff(points_angle(target, get_vps_position()), gyro_get_degrees());
     uint8_t which_forward = fabs(angdiff) < 90 ? FD_LEVERSIDE : FD_SPINSIDE;
     aim_towards_target_vps_gyro(target, which_forward);
+
     pause(6);
     print_vps_pos();
   }
@@ -126,11 +141,11 @@ void capture_gears() {
   set_wheel_pows(-0.5, -0.5);
   pause(200);
   motor_set_vel(PIN_MOTOR_GEAR, 255);
-  pause(200);
+  pause(500);
   set_wheel_pows(0,0);
   pause(500);
   motor_set_vel(PIN_MOTOR_GEAR, 0);
   set_wheel_pows(0.5, 0.5);
-  pause(500);
+  pause(200);
   set_wheel_pows(0, 0);
 }

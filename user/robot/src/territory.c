@@ -10,38 +10,6 @@ Point current_coords;
 float current_theta;
 
 void territory_init() {
-	for (int i = 0; i < 6; i++) {
-		float light_angle = 180 + 90  + 0     + 60 * i;
-		float gear_angle  = 180 + 180 - 76.16 + 60 * i;
-		float lever_angle = 180 + 0   + 76.55 + 60 * i;
-		territories[i] = (Point) {
-			TERRITORY_RAD_TO_LIGHT * cos(light_angle * DEGS_TO_RADS) ,
-			TERRITORY_RAD_TO_LIGHT * sin(light_angle * DEGS_TO_RADS) };
-		gears[i] = (Point) {
-			TERRITORY_RAD_TO_GEARS * cos(gear_angle * DEGS_TO_RADS) ,
-			TERRITORY_RAD_TO_GEARS * sin(gear_angle * DEGS_TO_RADS) };
-		mines[i] = (Point) {
-			TERRITORY_RAD_TO_MINE * cos(lever_angle * DEGS_TO_RADS) ,
-			TERRITORY_RAD_TO_MINE * sin(lever_angle * DEGS_TO_RADS) };
-	}
-
-static void territory_check() {
-	printf("territory initialization check\n");
-	for (int i = 0; i < 6; i++) {
-		printf("territories[%i] -> %f, %f\n", i, territories[i].x, territories[i].y);
-	}
-	for (int i = 0; i < 6; i++) {
-		printf("gears[%i] -> %f, %f\n", i, gears[i].x, gears[i].y);
-	}
-	for (int i = 0; i < 6; i++) {
-		printf("mines[%i] -> %f, %f\n", i, mines[i].x, mines[i].y);
-	}
-
-	current_coords = (Point) {0, -858};
-	current_theta = 90;
-}
-
-void territory_init() {
 	printf("initializing territories... ");
 	for (int i = 0; i < 6; i++) {
 		float light_angle      = 60 * i;
@@ -79,8 +47,6 @@ void territory_init() {
 
 	}
 	printf("done\n");
-
-	territory_check();
 }
 
 int8_t territory_of_point(Point p) {
@@ -180,19 +146,4 @@ void move_to_territory_dr(uint8_t terr){
 		vps_aim_towards_target(territories[target_territory], 1);
 		pause(10);
 	}*/
-}
-
-void move_to_gear() {
-	//These numbers will have to be tweaked
-	//maybe we don't even need the loop
-	while(points_distance(get_vps_position(),gears[current_territory()]) > 200){
-		vps_aim_towards_target(gears[current_territory()], 1);
-		pause(20);
-	}
-	set_wheel_pows(0,0);
-}
-
-void spin_gear() {
-  //motor_set_vel(PIN_MOTOR_DRIVE_L, l > -255 ? (l < 255 ? (l * 255) : 255) : -255);
-
 }

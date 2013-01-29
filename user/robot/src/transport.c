@@ -120,11 +120,12 @@ void face_towards_gears() {
     rotate_by_gyro_to(target_theta);
     printf("Current position:%f,%f\nTarget angle:%f", current_pos.x, current_pos.y,target_theta);
     pause(100);
-    if (fabs(ang_diff(target_theta, get_vps_theta())) < angle_threshold) {printf("done"); return;}
+    if (fabs(ang_diff(target_theta, get_vps_theta())) < angle_threshold) {printf("done\n"); return;}
   }
 }
 
 void face_towards_mine() {
+  printf("Facing towards mine\n");
   const float angle_threshold = 10;
   pause(100);
   gyro_set_degrees(get_vps_theta());
@@ -132,8 +133,9 @@ void face_towards_mine() {
     Point current_pos = get_vps_position();
     float target_theta = points_angle(&mines[current_territory()], &current_pos);
     rotate_by_gyro_to(target_theta);
+    printf("Current position:%f,%f\nTarget angle:%f", current_pos.x, current_pos.y,target_theta);
     pause(100);
-    if (fabs(ang_diff(target_theta, get_vps_theta())) < angle_threshold) return;
+    if (fabs(ang_diff(target_theta, get_vps_theta())) < angle_threshold) {printf("done\n"); return;}
   }
 }
 

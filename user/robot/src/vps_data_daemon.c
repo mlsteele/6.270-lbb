@@ -8,6 +8,7 @@
 static Point vps_antagonist;
 static Point vps_position;
 static float vps_theta;
+static uint16_t vps_score;
 
 static bool vps_daemon_has_recvd = false;
 static struct lock vps_data_lock;
@@ -79,6 +80,7 @@ static void vps_download_info() {
     vps_antagonist = (Point) {game.coords[1].x * UNITS_VPS_TO_MM, game.coords[1].y * UNITS_VPS_TO_MM};
     vps_theta = game.coords[0].theta * UNITS_VPS_TO_DEG;
     vps_daemon_has_recvd = true;
+    vps_score = game.coords[0].score;
   }
   release(&vps_data_lock);
 
@@ -135,6 +137,13 @@ Point get_vps_antagonist() {
 float get_vps_theta() {
   acquire(&vps_data_lock);
   float ret = vps_theta;
+  release(&vps_data_lock);
+  return ret;
+}
+
+uint16_t get_vps_score() {
+  acquire(&vps_data_lock);
+  uint16_t ret = vps_score;
   release(&vps_data_lock);
   return ret;
 }
@@ -206,11 +215,11 @@ uint8_t vps_owner(uint8_t terr) {
 //   return ret;
 // }
 
-// bool not_over_rate_limit(uint8_t terr) {
-//   //assumes rate_limit returns milliseconds until territory can be mined
-//   //TODO verify this assumption
-//   acquire(&vps_data_lock);
-//   bool ret = game.territories[us_to_vps_numbering(terr)].rate_limit < 1000;
-//   release(&vps_data_lock);
-//   return ret;
-// }
+bool not_over_rate_limit(uint8_t terr) {
+  //assumes rate_limit returns milliseconds until territory can be mined
+  //TODO verify this assumption
+  acquire(&vps_data_lock);
+  bool ret = game.territories[terr].rate_limit < 1000;
+  release(&vps_data_lock);
+  return ret;
+}

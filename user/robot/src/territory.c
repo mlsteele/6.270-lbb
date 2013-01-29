@@ -21,32 +21,56 @@ static void territory_check() {
 
 void territory_init() {
 	printf("initializing territories... ");
+	territories[0] = (Point) {960   , -57};
+	territories[1] = (Point) {435   , 819};
+	territories[2] = (Point) {-519  , 816};
+	territories[3] = (Point) {-1005 , -32};
+	territories[4] = (Point) {-546  , -900};
+	territories[5] = (Point) {526   , -884};
+
+	mines[0] = (Point) {1585  , -350};
+	mines[1] = (Point) {1086  , 1253};
+	mines[2] = (Point) {-500  , 1550};
+	mines[3] = (Point) {-1555 , 328};
+	mines[4] = (Point) {-1076 , -1188};
+	mines[5] = (Point) {480   , -1546};
+
+	gears[0] = (Point) {1535  , 280};
+	gears[1] = (Point) {537   , 1444};
+	gears[2] = (Point) {-965  , 1161};
+	gears[3] = (Point) {-1478 , -254};
+	gears[4] = (Point) {-494  , -1413};
+	gears[5] = (Point) {1016  , -1141};
+
 	for (int i = 0; i < 6; i++) {
-		float light_angle      = 60 * i;
-		float gear_angle       = 9.2 + 60 * i;
-		float lever_angle      = 360 - 20 + 60 * i;
+		// float light_angle      = 60 * i;
+		float light_angle = atan2(territories[i].y, territories[i].x);
+		// float gear_angle       = 9.2 + 60 * i;
+		float gear_angle = atan2(gears[i].y, gears[i].x);
+		// float lever_angle      = 360 - 20 + 60 * i;
+		float lever_angle = atan2(mines[i].y, mines[i].x);
 		territory_angle_mid[i] = 60 * i;
 		territory_angle_cw[i]  = 360 - 30 + 60 * i;
 		territory_angle_ccw[i] = 30 + 60 * i;
 
-		territories[i] = (Point) {
-			TERRITORY_RAD_TO_LIGHT * cos(light_angle * DEGS_TO_RADS) ,
-			TERRITORY_RAD_TO_LIGHT * sin(light_angle * DEGS_TO_RADS) };
+		// territories[i] = (Point) {
+		// 	TERRITORY_RAD_TO_LIGHT * cos(light_angle * DEGS_TO_RADS) ,
+		// 	TERRITORY_RAD_TO_LIGHT * sin(light_angle * DEGS_TO_RADS) };
 
-		gears[i] = (Point) {
-			TERRITORY_RAD_TO_GEARS * cos(gear_angle * DEGS_TO_RADS) ,
-			TERRITORY_RAD_TO_GEARS * sin(gear_angle * DEGS_TO_RADS) };
+		// gears[i] = (Point) {
+		// 	TERRITORY_RAD_TO_GEARS * cos(gear_angle * DEGS_TO_RADS) ,
+		// 	TERRITORY_RAD_TO_GEARS * sin(gear_angle * DEGS_TO_RADS) };
 
 		pre_gears[i] = (Point) {
 			TERRITORY_RAD_TO_PRE_GEARS * cos(gear_angle * DEGS_TO_RADS) ,
 			TERRITORY_RAD_TO_PRE_GEARS * sin(gear_angle * DEGS_TO_RADS) };
 
-		mines[i] = (Point) {
-			TERRITORY_RAD_TO_MINE * cos(lever_angle * DEGS_TO_RADS) ,
-			TERRITORY_RAD_TO_MINE * sin(lever_angle * DEGS_TO_RADS) };
+		// mines[i] = (Point) {
+		// 	TERRITORY_RAD_TO_MINE * cos(lever_angle * DEGS_TO_RADS) ,
+		// 	TERRITORY_RAD_TO_MINE * sin(lever_angle * DEGS_TO_RADS) };
 
 		float pre_mine_angle = light_angle - 30 + 180;
-		float pre_mine_displacement = 400;
+		float pre_mine_displacement = 430;
 		pre_mines[i] = (Point) {
 			mines[i].x + cos(pre_mine_angle * DEGS_TO_RADS) * pre_mine_displacement ,
 			mines[i].y + sin(pre_mine_angle * DEGS_TO_RADS) * pre_mine_displacement };

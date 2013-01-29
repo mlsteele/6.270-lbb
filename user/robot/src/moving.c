@@ -169,7 +169,6 @@ void move_distance_by_encoders(float distance_mm) {
     printf("traveled: [%f, %f]  ", delta_encs_mm.l, delta_encs_mm.r);
     printf("remaining: [%f, %f]  ", distance_mm - delta_encs_mm.l, distance_mm - delta_encs_mm.r);
     printf("wheel_pows [%f, %f]\n", get_wheel_pows().l, get_wheel_pows().r);
-
     pause(2);
   }
 

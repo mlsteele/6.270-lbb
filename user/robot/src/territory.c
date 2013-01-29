@@ -5,6 +5,25 @@
 #include <transport.h>
 #include <moving.h>
 #include "../cat_mouse/vps_utils.h"
+float terr_angles[7] = {-120,-60,0,60,120,180,240};
+Point current_coords;
+float current_theta;
+
+void territory_init() {
+	for (int i = 0; i < 6; i++) {
+		float light_angle = 180 + 90  + 0     + 60 * i;
+		float gear_angle  = 180 + 180 - 76.16 + 60 * i;
+		float lever_angle = 180 + 0   + 76.55 + 60 * i;
+		territories[i] = (Point) {
+			TERRITORY_RAD_TO_LIGHT * cos(light_angle * DEGS_TO_RADS) ,
+			TERRITORY_RAD_TO_LIGHT * sin(light_angle * DEGS_TO_RADS) };
+		gears[i] = (Point) {
+			TERRITORY_RAD_TO_GEARS * cos(gear_angle * DEGS_TO_RADS) ,
+			TERRITORY_RAD_TO_GEARS * sin(gear_angle * DEGS_TO_RADS) };
+		mines[i] = (Point) {
+			TERRITORY_RAD_TO_MINE * cos(lever_angle * DEGS_TO_RADS) ,
+			TERRITORY_RAD_TO_MINE * sin(lever_angle * DEGS_TO_RADS) };
+	}
 
 static void territory_check() {
 	printf("territory initialization check\n");
@@ -17,6 +36,9 @@ static void territory_check() {
 	for (int i = 0; i < 6; i++) {
 		printf("mines[%i] -> %f, %f\n", i, mines[i].x, mines[i].y);
 	}
+
+	current_coords = (Point) {0, -858};
+	current_theta = 90;
 }
 
 void territory_init() {
@@ -94,6 +116,53 @@ int8_t current_territory() {
 // 	}
 // 	set_wheel_pows(0,0);
 // }
+
+void move_to_next_territory_dr(){
+
+	Point target = territories[(current_territory() + 1) % 6];
+	printf("Current -> (%.0f,%.0f)\n", current_coords.x, current_coords.y);
+	printf("Target  -> (%.0f,%.0f)\n", target.x, target.y);
+
+	float dtheta = atan2(target.y - current_coords.y, target.x - current_coords.x) / DEGS_TO_RADS - current_theta;
+	rotate_by_gyro(dtheta);
+
+	float distance = sqrt(pow(target.x-current_coords.x,2) + pow(target.y-current_coords.y,2));
+	do {
+		move_distance_by_encoders(distance);
+		float distance = sqrt(pow(target.x-current_coords.x,2) + pow(target.y-current_coords.y,2));
+		printf("\tDistance -> %.2f\n", distance);
+	} while (distance > 200);
+	
+	/*while(points_distance(get_vps_position(), territories[target_territory]) > 200){
+		printf("%.2f away... from target %.2f, %.2f\n", points_distance(get_vps_position(), territories[target_territory]), territories[target_territory].x, territories[target_territory].y);
+		vps_aim_towards_target(territories[target_territory], 1);
+		pause(10);
+	}*/
+}
+
+void move_to_territory_dr(uint8_t terr){
+
+	Point target = territories[terr % 6];
+	printf("Current -> (%.0f,%.0f)\n", current_coords.x, current_coords.y);
+	printf("Target  -> (%.0f,%.0f)\n", target.x, target.y);
+
+	float dtheta = atan2(target.y - current_coords.y, target.x - current_coords.x) / DEGS_TO_RADS - current_theta;
+	printf("Current Theta -> %.0f\n", current_theta);
+	printf("Delta Theta   -> %.0f\n", dtheta);
+	rotate_by_gyro(dtheta);
+
+	float distance = sqrt(pow(target.x-current_coords.x,2) + pow(target.y-current_coords.y,2));
+	printf("Distance -> %.0f\n", distance);
+	move_distance_by_encoders(distance);
+	
+	current_coords = target;
+	current_theta += dtheta;
+	/*while(points_distance(get_vps_position(), territories[target_territory]) > 200){
+		printf("%.2f away... from target %.2f, %.2f\n", points_distance(get_vps_position(), territories[target_territory]), territories[target_territory].x, territories[target_territory].y);
+		vps_aim_towards_target(territories[target_territory], 1);
+		pause(10);
+	}*/
+}
 
 void move_to_gear() {
 	//These numbers will have to be tweaked

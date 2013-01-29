@@ -57,6 +57,7 @@ void go_to_point(Point* target, bool initial_rotate) {
 
   printf("[3] starting targeting point (%.5f, %.5f)\n", target->x, target->y);
 
+  gyro_set_degrees(get_vps_theta());
   // initial rotation
   if (initial_rotate) {
     printf("initial rotation...\n");
@@ -123,25 +124,22 @@ void face_towards_mine() {
 
 void capture_gears() {
   motor_set_vel(PIN_MOTOR_GEAR, 255);
-  for (int i = 0; i < 4; i++) {
-    face_towards_gears();
-    pause(100);
-    gyro_set_degrees(get_vps_theta());
 
-    set_wheel_pows(-0.5, -0.5);
-    pause(700);
-    set_wheel_pows(0.3, 0.3);
-    pause(200);
-    set_wheel_pows(0,0);
-  }
+  gyro_set_degrees(get_vps_theta());
+  face_towards_gears();
+
+  set_wheel_pows(-0.5, -0.5);
+  pause(700);
+  set_wheel_pows(0, 0);
+  pause(500);
+  set_wheel_pows(0,0);
 
   // back out
-  set_wheel_pows(0,0);
-  pause(500);
   motor_set_vel(PIN_MOTOR_GEAR, 0);
+  set_wheel_pows(0,0);
   gyro_set_degrees(get_vps_theta());
-  set_wheel_pows(0.5, 0.5);
-  pause(200);
+  set_wheel_pows(0.7, 0.7);
+  pause(400);
   set_wheel_pows(0, 0);
 }
 

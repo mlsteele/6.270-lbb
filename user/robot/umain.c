@@ -53,27 +53,27 @@ int umain (void) {
   // go_to_point(&pre_mines[current_territory()], false);
   // mine_resources();
 
-  rotate_by_gyro_to(0);
-  pause(300);
-  rotate_by_gyro_to(90);
-  pause(300);
-  rotate_by_gyro_to(180);
-  pause(300);
-  rotate_by_gyro_to(-90);
-  pause(300);
-  rotate_by_gyro_to(180);
-  pause(300);
-  rotate_by_gyro_to(0);
-  pause(300);
-
-  go_to_territory(current_territory(), false);
-  go_to_point(&pre_gears[current_territory()], false);
-  capture_gears();
+  // go_to_territory(current_territory(), false);
+  // go_to_point(&pre_gears[current_territory()], false);
+  // capture_gears();
 
   /*for(int i = 0; i < 4; i++) {
     go_to_point(&pre_gears[current_territory()], false);
     capture_gears();
   }*/
+
+  int i_init = current_territory();
+  printf("i_init %i\n", i_init);
+  for(int i = i_init; i <= i_init + 3; i++) {
+    int active_i = i % 6;
+    printf("target i %i\n", i % 6);
+    go_to_point(&territories[active_i], true);
+    go_to_point(&pre_gears[active_i], false);
+    capture_gears();
+    go_to_point(&pre_gears[active_i], false);
+    capture_gears();
+  }
+
 
   set_wheel_pows(0,0);
   printf("umain done\n");

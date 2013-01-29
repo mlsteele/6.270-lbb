@@ -73,7 +73,7 @@ void rotate_by_gyro(float dtheta) {
   const float drive_max = 0.7;
   const float drive_min = 0.2;
   const float angle_tolerance = 9;
-  const float correct_hold_time = 400;
+  const float correct_hold_time = 300;
   float final = gyro_get_degrees() + dtheta;
 
   bool correct_timer_active = false;
@@ -104,15 +104,16 @@ void rotate_by_gyro(float dtheta) {
 
     pause(2);
   }
+
+  set_wheel_pows(0,0);
 }
 
 void rotate_by_gyro_to(float theta) {
   printf("rotate_by_gyro_to(%.5f)\n", theta);
-  const float angle_tolerance = 7;
+  const float angle_tolerance = 10;
   for (int i = 0; i < 3; i++) {
-    rotate_by_gyro(ang_diff(theta, gyro_get_degrees()));
-    pause(100);
     gyro_set_degrees(get_vps_theta());
+    rotate_by_gyro(ang_diff(theta, gyro_get_degrees()));
     printf("rotate_by_gyro_to(%.5f) iteration %i -> gyro %.5f -> vps %.5f\n", theta, i, gyro_get_degrees(), get_vps_theta());
     if (fabs(ang_diff(get_vps_theta(), theta)) < angle_tolerance) {
       printf("rotate_by_gyro_to(%.5f) done -> gyro %.5f -> vps %.5f\n", theta, gyro_get_degrees(), get_vps_theta());

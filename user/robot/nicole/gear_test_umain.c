@@ -12,6 +12,8 @@ uint8_t capture_attempts = 0;
 uint8_t num_balls = 0; //an estimate assuming everything we mined is in our basket
 
 uint8_t order_of_preference[6];
+uint8_t cw_board[6];
+uint8_t ccw_board[6];
 
 uint32_t elapsed_time() {
 	return get_time()-start_time;
@@ -53,9 +55,22 @@ void claim_territory() {
 
 uint8_t next_unowned_territory() {
 	uint8_t t = -1;
-	for (int i = 0; i<6 && t==-1; i++) {
+	uint8_t enem_terr = territory_of_point(get_vps_antagonist());
+	bool enem_flag = false;
+	for (int i = 0; i<6 && t==-1; enem_flag ? i+=2 : i++) {
 		if (vps_owner(order_of_preference[i]) != 8) {
-			t = order_of_preference[i];
+			if (order_of_preference[i] == enem_terr)
+			{
+				enem_flag = true;
+				//decrement i and then add 2 for each iteration of for loop to only check items of opposite parity of where enemy is
+				//e.g. enemy is one territory left of us, so we'll only consider territories to the right.
+				//bug or intended behavior? : won't consider going all the way around the board in the opposite direction, will just say there are no available territories
+				i--;
+			}
+			else {
+				t = order_of_preference[i];
+			}
+			
 		}
 	}
 	return t;
@@ -63,9 +78,21 @@ uint8_t next_unowned_territory() {
 
 uint8_t next_mineable_territory() {
 	uint8_t t = -1;
+	uint8_t enem_terr = territory_of_point(get_vps_antagonist());
+	bool enem_flag = false;
 	for (int i = 0; i<6 && t==-1; i++) {
 		if (vps_owner(order_of_preference[i]) == 8 && not_over_rate_limit(order_of_preference[i])) {
-			t = order_of_preference[i];
+			if (order_of_preference[i] == enem_terr)
+			{
+				enem_flag = true;
+				//decrement i and then add 2 for each iteration of for loop to only check items of opposite parity of where enemy is
+				//e.g. enemy is one territory left of us, so we'll only consider territories to the right.
+				//bug or intended behavior? : won't consider going all the way around the board in the opposite direction, will just say there are no available territories
+				i--;
+			}
+			else {
+				t = order_of_preference[i];
+			}
 		}
 	}
 	return t;
@@ -130,6 +157,20 @@ void usetup() {
   order_of_preference[3] = (terr + 2)%6;
   order_of_preference[4] = (terr + 4)%6;
   order_of_preference[5] = (terr + 3)%6;
+
+  cw_board[0] = terr;
+  cw_board[1] = (terr+5)%6;
+  cw_board[2] = (terr+4)%6;
+  cw_board[3] = (terr+3)%6;
+  cw_board[4] = (terr+2)%6;
+  cw_board[5] = (terr+1)%6;
+
+  ccw_board[0] = terr;
+  ccw_board[1] = (terr+1)%6;
+  ccw_board[2] = (terr+2)%6;
+  ccw_board[3] = (terr+3)%6;
+  ccw_board[4] = (terr+4)%6;
+  ccw_board[5] = (terr+5)%6;
 }
 
 void umain() {

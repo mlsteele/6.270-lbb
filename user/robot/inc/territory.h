@@ -20,5 +20,8 @@ int8_t current_territory();
 
 void move_to_territory(int8_t territory);
 void move_to_next_territory();
-
+void move_to_next_territory_dr();
+void move_to_territory_dr(uint8_t terr);
+void move_to_gear();
+void spin_gear();
 #endif

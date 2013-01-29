@@ -14,3 +14,7 @@ void determine_team_color() {
   if (team_color == TEAM_BLUE)
     printf("TEAM_BLUE\n");
 }
+
+int get_team_color() {
+	return team_color;
+}

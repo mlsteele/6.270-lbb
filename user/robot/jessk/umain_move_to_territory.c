@@ -51,11 +51,11 @@ int umain (void) {
   // }
 
   // // move around the board twice
-  // for(int i=0;i<12;i++){
-  //   move_to_next_territory();
+   for(int i=1;i<7;i++){
+     move_to_territory_dr(i);
   //   set_wheel_pows(0, 0);
   //   pause(1000);
-  // }
+   }
 
   // //Move to 3 random territories
   // for(int i=0;i<3;i++){

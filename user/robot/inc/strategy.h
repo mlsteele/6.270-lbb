@@ -9,5 +9,5 @@
 int8_t team_color;
 
 void determine_team_color();
-
+int get_team_color();
 #endif

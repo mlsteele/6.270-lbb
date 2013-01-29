@@ -6,18 +6,23 @@ typedef struct {
 	float x;
 	float y;
 } Point;
+float ang_diff(float a, float b) {
+  float delta_theta = fmod(a, 360) - fmod(b, 360);
+  if (delta_theta < -180) delta_theta += 360;
+  if (delta_theta >  180) delta_theta -= 360;
+  return delta_theta;
+}
 
-float terr_angles[7] = {-120,-60,0,60,120,180,240};
-
-uint8_t territory_of_point(Point p) {
-	float ang = atan2(p.y, p.x) / DEGS_TO_RADS;
-	printf("\tAngle: %.2f\n", ang);
+int8_t territory_of_point(Point p) {
+	float ang = fmod(ang_diff(atan2(p.y, p.x) / DEGS_TO_RADS,0) + 360,360);
+	printf("ang = %.0f\n", ang);
 	int i;
 	for(i=0;i<6;i++){
-		if((ang>terr_angles[i] && ang<terr_angles[i+1])
-		|| ((ang+360)>terr_angles[i] && (ang+360)<terr_angles[i+1]))  {
+		printf("\tang_diff(ang, %.0f): %.0f\n", fmod(270+60*i,360), ang_diff(ang, fmod(270+60*i,360)));
+		if(fabsf(ang_diff(ang, fmod(270+60*i,360))) <= 60) {
+	    	//printf("  YES!\n");
 			return i;
-		}	
+		}	//printf("  NO!\n");
 	}
 	return -1;
 }

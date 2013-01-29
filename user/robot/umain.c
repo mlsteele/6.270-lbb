@@ -65,19 +65,25 @@ int umain (void) {
 
   int i_init = current_territory();
   printf("i_init %i\n", i_init);
-  for(int i = i_init; i <= i_init + 3; i++) {
+  for(int i = i_init; i <= i_init + 7; i++) {
     int active_i = i % 6;
-    printf("target i %i\n", i % 6);
-    go_to_point(&territories[active_i], true);
-    go_to_point(&pre_gears[active_i], false);
-    capture_gears();
-    go_to_point(&pre_gears[active_i], false);
+    printf("active_i %i\n", active_i);
+    go_to_point(&territories[active_i], false);
+  }
+
+  for (int i = 0; i <3 ; i++) {
+    go_to_point(&pre_gears[current_territory()], false);
     capture_gears();
   }
 
+  set_wheel_pows(1, -1);
+  pause(6000);
+  set_wheel_pows(0,0);
 
-  // go_straight_by_gyro_for_ms(10000, FD_SPINSIDE);
-
+  while (true) {
+    rotate_by_gyro((get_time() % 360) - 180);
+    pause((get_time() % 20000) + 500);
+  }
 
   set_wheel_pows(0,0);
   printf("umain done\n");

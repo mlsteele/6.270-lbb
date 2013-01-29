@@ -110,41 +110,33 @@ void go_to_territory(int8_t terr_i, bool initial_rotate) {
 }
 
 void face_towards_gears() {
-  const float angle_threshold = 15;
-  pause(100);
-  gyro_set_degrees(get_vps_theta());
-  for (int i = 0; i < 3; i++) {
-    Point current_pos = get_vps_position();
-    float target_theta = points_angle(&gears[current_territory()], &current_pos) + 180;
-    rotate_by_gyro_to(target_theta);
-    pause(100);
-    if (fabs(ang_diff(target_theta, get_vps_theta())) < angle_threshold) return;
-  }
+  Point current_pos = get_vps_position();
+  rotate_by_gyro_to(points_angle(&gears[current_territory()], &current_pos) + 180);
 }
 
 void face_towards_mine() {
-  const float angle_threshold = 10;
-  pause(100);
-  gyro_set_degrees(get_vps_theta());
-  for (int i = 0; i < 3; i++) {
-    Point current_pos = get_vps_position();
-    float target_theta = points_angle(&mines[current_territory()], &current_pos);
-    rotate_by_gyro_to(target_theta);
-    pause(100);
-    if (fabs(ang_diff(target_theta, get_vps_theta())) < angle_threshold) return;
-  }
+  Point current_pos = get_vps_position();
+  rotate_by_gyro_to(points_angle(&mines[current_territory()], &current_pos));
 }
 
 void capture_gears() {
   face_towards_gears();
-  motor_set_vel(PIN_MOTOR_GEAR, 100);
-  set_wheel_pows(-0.5, -0.5);
-  pause(200);
   motor_set_vel(PIN_MOTOR_GEAR, 255);
-  pause(500);
+  pause(100);
+  gyro_set_degrees(get_vps_theta());
+  for (int i = 0; i < 4; i++) {
+    set_wheel_pows(-0.5, -0.5);
+    pause(700);
+    set_wheel_pows(0.3, 0.3);
+    pause(200);
+    set_wheel_pows(0,0);
+  }
+
+  // back out
   set_wheel_pows(0,0);
   pause(500);
   motor_set_vel(PIN_MOTOR_GEAR, 0);
+  gyro_set_degrees(get_vps_theta());
   set_wheel_pows(0.5, 0.5);
   pause(200);
   set_wheel_pows(0, 0);
@@ -153,18 +145,35 @@ void capture_gears() {
 void mine_resources() {
   face_towards_mine();
   set_wheel_pows(0.5, 0.5);
-  pause(200);
   servo_set_pos(PIN_SERVO_GEARS, SERVO_GEARS_UP);
-  set_wheel_pows(1, 1);
-  pause(700);
+  pause(1200);
   set_wheel_pows(0,0);
-  pause(300);
-  servo_set_pos(PIN_SERVO_GEARS, SERVO_GEARS_DN);
   pause(100);
-  set_wheel_pows(-0.3, -0.3);
-  pause(300);
+  gyro_set_degrees(get_vps_theta());
+  // contact mine
+
+  for (int i = 0; i < 5; i++) {
+    // leve and back up
+    servo_set_pos(PIN_SERVO_GEARS, SERVO_GEARS_DN);
+    pause(300);
+    set_wheel_pows(-0.3, -0.3);
+    pause(300);
+    set_wheel_pows(0,0);
+
+    // contact mine
+    servo_set_pos(PIN_SERVO_GEARS, SERVO_GEARS_UP);
+    pause(400);
+    set_wheel_pows(0.5, 0.5);
+    pause(420);
+    set_wheel_pows(0,0);
+  }
+
+  // back out
   set_wheel_pows(-0.5, -0.5);
-  servo_set_pos(PIN_SERVO_GEARS, SERVO_GEARS_UP);
   pause(500);
   set_wheel_pows(0, 0);
+}
+
+void dump() {
+  // TODO: implement
 }

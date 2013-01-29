@@ -14,5 +14,6 @@ void face_towards_gears();
 void face_towards_mine();
 void capture_gears();
 void mine_resources();
+void dump();
 
 #endif

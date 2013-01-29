@@ -71,8 +71,8 @@ void wheels_brake() {
 
 void rotate_by_gyro(float dtheta) {
   const float drive_max = 0.7;
-  const float drive_min = 0.13;
-  const float angle_tolerance = 5;
+  const float drive_min = 0.2;
+  const float angle_tolerance = 9;
   const float correct_hold_time = 400;
   float final = gyro_get_degrees() + dtheta;
 
@@ -107,7 +107,12 @@ void rotate_by_gyro(float dtheta) {
 }
 
 void rotate_by_gyro_to(float theta) {
-  rotate_by_gyro(ang_diff(theta, gyro_get_degrees()));
+  const float angle_tolerance = 10;
+  for (int i = 0; i < 3; i++) {
+    rotate_by_gyro(ang_diff(theta, gyro_get_degrees()));
+    gyro_set_degrees(get_vps_theta());
+    if (fabs(ang_diff(get_vps_theta(), theta)) < angle_tolerance) return;
+  }
 }
 
 // void move_to(Point p, float velocity) {

@@ -41,11 +41,19 @@ int umain (void) {
   // pause(300);
   // go_to_territory(current_territory() + 1);
   // pause(300);
-  go_to_point(&pre_gears[current_territory()], false);
-  capture_gears();
-  pause(500);
-  go_to_point(&pre_mines[current_territory()], false);
-  mine_resources();
+
+  // go_to_point(&pre_gears[current_territory()], false);
+  // capture_gears();
+  // go_to_point(&pre_gears[current_territory()], false);
+  // capture_gears();
+  // pause(500);
+  // go_to_point(&territories[current_territory()], false);
+  // mine_resources();
+
+  for(int i = 0; i < 4; i++) {
+    go_to_point(&pre_gears[current_territory()], false);
+    capture_gears();
+  }
 
   set_wheel_pows(0,0);
   printf("umain done\n");

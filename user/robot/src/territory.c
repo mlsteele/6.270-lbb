@@ -34,8 +34,8 @@ void territory_init() {
 			TERRITORY_RAD_TO_LIGHT * sin(light_angle * DEGS_TO_RADS) };
 
 		pre_gears[i] = (Point) {
-			TERRITORY_RAD_TO_LIGHT * cos(gear_angle * DEGS_TO_RADS) ,
-			TERRITORY_RAD_TO_LIGHT * sin(gear_angle * DEGS_TO_RADS) };
+			TERRITORY_RAD_TO_PRE_GEARS * cos(gear_angle * DEGS_TO_RADS) ,
+			TERRITORY_RAD_TO_PRE_GEARS * sin(gear_angle * DEGS_TO_RADS) };
 
 		gears[i] = (Point) {
 			TERRITORY_RAD_TO_GEARS * cos(gear_angle * DEGS_TO_RADS) ,

@@ -9,15 +9,15 @@ int usetup (void) {
 int umain (void) {
   pause(200);
   motor_set_vel(PIN_MOTOR_GEAR, 100);
-  pause(500);
+  pause(700);
   motor_set_vel(PIN_MOTOR_GEAR, 255);
-  pause(500);
+  pause(700);
   motor_set_vel(PIN_MOTOR_GEAR, 0);
-  pause(500);
+  pause(700);
   motor_set_vel(PIN_MOTOR_GEAR, -100);
-  pause(500);
+  pause(700);
   motor_set_vel(PIN_MOTOR_GEAR, -255);
-  pause(500);
+  pause(700);
   motor_set_vel(PIN_MOTOR_GEAR, 0);
 
   return 0;

@@ -1,4 +1,3 @@
-// Include headers from OS
 #include <joyos.h>
 #include <hw_config.h>
 #include <Point.h>
@@ -32,9 +31,9 @@ int usetup (void) {
 int umain (void) {
   int i_init = current_territory();
   printf("i_init %i\n", i_init);
-  for(int i = i_init; i < i_init + 7; i++) {
-    printf("target i %i\n", i);
-    go_to_territory(i, false);
+  for(int i = i_init; i <= i_init + 1; i++) {
+    printf("target i %i\n", i % 6);
+    go_to_territory(i % 6, false);
   }
 
   // printf("[1] starting territory is %i\n", current_territory());
@@ -42,9 +41,10 @@ int umain (void) {
   // pause(300);
   // go_to_territory(current_territory() + 1);
   // pause(300);
+  go_to_point(&pre_gears[current_territory()], false);
   capture_gears();
-  go_to_territory(current_territory(), false);
   pause(500);
+  go_to_point(&pre_mines[current_territory()], false);
   mine_resources();
 
   set_wheel_pows(0,0);

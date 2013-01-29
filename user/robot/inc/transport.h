@@ -13,5 +13,6 @@ void go_to_territory(int8_t terr_i, bool initial_rotate);
 void face_towards_gears();
 void face_towards_mine();
 void capture_gears();
+void mine_resources();
 
 #endif

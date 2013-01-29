@@ -7,7 +7,9 @@
 // in local coordinates, assume robot starts in center of territory '0' at 0, -y and angle 90
 Point territories[6];
 Point gears[6];
+Point pre_gears[6];
 Point mines[6];
+Point pre_mines[6];
 float territory_angle_mid[6]; // bounding angles of territories
 float territory_angle_cw[6]; // bounding angles of territories
 float territory_angle_ccw[6];

@@ -154,7 +154,17 @@ void mine_resources() {
   face_towards_mine();
   set_wheel_pows(0.5, 0.5);
   pause(200);
+  servo_set_pos(PIN_SERVO_GEARS, SERVO_GEARS_UP);
   set_wheel_pows(1, 1);
-  pause(200);
+  pause(700);
   set_wheel_pows(0,0);
+  pause(300);
+  servo_set_pos(PIN_SERVO_GEARS, SERVO_GEARS_DN);
+  pause(100);
+  set_wheel_pows(-0.3, -0.3);
+  pause(300);
+  set_wheel_pows(-0.5, -0.5);
+  servo_set_pos(PIN_SERVO_GEARS, SERVO_GEARS_UP);
+  pause(500);
+  set_wheel_pows(0, 0);
 }

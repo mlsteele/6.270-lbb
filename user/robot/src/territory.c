@@ -23,20 +23,32 @@ void territory_init() {
 	printf("initializing territories... ");
 	for (int i = 0; i < 6; i++) {
 		float light_angle      = 60 * i;
-		float gear_angle       = 13.6 + 60 * i;
-		float lever_angle      = 360 + -13.54 + 60 * i;
+		float gear_angle       = 10 + 60 * i;
+		float lever_angle      = 360 + -8 + 60 * i;
 		territory_angle_mid[i] = 60 * i;
 		territory_angle_cw[i]  = 360 - 30 + 60 * i;
 		territory_angle_ccw[i] = 30 + 60 * i;
+
 		territories[i] = (Point) {
 			TERRITORY_RAD_TO_LIGHT * cos(light_angle * DEGS_TO_RADS) ,
 			TERRITORY_RAD_TO_LIGHT * sin(light_angle * DEGS_TO_RADS) };
+
+		pre_gears[i] = (Point) {
+			TERRITORY_RAD_TO_LIGHT * cos(gear_angle * DEGS_TO_RADS) ,
+			TERRITORY_RAD_TO_LIGHT * sin(gear_angle * DEGS_TO_RADS) };
+
 		gears[i] = (Point) {
 			TERRITORY_RAD_TO_GEARS * cos(gear_angle * DEGS_TO_RADS) ,
 			TERRITORY_RAD_TO_GEARS * sin(gear_angle * DEGS_TO_RADS) };
+
+		pre_mines[i] = (Point) {
+			TERRITORY_RAD_TO_LIGHT * cos(lever_angle * DEGS_TO_RADS) ,
+			TERRITORY_RAD_TO_LIGHT * sin(lever_angle * DEGS_TO_RADS) };
+
 		mines[i] = (Point) {
 			TERRITORY_RAD_TO_MINE * cos(lever_angle * DEGS_TO_RADS) ,
 			TERRITORY_RAD_TO_MINE * sin(lever_angle * DEGS_TO_RADS) };
+
 	}
 	printf("done\n");
 

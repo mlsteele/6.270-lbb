@@ -23,7 +23,7 @@ void territory_init() {
 	printf("initializing territories... ");
 	for (int i = 0; i < 6; i++) {
 		float light_angle      = 60 * i;
-		float gear_angle       = 10 + 60 * i;
+		float gear_angle       = 8.8 + 60 * i;
 		float lever_angle      = 360 - 20 + 60 * i;
 		territory_angle_mid[i] = 60 * i;
 		territory_angle_cw[i]  = 360 - 30 + 60 * i;

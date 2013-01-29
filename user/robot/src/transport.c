@@ -122,11 +122,12 @@ void face_towards_mine() {
 }
 
 void capture_gears() {
-  face_towards_gears();
   motor_set_vel(PIN_MOTOR_GEAR, 255);
-  pause(100);
-  gyro_set_degrees(get_vps_theta());
   for (int i = 0; i < 4; i++) {
+    face_towards_gears();
+    pause(100);
+    gyro_set_degrees(get_vps_theta());
+
     set_wheel_pows(-0.5, -0.5);
     pause(700);
     set_wheel_pows(0.3, 0.3);

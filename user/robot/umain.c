@@ -49,9 +49,26 @@ int umain (void) {
   // pause(500);
   // go_to_point(&territories[current_territory()], false);
 
+  // go_to_territory(current_territory(), false);
+  // go_to_point(&pre_mines[current_territory()], false);
+  // mine_resources();
+
+  rotate_by_gyro_to(0);
+  pause(300);
+  rotate_by_gyro_to(90);
+  pause(300);
+  rotate_by_gyro_to(180);
+  pause(300);
+  rotate_by_gyro_to(-90);
+  pause(300);
+  rotate_by_gyro_to(180);
+  pause(300);
+  rotate_by_gyro_to(0);
+  pause(300);
+
   go_to_territory(current_territory(), false);
-  go_to_point(&pre_mines[current_territory()], false);
-  mine_resources();
+  go_to_point(&pre_gears[current_territory()], false);
+  capture_gears();
 
   /*for(int i = 0; i < 4; i++) {
     go_to_point(&pre_gears[current_territory()], false);

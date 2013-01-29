@@ -128,14 +128,14 @@ void capture_gears() {
   gyro_set_degrees(get_vps_theta());
   face_towards_gears();
 
-  set_wheel_pows(-0.5, -0.5);
-  pause(700);
+  gyro_set_degrees(get_vps_theta());
+  go_straight_by_gyro_for_ms(900, FD_SPINSIDE);
+  set_wheel_pows(-.2, -.2);
+  pause(600);
   set_wheel_pows(0, 0);
   pause(500);
-  set_wheel_pows(0,0);
 
   // back out
-  motor_set_vel(PIN_MOTOR_GEAR, 0);
   set_wheel_pows(0,0);
   gyro_set_degrees(get_vps_theta());
   set_wheel_pows(0.7, 0.7);

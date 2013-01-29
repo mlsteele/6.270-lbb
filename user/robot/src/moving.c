@@ -241,6 +241,24 @@ void move_distance_by_encoders_gyro(float distance_mm) {
     ang_diff(starting_angle, gyro_get_degrees()));
 }
 
+void go_straight_by_gyro_for_ms(uint32_t ms, uint8_t which_forward) {
+  const float start_angle = gyro_get_degrees();
+  const uint32_t start_time = get_time();
+
+  while(start_time + ms > get_time()) {
+    float theta_offset = start_angle - gyro_get_degrees();
+    float wheel_bias = theta_offset / 90;
+    float pow_base = 0.5 * (which_forward == FD_LEVERSIDE ? 1 : -1);
+    set_wheel_pows(pow_base - wheel_bias, pow_base + wheel_bias);
+    printf("m_l: %f", get_wheel_pows().l);
+    printf("    m_l: %f", get_wheel_pows().r);
+    printf("    theta_offset: %f", theta_offset);
+    printf("    wheel_bias: %f", wheel_bias);
+    printf("\n");
+  }
+
+  set_wheel_pows(0,0);
+}
 
 void rotate_by_encoders(float delta_theta) {
   const int direction = delta_theta > 0 ? 1 : -1;

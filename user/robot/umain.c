@@ -62,6 +62,7 @@ int umain (void) {
     capture_gears();
   }*/
 
+
   int i_init = current_territory();
   printf("i_init %i\n", i_init);
   for(int i = i_init; i <= i_init + 3; i++) {
@@ -73,6 +74,9 @@ int umain (void) {
     go_to_point(&pre_gears[active_i], false);
     capture_gears();
   }
+
+
+  // go_straight_by_gyro_for_ms(10000, FD_SPINSIDE);
 
 
   set_wheel_pows(0,0);

@@ -28,7 +28,7 @@ void move_for_time(float velocity, uint32_t millis);
 // ~1.2mm overshoot
 void move_distance_by_encoders(float distance_mm);
 void move_distance_by_encoders_gyro(float distance_mm);
-
+void go_straight_by_gyro_for_ms(uint32_t ms, uint8_t which_forward);
 void rotate_by_encoders(float delta_theta);
 
 #endif

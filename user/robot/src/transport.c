@@ -115,8 +115,10 @@ void face_towards_gears() {
 }
 
 void face_towards_mine() {
+  printf("face_towards_mine()\n");
   Point current_pos = get_vps_position();
   rotate_by_gyro_to(points_angle(&mines[current_territory()], &current_pos));
+  printf("face_towards_mine() done\n");
 }
 
 void capture_gears() {

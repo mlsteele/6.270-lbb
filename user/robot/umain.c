@@ -29,12 +29,12 @@ int usetup (void) {
 }
 
 int umain (void) {
-  int i_init = current_territory();
-  printf("i_init %i\n", i_init);
-  for(int i = i_init; i <= i_init + 1; i++) {
-    printf("target i %i\n", i % 6);
-    go_to_territory(i % 6, false);
-  }
+  // int i_init = current_territory();
+  // printf("i_init %i\n", i_init);
+  // for(int i = i_init; i <= i_init + 1; i++) {
+  //   printf("target i %i\n", i % 6);
+  //   go_to_territory(i % 6, false);
+  // }
 
   // printf("[1] starting territory is %i\n", current_territory());
   // go_to_territory(current_territory() + 5);
@@ -48,12 +48,15 @@ int umain (void) {
   // capture_gears();
   // pause(500);
   // go_to_point(&territories[current_territory()], false);
-  // mine_resources();
 
-  for(int i = 0; i < 4; i++) {
+  go_to_territory(current_territory(), false);
+  go_to_point(&pre_mines[current_territory()], false);
+  mine_resources();
+
+  /*for(int i = 0; i < 4; i++) {
     go_to_point(&pre_gears[current_territory()], false);
     capture_gears();
-  }
+  }*/
 
   set_wheel_pows(0,0);
   printf("umain done\n");

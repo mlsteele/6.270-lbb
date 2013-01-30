@@ -44,7 +44,7 @@ uint8_t next_unowned_territory() {
 	uint8_t t = -1;
 	uint8_t enem_terr = territory_of_point(get_vps_antagonist());
 	bool enem_flag = false;
-	for (int i = 0; i<6 && t==-1; enem_flag ? i+=2 : i++) {
+	for (int i = 1; i<6 && t==-1; enem_flag ? i+=2 : i++) {
 		if (vps_owner(order_of_preference[i]) != 8) {
 			if (order_of_preference[i] == enem_terr)
 			{
@@ -67,7 +67,7 @@ uint8_t next_mineable_territory() {
 	uint8_t t = -1;
 	uint8_t enem_terr = territory_of_point(get_vps_antagonist());
 	bool enem_flag = false;
-	for (int i = 0; i<6 && t==-1; i++) {
+	for (int i = 1; i<6 && t==-1; i++) {
 		if (vps_owner(order_of_preference[i]) == 8 && not_over_rate_limit(order_of_preference[i])) {
 			if (order_of_preference[i] == enem_terr)
 			{
@@ -97,7 +97,7 @@ void mine_territory() {
 	Point pos = get_vps_position();
 	uint32_t t = get_time();
 
-	while(points_distance(&pos,&mines[terr])>1000 && get_time()-t < 10000){
+	while(points_distance(&pos,&mines[terr])>700 && get_time()-t < 10000){
 		//move to mine
 		pos = get_vps_position();
 		printf("current position:%f,%f\ncurrent territory:%d\nmine:%f,%f\ndistance:%f",
@@ -170,7 +170,8 @@ void umain() {
 			}
 			else if (vps_owner(terr)==8 && not_over_rate_limit(terr) && mining_attempts<3 && try_to_mine) {
 				printf("mining territory %d", terr);
-				mine_territory();
+				//mine_territory();
+				mine_resources();
 				go_to_point(&territories[terr], false);
 			}
 			else if (vps_owner(terr) != 8 && capture_attempts<3){
@@ -200,7 +201,7 @@ void umain() {
 						// 	//we have literally nothing better to do than wait
 						// 	pause(1000);
 						// }
-						pause(1000);
+						explore();
 					}
 					else {
 						go_to_territory(m, true);

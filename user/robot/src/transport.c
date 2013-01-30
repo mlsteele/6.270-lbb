@@ -122,8 +122,8 @@ void face_towards_mine() {
   printf("face_towards_mine() done\n");
 }
 
-void capture_gears() {
-  motor_set_vel(PIN_MOTOR_GEAR, 255);
+void capture_gears(uint8_t color) {
+  motor_set_vel(PIN_MOTOR_GEAR, color==TEAM_RED ? -255 : 255);
 
   gyro_set_degrees(get_vps_theta());
   face_towards_gears();

@@ -9,6 +9,11 @@
 uint8_t terr = 0;
 uint32_t start_time;
 uint8_t capture_attempts = 0;
+uint8_t failed_capture_attempts = 0;
+uint8_t mining_attempts = 0;
+uint8_t failed_mining_attempts = 0;
+bool try_to_mine = true;
+bool failure_mode = false;
 uint8_t num_balls = 0; //an estimate assuming everything we mined is in our basket
 
 uint8_t order_of_preference[6];
@@ -20,37 +25,19 @@ uint32_t elapsed_time() {
 }
 
 void explore() {
-	//TODO
+	int i_init = current_territory();
+    printf("i_init %i\n", i_init);
+    for(int i = i_init; i <= i_init + 7; i++) {
+	    int active_i = i % 6;
+	    printf("active_i %i\n", active_i);
+	    go_to_point(&territories[active_i], false);
+  	}
 }
 
 void claim_territory() {
 	capture_attempts++;
-	face_towards_gears();
-	printf("done facing towards gears\n");
-	terr = current_territory();
-	Point pos = get_vps_position();
-	while(points_distance(&pos,&gears[terr])>450){
-		pos = get_vps_position();
-		printf("current position:%f,%f\ncurrent territory:%d\ngears:%f,%f\ndistance:%f\n",
-			get_vps_position().x,get_vps_position().y, current_territory(),
-			gears[current_territory()].x, gears[current_territory()].y,
-			points_distance(&pos,&gears[current_territory()])
-		);
-		aim_towards_target_vps_gyro(&gears[terr], FD_SPINSIDE);
-		pause(10);
-	}
-	printf("close enough to gears\n");
-	set_wheel_pows(0,0);
-	uint32_t time = get_time();
-	motor_set_vel(PIN_MOTOR_GEAR, 255 * get_team_color()==TEAM_RED ? -1 : 1);
-	while (vps_owner(terr) != 8 && get_time()-time<5000) {}
-	if (vps_owner(terr) != 8) {
-		printf("timeout, didn't capture territory\n");
-	}
-	else {
-		printf("done capturing territory\n");
-	}
-	motor_set_vel(PIN_MOTOR_GEAR, 0);
+	go_to_point(&pre_gears[current_territory()], false);
+    capture_gears(get_team_color());
 }
 
 uint8_t next_unowned_territory() {
@@ -108,8 +95,9 @@ void mine_territory() {
 	face_towards_mine();
 	terr = current_territory();
 	Point pos = get_vps_position();
+	uint32_t t = get_time();
 
-	while(points_distance(&pos,&mines[terr])>400){
+	while(points_distance(&pos,&mines[terr])>1000 && get_time()-t < 10000){
 		//move to mine
 		pos = get_vps_position();
 		printf("current position:%f,%f\ncurrent territory:%d\nmine:%f,%f\ndistance:%f",
@@ -117,7 +105,7 @@ void mine_territory() {
 			mines[current_territory()].x, mines[current_territory()].y,
 			points_distance(&pos,&mines[current_territory()])
 			);
-		aim_towards_target_vps_gyro(&mines[terr], FD_SPINSIDE);
+		aim_towards_target_vps_gyro(&mines[terr], FD_LEVERSIDE);
 		pause(10);
 	}
 	set_wheel_pows(0,0);
@@ -138,6 +126,9 @@ void mine_territory() {
 		}
 		num_balls +=5;
 	}
+	else {
+		mining_attempts++;
+	}
 }
 
 void dump_balls() {
@@ -148,29 +139,17 @@ void dump_balls() {
 void usetup() {
   extern volatile uint8_t robot_id;
   robot_id = 8;
-  gyro_init(PIN_GYRO, LSB_US_PER_DEG, 500);
+  pause(700);
+  gyro_init(PIN_GYRO, LSB_US_PER_DEG, 1000);
   vps_data_daemon_init();
   territory_init();
+  gyro_set_degrees(get_vps_theta());
   order_of_preference[0] = terr;
   order_of_preference[1] = (terr + 1)%6;
   order_of_preference[2] = (terr + 5)%6;
   order_of_preference[3] = (terr + 2)%6;
   order_of_preference[4] = (terr + 4)%6;
   order_of_preference[5] = (terr + 3)%6;
-
-  cw_board[0] = terr;
-  cw_board[1] = (terr+5)%6;
-  cw_board[2] = (terr+4)%6;
-  cw_board[3] = (terr+3)%6;
-  cw_board[4] = (terr+2)%6;
-  cw_board[5] = (terr+1)%6;
-
-  ccw_board[0] = terr;
-  ccw_board[1] = (terr+1)%6;
-  ccw_board[2] = (terr+2)%6;
-  ccw_board[3] = (terr+3)%6;
-  ccw_board[4] = (terr+4)%6;
-  ccw_board[5] = (terr+5)%6;
 }
 
 void umain() {
@@ -179,36 +158,49 @@ void umain() {
 	explore();
 	while (elapsed_time() < 120000) {
 		if (elapsed_time() > 10000) {
+			// if (failed_capture_attempts > 4) {
+			// 	explore();
+			// }
+			if (failed_mining_attempts > 3) {
+				try_to_mine = false;
+			}
 			terr = current_territory();
-			if (num_balls >= 20 || elapsed_time() > 110000) {
+			if (num_balls >= 20) {
 				dump_balls();
 			}
-			else if (vps_owner(terr)==8 && not_over_rate_limit(terr)) {
+			else if (vps_owner(terr)==8 && not_over_rate_limit(terr) && mining_attempts<3 && try_to_mine) {
 				printf("mining territory %d", terr);
 				mine_territory();
 				go_to_point(&territories[terr], false);
 			}
 			else if (vps_owner(terr) != 8 && capture_attempts<3){
-				printf("claiming territory %d", terr);
 				claim_territory();
 				go_to_point(&territories[terr], false);
 			}
 			else {
+				if (capture_attempts==3) {
+					failed_capture_attempts++;
+				}
+				if (mining_attempts == 3) {
+					failed_mining_attempts++;
+				}
 				capture_attempts = 0;
+				mining_attempts = 0;
 				printf("moving to next territory %d", next_unowned_territory());
 				uint8_t t= next_unowned_territory();
 				if (t==-1) {
 					//no unowned territories left
 					uint8_t m = next_mineable_territory();
 					if (m==-1) {
-						//no territories under the rate limit
-						if (num_balls > 0) {
-							dump_balls();
-						}
-						else {
-							//we have literally nothing better to do than wait
-							pause(1000);
-						}
+						// //no territories under the rate limit
+						// if (num_balls > 0) {
+						// 	//dump_balls();
+						// }
+						// else {
+						// 	//we have literally nothing better to do than wait
+						// 	pause(1000);
+						// }
+						pause(1000);
 					}
 					else {
 						go_to_territory(m, true);
